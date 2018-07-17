@@ -1,5 +1,3 @@
----
-
 # 306 Project 1  |  Team 11   |  *draft*
 
 **Using AI and parallel processing power to solve difficult scheduling problem**
