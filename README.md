@@ -2,7 +2,7 @@
 
 **Using AI and parallel processing power to solve difficult scheduling problem**
 
-``` Brief Description of the project to go here ```
+Brief Description of the project to go here
 
 ## Getting Started
 
@@ -22,10 +22,10 @@ Requisite Pacakages and software goes here
 
 ## Running the Code
 
-With Java (plus dependant packages) and the database installed you can run the project code. 
+With Java (plus dependant packages) installed you can run the project code. 
 
-To do this *Provide Step by step instructions here:
-```shell
+To do this *Provide Step by step instructions here*:
+```java
 java .........
 ```
 
@@ -53,7 +53,7 @@ The projects folder structure is as follows:
 
 ## Helpful Links
 
-''' These will be locations where additional install information can be found including dependent packages '''
+*These will be locations where additional install information can be found including dependent packages*
 
 *  [Link 1 (Currently links to Google)](https://www.google.com/) - Description of the link (i.e. Google search browser for finding information.
 *  [Link 2 (Currently links to Google)](https://www.google.com/) - Description of the link (i.e. Google search browser for finding information.
@@ -64,6 +64,8 @@ The projects folder structure is as follows:
 * **Sean Oldfield** - *Development* - [SheepySean](https://github.com/SheepySean)
 * **Tina Chen** - *Development* - [twchen97](https://github.com/twchen97)
 * **Rebekah Berriman** - *Development* - [rmberriman](https://github.com/rmberriman)
+* **Jessica Alcantara** - *Development* - [ghuser](https://github.com/)
+* **Holly Hagenson** - *Development* - [ghuser](https://github.com/)
 
 ## Acknowledgments
 
