@@ -1,10 +1,10 @@
-# 306 Project 1  |  Team 11   |  *draft*
-
 ---
+
+# 306 Project 1  |  Team 11   |  *draft*
 
 **Using AI and parallel processing power to solve difficult scheduling problem**
 
-''' Brief Description of the project to go here '''
+``` Brief Description of the project to go here ```
 
 ## Getting Started
 
@@ -71,3 +71,4 @@ The projects folder structure is as follows:
 
 * Any additional acknowledgments i.e. StackOverflow
 
+---
