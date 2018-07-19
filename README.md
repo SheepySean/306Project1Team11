@@ -1,4 +1,4 @@
-# 306 Project 1  |  Team 11   |  *draft*
+# 306 Project 1		|		Team 11		|		Para11el
 
 **Using AI and parallel processing power to solve difficult scheduling problem**
 
@@ -64,8 +64,8 @@ The projects folder structure is as follows:
 * **Sean Oldfield** - *Development* - [SheepySean](https://github.com/SheepySean)
 * **Tina Chen** - *Development* - [twchen97](https://github.com/twchen97)
 * **Rebekah Berriman** - *Development* - [rmberriman](https://github.com/rmberriman)
-* **Jessica Alcantara** - *Development* - [ghuser](https://github.com/)
-* **Holly Hagenson** - *Development* - [ghuser](https://github.com/)
+* **Jessica Alcantara** - *Development* - [Jess-Alcantara](https://github.com/Jess-Alcantara)
+* **Holly Hagenson** - *Development* - [hhagenson28](https://github.com/hhagenson28)
 
 ## Acknowledgments
 
