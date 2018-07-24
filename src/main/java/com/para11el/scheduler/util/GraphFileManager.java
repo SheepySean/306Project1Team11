@@ -1,3 +1,5 @@
+package com.para11el.scheduler.util;
+
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
 import org.graphstream.stream.file.FileSink;
@@ -20,13 +22,14 @@ public class GraphFileManager {
                 "ui.screenshot");
 
         public static void main(String args[]) {
+            System.out.println("hi");
             Graph g = new SingleGraph("Tutorial 1");
             FileSource fs = new FileSourceDOT();
 
             fs.addSink(g);
 
             try {
-                fs.readAll("out_example.dot");
+                fs.readAll("example_graphs/example.dot");
                 for(Node n : g.getNodeSet()) {
                     n.addAttribute("ui.label", n.getId());
                     for (Edge e : n.getEdgeSet()) {
