@@ -14,7 +14,7 @@ The project should be able to run on all operating systems namely **Linux**.
 
 The project requires:
 ```
-Requisite Pacakages and software goes here
+GraphStream
 ```
 
 ### (Optional) Additional Requirements
@@ -36,17 +36,23 @@ The projects folder structure is as follows:
 ```
 306Project1Team11
 |
-|__... (description of folder)
-|  |__... ()
-|	  |__... ()
+|__example_graphs (Sample graphs for utilising the application)
+|  |__example.dot
+|  |__...
+|  |__...
 |  
-|__... ()
+|__lib (Libraries folder for any additional project libraries)
+|  |__ext (External Libraries)
+|  |  |__graph_stream (GraphStream Library for graph management)
+|  |     |__gs-algo-1.3.jar
+|  |     |__gs-core-1.3.jar
+|  |     |__gs-ui-1.3.jar
 |  |__... ()
 |
+|__src (.java files for compiling and running the project)
+|  |__GraphFileManager.java (File I/O)
 |
-|__... ()
-|  |__... ()
-|
+|__.gitignore
 |
 |__README.md (You Are Here)
 ```
@@ -55,7 +61,7 @@ The projects folder structure is as follows:
 
 *These will be locations where additional install information can be found including dependent packages*
 
-*  [Link 1 (Currently links to Google)](https://www.google.com/) - Description of the link (i.e. Google search browser for finding information.
+*  [GraphStream](http://graphstream-project.org/) - GraphStream project for graph management and visualisation. Simple tutorials can be found [here](http://graphstream-project.org/doc/Tutorials/)
 *  [Link 2 (Currently links to Google)](https://www.google.com/) - Description of the link (i.e. Google search browser for finding information.
 
 
