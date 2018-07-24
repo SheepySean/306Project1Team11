@@ -42,23 +42,23 @@ This will create a folder called 306Project1Team11 on your system.
 With the project cloned, you can choose between **Eclipse** and **IntelliJ** as your development IDE.
 
 #### Eclipse
-··1. Open Eclipse on your computer and go *File* -> *New* -> *Java Project*.
-··2. Untick *Use default location* and select the 306Project1Team11 folder that you have just cloned.
-··3. Click *Finish*
+1. Open Eclipse on your computer and go *File* -> *New* -> *Java Project*.
+2. Untick *Use default location* and select the 306Project1Team11 folder that you have just cloned.
+3. Click *Finish*
 You will now be able to interact with the Java files as per normal.
 
 ###### Deployment with Maven
-··1. Right-click *pom.xml* and select *Run as* then *Run Configurations...*.
-··2. Make sure *Maven Build* is selected in the list on the left hand side.
-··3. Press the *New* button in the top left corner.
-··4. Select the base directory as *Workspace...*
-··5. Then type the following into *Goals:*
+1. Right-click *pom.xml* and select *Run as* then *Run Configurations...*.
+2. Make sure *Maven Build* is selected in the list on the left hand side.
+3. Press the *New* button in the top left corner.
+4. Select the base directory as *Workspace...*
+5. Then type the following into *Goals:*
 ```cmd
 clean compile assembly:single
 ```
-··6. Click *Run*
-··7. You will see the command line at the bottom of Eclipse fill with output. Wait for *BUILD SUCCESS* to display.
-··8. Once the build is completed, navigate to your project folder using explorer and double click the JAR *scheduling-solver-x.x-SNAPSHOT-jar-with-dependencies.jar*
+6. Click *Run*
+7. You will see the command line at the bottom of Eclipse fill with output. Wait for *BUILD SUCCESS* to display.
+8. Once the build is completed, navigate to your project folder using explorer and double click the JAR *scheduling-solver-x.x-SNAPSHOT-jar-with-dependencies.jar*
 **If you get build failures with the error saying there is bad central directory size, delete your .m2 folder and run the pom.xml file again**
 
 ## Running the Code (For a User)
