@@ -31,11 +31,11 @@ These instructions are designed to get the project up and running on your system
 
 ### Cloning the Repository
 
-First you must clone this repo onto your local machine with
+First you must clone this repo onto your local machine with:
 ```git
 git clone https://github.com/SheepySean/306Project1Team11.git
 ```
-This will create a folder called 306Project1Team11 on your system.
+This will create a folder called **306Project1Team11** on your system.
 
 ### Import the project to an IDE
 
@@ -43,23 +43,46 @@ With the project cloned, you can choose between **Eclipse** and **IntelliJ** as 
 
 #### Eclipse
 1. Open Eclipse on your computer and go *File* -> *New* -> *Java Project*.
-2. Untick *Use default location* and select the 306Project1Team11 folder that you have just cloned.
+2. Untick *Use default location* and select the **306Project1Team11** folder that you have just cloned.
 3. Click *Finish*
 You will now be able to interact with the Java files as per normal.
 
-###### Deployment with Maven
+##### Deployment with Maven
 1. Right-click *pom.xml* and select *Run as* then *Run Configurations...*.
 2. Make sure *Maven Build* is selected in the list on the left hand side.
 3. Press the *New* button in the top left corner.
 4. Select the base directory as *Workspace...*
 5. Then type the following into *Goals:*
-```cmd
+```maven
 clean compile assembly:single
 ```
 6. Click *Run*
-7. You will see the command line at the bottom of Eclipse fill with output. Wait for *BUILD SUCCESS* to display.
+7. You will see the command line at the bottom of Eclipse fill with output. Wait for *BUILD SUCCESS* to display.**If you get build failures with the error saying there is bad central directory size, delete your .m2 folder and run the pom.xml file again**
 8. Once the build is completed, navigate to your project folder using explorer and double click the JAR *scheduling-solver-x.x-SNAPSHOT-jar-with-dependencies.jar*
-**If you get build failures with the error saying there is bad central directory size, delete your .m2 folder and run the pom.xml file again**
+
+#### IntelliJ
+1. Open IntelliJ on your computer and go *Import Project*.
+2. Navigate to the **306Project1Team11** Folder, select it and click *OK*.
+3. Select *Import project from external model*, select *Maven*, and click *Next*.
+4. Confirm the *Root directory* at the top of the window ends in **306Project1Team11** and click *Next*.
+5. In the next window, make sure **com.para11el:scheduling-solver-x.x-SNAPSHOT** is selected and click *Next*.
+6. Select the JDK you would like to work with and click *Next*.
+7. Check you're happy with the project name and click *Finish*.
+You will now be able to interact with the Java files as per normal.
+
+##### Deployment with Maven
+1. Double click *pom.xml* in the file tree.
+2. Along the top of the IntelliJ Window, click *Run* -> *Edit Configurations...*.
+3. At the top left corner click the green plus button to add a new run configuration, and select *Maven*.
+4. Feel free to name the configuration as something meaningful such as *Project Deployment*.
+5. Then type the following into *Command line:*
+```maven
+clean compile assembly:single
+```
+6. Click *OK*.
+7. Along the top right, click the green play button to run the maven build.
+8. You will see the command line at the bottom of IntelliJ fill with output. Wait for *BUILD SUCCESS* to display.**If you get build failures with the error saying there is bad central directory size, delete your .m2 folder and run the pom.xml file again**
+9. Once the build is completed, navigate to your project folder using explorer and double click the JAR *scheduling-solver-x.x-SNAPSHOT-jar-with-dependencies.jar*
 
 ## Running the Code (For a User)
 
@@ -91,9 +114,27 @@ The projects folder structure is as follows:
 |  |__... ()
 |
 |__src (.java files for compiling and running the project)
-|  |__GraphFileManager.java (File I/O)
+|  |__main (Runner Files)
+|  |  |__java
+|  |  |  |__com
+|  |  |     |__para11el
+|  |  |        |__scheduler (Main project package)
+|  |  |           |__util (Utilities)
+|  |  |           |  |__GraphFileManager.java
+|  |  |           |
+|  |  |           |__...
+|  |  |
+|  |  |__resources (Other External Resources)
+|  |     |__...
+|  |
+|  |__test (Test files)
+|     |__java
+|        |__...
+|
 |
 |__.gitignore
+|
+|__pom.xml (Maven file for building the project)
 |
 |__README.md (You Are Here)
 ```
