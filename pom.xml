@@ -35,7 +35,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.para11el.scheduler.util.GraphFileManager</mainClass>
+                            <mainClass>com.para11el.scheduler.main.Scheduler</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
