@@ -179,6 +179,7 @@ buildNumber.properties
 
 # Output Files
 out_*
+*-output*
 
 ### macOS ###
 # General
