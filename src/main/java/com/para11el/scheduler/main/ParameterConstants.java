@@ -1,11 +1,17 @@
 package com.para11el.scheduler.main;
 
+
+/**
+ * Enum for representing constants used for command line inputs
+ *
+ * @Author Sean Oldfield
+ */
 public enum ParameterConstants {
-    PARALLISATION("-p"), VISUALISATION("-v"), OUTPUT("-o");
+    PARALLISATION("-p"), VISUALISATION("-v"), OUTPUT("-o"), REQUIRED_PARAMS("2");
 
     private final String _value;
 
-    private ParameterConstants(String value) {
+    ParameterConstants(String value) {
         _value = value;
     }
 
