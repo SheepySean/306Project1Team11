@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Manager class that controls the view of a graph such as its ability to be labelled or not
  *
- * @Author Sean Oldfield
+ * @author Sean Oldfield
  */
 public class GraphViewManager {
 
@@ -30,22 +30,24 @@ public class GraphViewManager {
 
     /**
      * Label the graph with its attributes such as weight and node name for visual display
+     * @author Sean Oldfield
      */
     public void labelGraph() {
         for(Node node : _managedGraph.getNodeSet()) {
-            node.addAttribute("ui.label", node.getId());
+            node.addAttribute("ui.label", node.getId()); // Name each node
             for (Edge edge : node.getEdgeSet()) {
-                edge.addAttribute("ui.label", edge.getAttribute("Weight").toString());
+                edge.addAttribute("ui.label", edge.getAttribute("Weight").toString()); // Add each edges weight
             }
         }
     }
 
     /**
      * Remove the graphical labels of the graph and only leave the key attributes such as weight behind
+     * @author Sean Oldfield
      */
     public void unlabelGraph() {
-        this.removeExcludedAttributes(_managedGraph.getNodeSet());
-        this.removeExcludedAttributes(_managedGraph.getEdgeSet());
+        this.removeExcludedAttributes(_managedGraph.getNodeSet()); // Each node
+        this.removeExcludedAttributes(_managedGraph.getEdgeSet()); // Each edge
     }
 
     /**
@@ -53,6 +55,7 @@ public class GraphViewManager {
      * need to be included in .dot file. This exists because you may find adding an attribute for CSS control
      * useful in later visualisation.
      * @param attribute Name of the attribute that needs to be excluded
+     * @author Sean Oldfield
      */
     public void addExcludedAttribute(String attribute) {
         ATTR_EXCLUDES.add(attribute);
@@ -61,13 +64,14 @@ public class GraphViewManager {
     /**
      * Remove excluded attributes from a set of elements from the graph.
      * @param set Set of elements from the graph that need certain attributes removed.
+     * @author Sean Oldfield
      */
     private void removeExcludedAttributes(Collection<? extends Element> set) {
         for(Element e : set) {
-            Object[] attrs = e.getAttributeKeySet().toArray();
-            for(int i = 0; i < attrs.length; i++) {
-                if(ATTR_EXCLUDES.contains(attrs[i])) {
-                    e.removeAttribute((String)attrs[i]);
+            Object[] attrs = e.getAttributeKeySet().toArray(); // Each attribute the element has
+            for(int i = 0; i < attrs.length; i++) { // For each attribute
+                if(ATTR_EXCLUDES.contains(attrs[i])) { // If its an excluded attribute
+                    e.removeAttribute((String)attrs[i]); // Remove it
                 }
             }
         }

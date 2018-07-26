@@ -14,7 +14,7 @@ import java.util.Arrays;
 /**
  * Simple JUnit test to test the behaviour of the Scheduler.
  *
- * @Author Sean Oldfield
+ * @author Sean Oldfield
  */
 public class GraphResourceIT {
 	private static GraphFileManager _fileManager;
@@ -32,7 +32,7 @@ public class GraphResourceIT {
             Graph g = _fileManager.readGraphFile(GraphConstants.GRAPH_DIRECTORY.getValue() +
                     "/" + GraphConstants.SAMPLE_INPUT_FILE.getValue() +
                     GraphConstants.FILE_EXT.getValue(), "Test");
-            if(!(g instanceof Graph)) {
+            if(g == null) {
                 fail();
             }
             assertNotEquals(0, g.getNodeCount());
