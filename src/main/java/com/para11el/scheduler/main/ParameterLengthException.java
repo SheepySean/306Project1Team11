@@ -1,5 +1,12 @@
 package com.para11el.scheduler.main;
 
-public class ParameterLengthException extends Exception {
+
+/**
+ * Simple exception class to represent errors when required parameters are not supplied
+ * to the scheduler
+ *
+ * @author Sean Oldfield
+ */
+class ParameterLengthException extends Exception {
 
 }

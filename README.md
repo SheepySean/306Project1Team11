@@ -94,7 +94,7 @@ The projects folder structure is as follows:
 *  [Link 2 (Currently links to Google)](https://www.google.com/) - Description of the link (i.e. Google search browser for finding information.
 
 
-## Authors
+## authors
 
 * **Sean Oldfield** - *Development* - [SheepySean](https://github.com/SheepySean)
 * **Tina Chen** - *Development* - [twchen97](https://github.com/twchen97)

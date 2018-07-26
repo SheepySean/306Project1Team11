@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Manager class that control the file I/O for the scheduler's graphs
  *
- * @Author Sean Oldfield
+ * @author Sean Oldfield
  */
 public class GraphFileManager {
 
@@ -26,14 +26,15 @@ public class GraphFileManager {
      * @param filename Name of the .dot file that stores the graph
      * @param graphID Name of the generated graph for titling purposes
      * @return Graph made from the file
-     * @throws IOException
+     * @throws IOException Thrown if the graph file cannot be read
+     * @author Sean Oldfield
      */
     public Graph readGraphFile(String filename, String graphID) throws IOException {
         Graph g = new SingleGraph(graphID);
         FileSource fs = new FileSourceDOT();
 
         fs.addSink(g);
-        fs.readAll(filename);
+        fs.readAll(filename); // Read the .dot file
         return g;
     }
 
@@ -42,10 +43,11 @@ public class GraphFileManager {
      * @param filename Name of the output file
      * @param graph The graph to be written to the output file
      * @param isDigraph True if the graph is a digraph, false otherwise
-     * @throws IOException
+     * @throws IOException Thrown if the graph file cannot be written
+     * @author Sean Oldfield
      */
     public void writeGraphFile(String filename, Graph graph, boolean isDigraph) throws IOException {
         FileSink fso = new FileSinkDOT(isDigraph);
-        fso.writeAll(graph, filename);
+        fso.writeAll(graph, filename); // Write to .dot file
     }
 }
