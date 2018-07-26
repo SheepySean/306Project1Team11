@@ -8,6 +8,7 @@ import com.para11el.scheduler.main.Scheduler;
 import org.graphstream.graph.Graph;
 import org.junit.*;
 
+import java.awt.*;
 import java.util.Arrays;
 
 /**
@@ -78,6 +79,7 @@ public class GraphResourceIT {
 	    try {
 	        String[] someArgs = {"example.dot", "4"};
             Scheduler.main(someArgs);
+        } catch (HeadlessException e) {
         } catch (Exception e) {
 	        e.printStackTrace();
 	        fail();

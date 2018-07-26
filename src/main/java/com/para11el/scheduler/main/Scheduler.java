@@ -36,7 +36,8 @@ public class Scheduler {
         GraphViewManager viewManager = new GraphViewManager(_inGraph);
         viewManager.labelGraph();
         //viewManager.unlabelGraph();
-        
+
+        _inGraph.display();
         try {
             fileManager.writeGraphFile(GraphConstants.OUTPUT_PREFIX.getValue() +
                     GraphConstants.SAMPLE_INPUT_FILE.getValue() + GraphConstants.FILE_EXT.getValue(),
