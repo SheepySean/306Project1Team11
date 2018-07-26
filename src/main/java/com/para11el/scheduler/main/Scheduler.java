@@ -8,7 +8,7 @@ import org.graphstream.graph.Graph;
 import java.io.IOException;
 
 public class Scheduler {
-    
+
     private static Graph _inGraph = null;
 
     private static String _filename = null;

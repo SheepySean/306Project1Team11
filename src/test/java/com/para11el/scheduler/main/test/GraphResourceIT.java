@@ -8,6 +8,8 @@ import com.para11el.scheduler.main.Scheduler;
 import org.graphstream.graph.Graph;
 import org.junit.*;
 
+import java.util.Arrays;
+
 /**
  * Simple JUnit test to test the behaviour of the Scheduler.
  *
@@ -74,15 +76,12 @@ public class GraphResourceIT {
     @Test
     public void testSchedulerRun() {
 	    try {
-            Scheduler.main(null);
+	        String[] someArgs = {"example.dot", "4"};
+            Scheduler.main(someArgs);
         } catch (Exception e) {
 	        e.printStackTrace();
 	        fail();
         }
     }
 
-    @Test
-    public void testSchedulerRunWithParams() {
-
-    }
 }
