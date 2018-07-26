@@ -53,11 +53,12 @@ public class Scheduler {
             _outputFilename = _filename.substring(0, _filename.lastIndexOf('.'))
                     + "-output" + GraphConstants.FILE_EXT.getValue();
         }
+
         try {
             fileManager.writeGraphFile(_outputFilename,
                     _inGraph, true);
         } catch(IOException e) {
-            System.out.println("Unable to write the graph to the file '" + _filename +
+            System.out.println("Unable to write the graph to the file '" + _outputFilename +
                     "'");
             return;
         }

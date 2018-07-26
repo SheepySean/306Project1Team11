@@ -2,7 +2,7 @@
 <img src="https://github.com/SheepySean/306Project1Team11/blob/master/img.png">
 </p>
 
-# 306 Project 1		|		Team 11		|		Para11el
+# 306 Project 1		|		Team 11		|		Para11el    |   [![Build Status](https://travis-ci.com/SheepySean/306Project1Team11.svg?token=uyPgVa62zwbc6MQzYwFa&branch=master)](https://travis-ci.com/SheepySean/306Project1Team11)
 
 
 **Using AI and parallel processing power to solve difficult scheduling problem**
