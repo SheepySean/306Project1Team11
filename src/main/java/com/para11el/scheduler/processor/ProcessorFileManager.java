@@ -2,6 +2,7 @@ package com.para11el.scheduler.processor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.graphstream.graph.Edge;
@@ -18,15 +19,18 @@ import org.graphstream.stream.file.FileSourceDOT;
  */
 public class ProcessorFileManager {
 	
-	private List<List<Node>> _paths = new ArrayList<List<Node>>();
+private HashMap<List<Node>, Double> _pathsWithCosts = new HashMap<List<Node>, Double>(); 
 	
 	private Graph _graph;
+	
+	private double _cost;
 	
 	public ProcessorFileManager(String filename, String graphID) throws IOException {
 		_graph = new SingleGraph(graphID);
 		FileSource fs = new FileSourceDOT();
 		fs.addSink(_graph);
 		fs.readAll(filename); // Read .dot file
+		_cost = 0;
 	}
 	
     /**
@@ -49,7 +53,7 @@ public class ProcessorFileManager {
      * @return List of paths
      * @author Jessica Alcantara, Holly Hagenson
      */
-	public List<List<Node>> calculateStateSpace() {
+	public HashMap<List<Node>, Double> calculateStateSpace() {
 		List<Node> roots = getRoots();
 		
 		// Find paths for each entry of a graph
@@ -59,7 +63,7 @@ public class ProcessorFileManager {
 			findPath(path, entry);
 		}
 
-		return _paths;
+		return _pathsWithCosts;
 	}
 	
     /**
@@ -67,9 +71,14 @@ public class ProcessorFileManager {
      * @author Jessica Alcantara, Holly Hagenson
      */
 	public void findPath(List<Node> path, Node node) {
-		// Add path to list at leaf node
+		// Add path to HashMap with total path cost at leaf node
 		if (node.getOutDegree() == 0) {
-			_paths.add(path);
+			// Find cost of path, assuming one processor
+			for (Node n : path){
+				_cost += (double)n.getAttribute("Weight");
+			}
+			_pathsWithCosts.put(path, _cost); 
+			_cost = 0; 
 		} else {
 			// Find all possible paths through each adjacent nodes
 			for (Edge e : node.getEachLeavingEdge()) {
