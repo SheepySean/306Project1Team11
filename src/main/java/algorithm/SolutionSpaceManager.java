@@ -48,7 +48,7 @@ public class SolutionSpaceManager {
 		
 		for (Node n : _graph.getNodeSet()) {
 			if (n.getInDegree() == 0) {
-				for (int i = 0; i < _processors; i++) {
+				for (int i = 1; i <= _processors; i++) {
 					
 					Task t = new Task(n, 0, _processors);
 					ArrayList<Task> _solutionPart = new ArrayList<Task>();
