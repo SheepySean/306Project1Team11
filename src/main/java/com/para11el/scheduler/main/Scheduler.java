@@ -17,7 +17,7 @@ public class Scheduler {
     private static int _scheduleProcessors = 0;
     private static int _numCores = 0;
     private static String _outputFilename = null;
-    private static boolean _visualisation = false;
+    private static boolean _visualise = false;
 
     /**
      * Entry point for the program
@@ -50,14 +50,15 @@ public class Scheduler {
         // For viewing the Graph
         GraphViewManager viewManager = new GraphViewManager(_inGraph);
         viewManager.labelGraph();
-        //viewManager.unlabelGraph();
 
+        if(_visualise) {
+            _inGraph.display();
+        }
         // Name the file if no specific output name was provided
         if(_outputFilename == null) {
             _outputFilename = _filename.substring(0, _filename.lastIndexOf('.'))
                     + "-output" + GraphConstants.FILE_EXT.getValue();
         }
-
         // Write the output file
         try {
             fileManager.writeGraphFile(_outputFilename,
@@ -77,9 +78,8 @@ public class Scheduler {
      */
     private static void readParameters(String[] params)
             throws ParameterLengthException, NumberFormatException {
-        int requiredParams =  Integer.parseInt(ParameterConstants.REQUIRED_PARAMS.getValue());
         // If the required parameters weren't specified
-        if(params.length < requiredParams) {
+        if(params.length < ParameterType.REQUIRED_PARAMS) {
             throw new ParameterLengthException();
         }
 
@@ -88,13 +88,17 @@ public class Scheduler {
         _scheduleProcessors = Integer.parseInt(params[1]);
 
         // Read the additional parameters if there are any
-        for(int i = requiredParams; i < params.length; i++) {
-            if(params[i].equals(ParameterConstants.PARALLISATION.getValue())) { // -p
-                _numCores = Integer.parseInt(params[i+1]);
-            } else if(params[i].equals(ParameterConstants.OUTPUT.getValue())) { // -o
-                _outputFilename = params[i+1];
-            } else if(params[i].equals(ParameterConstants.VISUALISATION.getValue())) { // -v
-                _visualisation = true;
+        for(int i = ParameterType.REQUIRED_PARAMS; i < params.length; i++) {
+            switch (params[i]) {
+                case ParameterType.PARRALISE:
+                    _numCores = Integer.parseInt(params[i + 1]);
+                    break;
+                case ParameterType.VISUALISE:
+                    _visualise = true;
+                    break;
+                case ParameterType.OUTPUT_FILE:
+                    _outputFilename = params[i + 1];
+                    break;
             }
         }
     }
