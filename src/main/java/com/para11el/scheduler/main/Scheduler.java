@@ -102,10 +102,8 @@ public class Scheduler {
 			case ParameterType.OUTPUT_FILE:
 				try {
 					_outputFilename = params[i + 1];
-					break;
-				} catch (ArrayIndexOutOfBoundsException e) {
-					
-				}
+				} catch (ArrayIndexOutOfBoundsException e) {}
+				break;
 			}
 		}
 	}
