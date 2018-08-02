@@ -32,8 +32,10 @@ public class SolutionSpaceManager {
 		
 		initialise();
 		
+		System.out.println(_allSolutions.size());
+		System.out.println("All solutions:");
 		for (List l : _allSolutions) {
-			System.out.println(l);
+			System.out.println("Solution:" + l);
 		}
 	}
 	
@@ -78,24 +80,37 @@ public class SolutionSpaceManager {
 	 *@author Rebekah Berriman and Tina Chen
 	 */
 	
-	private void buildRecursiveSolution(ArrayList<Task> solutionArrayList) {
+	private void buildRecursiveSolution(ArrayList<Task> solutionArrayList) {		
+		ArrayList<Task> privateSolutionArrayList = solutionArrayList;
 		ArrayList<Node> availableNodes = availableNode(solutionArrayList);
-		if (availableNodes.size() == 0 ) {
-			addSolution(solutionArrayList);
-			return;
-		}
 		
-		for (Node node : availableNodes) {
-			for (int i = 1; i <= _processors; i++) {
-				for(Task t : solutionArrayList) {
-					//System.out.println(t);
+		if (availableNodes.size() == 0 ) {
+			System.out.println("EMPTY");
+			addSolution(privateSolutionArrayList);
+			System.out.println("ADDED SOLUTION");
+			System.out.println(privateSolutionArrayList);
+			
+			
+		} else {
+		
+			System.out.println("Hello?");
+			System.out.println("OUTSIDE OF FOR IN buildRecursive");
+			for (Node node : availableNodes) {
+				for (int i = 1; i <= _processors; i++) {
+					System.out.println("Processor: " + i + " with node: " + node);
+				
+					int startTime = getStartTime(privateSolutionArrayList, node, i);
+					Task task = new Task(node, startTime, i);
+					System.out.println("New task: " + task);
+					privateSolutionArrayList.add(task);
+					
+					System.out.println("About to pass in: " + privateSolutionArrayList);
+					
+					buildRecursiveSolution(privateSolutionArrayList);
+					//TO TESSST
+					//addSolution(solutionArrayList);
+				
 				}
-				int startTime = getStartTime(solutionArrayList, node, i);
-				Task task = new Task(node, startTime, i);
-				solutionArrayList.add(task);
-				
-				buildRecursiveSolution(solutionArrayList);
-				
 			}
 		}
 		
