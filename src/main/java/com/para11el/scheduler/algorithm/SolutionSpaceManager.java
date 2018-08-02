@@ -101,29 +101,6 @@ public class SolutionSpaceManager {
 		
 	}
 	
-	private void buildRecursiveSolution2(ArrayList<Task> solutionArrayList) {
-		ArrayList<Node> availableNodes = availableNode(solutionArrayList);
-		if (availableNodes.size() == 0 ) {
-			addSolution(solutionArrayList);
-			return;
-		}
-		
-		for (Node node : availableNodes) {
-			for (int i = 1; i <= _processors; i++) {
-				int startTime = getStartTime(solutionArrayList, node, i);
-				Task task = new Task(node, startTime, i);
-				solutionArrayList.add(task);
-				
-				//buildRecursiveSolution(solutionArrayList);
-				
-				
-				//TO TEST LOL
-				addSolution(solutionArrayList);
-			}
-		}
-		
-	}
-	
 	/**
 	 * Returns the earliest start time of the node on the processor
 	 * @param solutionArrayList of the scheduled tasks
