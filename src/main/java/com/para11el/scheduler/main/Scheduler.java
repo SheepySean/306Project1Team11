@@ -1,5 +1,6 @@
 package com.para11el.scheduler.main;
 
+import com.para11el.scheduler.algorithm.SolutionSpaceManager;
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;

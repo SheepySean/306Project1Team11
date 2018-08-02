@@ -1,8 +1,10 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
@@ -50,7 +52,7 @@ public class SolutionSpaceManager {
 			if (n.getInDegree() == 0) {
 				for (int i = 1; i <= _processors; i++) {
 					
-					Task t = new Task(n, 0, _processors);
+					Task t = new Task(n, 0, i);
 					ArrayList<Task> _solutionPart = new ArrayList<Task>();
 					_solutionPart.add(t);
 					buildRecursiveSolution(_solutionPart);
@@ -67,6 +69,24 @@ public class SolutionSpaceManager {
 	
 	private void buildRecursiveSolution(ArrayList<Task> s) {
 		
+	}
+	
+	
+	/**
+	 * Returns an ArrayList<Node> of the parents nodes a node has
+	 * @param n = the node to find parents of
+	 * 
+	 * @author Tina Chen 
+	 */
+	private ArrayList<Node> getParents(Node n) {
+		
+		ArrayList<Node> _parents = new ArrayList<Node>();
+		Iterator<Edge> i = n.getEnteringEdgeIterator();
+		
+		while (i.hasNext()) {
+			_parents.add(i.next().getSourceNode());
+		}
+		return _parents;
 	}
 	
 	
