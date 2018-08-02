@@ -18,10 +18,10 @@ public class Task {
 	private int _startTime;
 	private int _processor;
 	
-	public Task(Node n, int t, int p) {
-		_node = n;
-		_startTime = t;
-		_processor = p;
+	public Task(Node node, int startTime, int processor) {
+		_node = node;
+		_startTime = startTime;
+		_processor = processor;
 	}
 
 	public Node get_node() {
