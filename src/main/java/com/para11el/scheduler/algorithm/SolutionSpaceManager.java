@@ -29,6 +29,12 @@ public class SolutionSpaceManager {
 		_graph = graph;
 		_processors = processor;
 		_cores = 1;
+		
+		initialise();
+		
+		for (List l : _allSolutions) {
+			System.out.println(l);
+		}
 	}
 	
 	/**
@@ -56,6 +62,7 @@ public class SolutionSpaceManager {
 			if (node.getInDegree() == 0) {
 				for (int i = 1; i <= _processors; i++) {
 					Task t = new Task(node, 0, i);
+					//System.out.println(t);
 					ArrayList<Task> _solutionPart = new ArrayList<Task>();
 					_solutionPart.add(t);
 					buildRecursiveSolution(_solutionPart);
@@ -73,7 +80,30 @@ public class SolutionSpaceManager {
 	
 	private void buildRecursiveSolution(ArrayList<Task> solutionArrayList) {
 		ArrayList<Node> availableNodes = availableNode(solutionArrayList);
-		if (availableNodes.size() == 0) {
+		if (availableNodes.size() == 0 ) {
+			addSolution(solutionArrayList);
+			return;
+		}
+		
+		for (Node node : availableNodes) {
+			for (int i = 1; i <= _processors; i++) {
+				for(Task t : solutionArrayList) {
+					//System.out.println(t);
+				}
+				int startTime = getStartTime(solutionArrayList, node, i);
+				Task task = new Task(node, startTime, i);
+				solutionArrayList.add(task);
+				
+				buildRecursiveSolution(solutionArrayList);
+				
+			}
+		}
+		
+	}
+	
+	private void buildRecursiveSolution2(ArrayList<Task> solutionArrayList) {
+		ArrayList<Node> availableNodes = availableNode(solutionArrayList);
+		if (availableNodes.size() == 0 ) {
 			addSolution(solutionArrayList);
 			return;
 		}
@@ -83,7 +113,12 @@ public class SolutionSpaceManager {
 				int startTime = getStartTime(solutionArrayList, node, i);
 				Task task = new Task(node, startTime, i);
 				solutionArrayList.add(task);
-				buildRecursiveSolution(solutionArrayList);
+				
+				//buildRecursiveSolution(solutionArrayList);
+				
+				
+				//TO TEST LOL
+				addSolution(solutionArrayList);
 			}
 		}
 		
@@ -104,11 +139,18 @@ public class SolutionSpaceManager {
 		
 		if (getParents(node).size() != 0) {
 			for (Node parents : getParents(node)) {
-				Task t = solutionArrayList.get(solutionArrayList.indexOf(node));
+				Task t = findNode(parents, solutionArrayList);
+				
+				//System.out.println(t);
+				
+				double nodeWeightDouble = t.get_node().getAttribute("Weight");
+				int nodeWeightInt = (int)nodeWeightDouble;
 				if (t.get_processor() == processor) {
-					possibleTime = t.get_startTime() + Integer.parseInt((t.get_node()).getAttribute("Weight"));
+					possibleTime = t.get_startTime() + nodeWeightInt;
 				} else {
-					possibleTime = t.get_startTime() + Integer.parseInt((t.get_node()).getAttribute("Weight")) + Integer.parseInt((t.get_node()).getEdgeFrom(parents).getAttribute("Weight"));
+					double edgeWeightDouble = t.get_node().getEdgeFrom(parents).getAttribute("Weight");
+					int edgeWeightInt = (int)edgeWeightDouble;
+					possibleTime = t.get_startTime() + nodeWeightInt + edgeWeightInt;
 				}
 				
 				if (startTime < possibleTime) {
@@ -127,6 +169,18 @@ public class SolutionSpaceManager {
 		
 	}
 	
+	private Task findNode(Node node, ArrayList<Task> currentTasks) {
+		
+		for (Task t : currentTasks) {
+			if (t.get_node().equals(node)) {
+				return t;
+			}
+		}
+		
+		return null;
+		
+	}
+	
 	/**
 	 * Returns an int of the finishTime of the last task on the processor
 	 * @param s currently scheduled tasks
@@ -141,7 +195,9 @@ public class SolutionSpaceManager {
 		
 		for (Task t : s) {
 			if (t.get_processor() == p) {
-				possibleTime = t.get_startTime() + Integer.parseInt((t.get_node()).getAttribute("Weight"));
+				double nodeWeightDouble = t.get_node().getAttribute("Weight");
+				int nodeWeightInt = (int)nodeWeightDouble;
+				possibleTime = t.get_startTime() + nodeWeightInt;
 				if (finishTime < possibleTime) {
 					finishTime = possibleTime;
 				}
@@ -175,20 +231,28 @@ public class SolutionSpaceManager {
 	 * 
 	 * @author Rebekah Berriman and Tina Chen
 	 */
-	private ArrayList<Node>  availableNode(ArrayList<Task> scheduledNodes) {
-		ArrayList<Task> _scheduledNodes =  scheduledNodes;
+	private ArrayList<Node>  availableNode(ArrayList<Task> scheduledTasks) {
+		ArrayList<Node> scheduledNodes =  new ArrayList<Node>();
 		ArrayList<Node> _available = new ArrayList<Node>();
+		
+		for (Task t : scheduledTasks) {
+			scheduledNodes.add(t.get_node());
+		}
 		
 		
 		for (Node node : _graph.getNodeSet()) {
-			if (!_scheduledNodes.contains(node)) { //if Node is not already scheduled
+			if (!scheduledNodes.contains(node)) { //if Node is not already scheduled
+				//System.out.println("Entered on node: " + node);
 				ArrayList<Node> _parents = getParents(node);
 				if (_parents.size() == 0) { //Node has no parents so can be scheduled
+					//System.out.println("Node has no parent:" + node);
 					_available.add(node);
 				} else {
+					//System.out.println("Has parents:" + node);
 					boolean availableNode = true;
 					for (Node parentNode : _parents) {
-						if (!_scheduledNodes.contains(parentNode)) { //if schedule
+						if (!scheduledNodes.contains(parentNode)) { //if schedule
+							//System.out.println("Node: " + node + " has parent: " + parentNode);
 							availableNode = false;
 						}
 					}
@@ -199,6 +263,10 @@ public class SolutionSpaceManager {
 			}
 		}
 		
+		//System.out.println("Print available nodes:");
+		for (Node n : _available) {
+			//System.out.println(n.getId());
+		}
 		return _available;
 		
 	}

@@ -1,5 +1,6 @@
 package com.para11el.scheduler.main;
 
+import com.para11el.scheduler.algorithm.SolutionSpaceManager;
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
@@ -49,6 +50,8 @@ public class Scheduler {
 					"'");
 			return;
 		}
+		
+		SolutionSpaceManager s = new SolutionSpaceManager(_inGraph, 1);
 
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
