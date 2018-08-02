@@ -8,6 +8,11 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
+/**
+ * DFS Recursive Algorithm to find the solution 
+ * @author Rebekah Berriman and Tina Chen
+ *
+ */
 public class SolutionSpaceManager {
 	
 	private Graph _graph;
@@ -15,7 +20,7 @@ public class SolutionSpaceManager {
 	private int _cores;
 	
 	private ArrayList<Task> _solution = new ArrayList<Task>();
-	private List<List<Task>> _allSolutions = new ArrayList<List<Task>>();
+	private static ArrayList<ArrayList<Task>> _allSolutions = new ArrayList<ArrayList<Task>>();
 	
 	/**
 	 * Constructor for SolutionSpaceManager if user does not specify number
@@ -32,11 +37,8 @@ public class SolutionSpaceManager {
 		
 		initialise();
 		
-		System.out.println(_allSolutions.size());
-		System.out.println("All solutions:");
-		for (List l : _allSolutions) {
-			System.out.println("Solution:" + l);
-		}
+		System.out.println("Solution: " + getOptimal());
+		
 	}
 	
 	/**
@@ -67,6 +69,7 @@ public class SolutionSpaceManager {
 					//System.out.println(t);
 					ArrayList<Task> _solutionPart = new ArrayList<Task>();
 					_solutionPart.add(t);
+					System.out.println("Top of the list!!");
 					buildRecursiveSolution(_solutionPart);
 					
 				}
@@ -79,42 +82,25 @@ public class SolutionSpaceManager {
 	 *
 	 *@author Rebekah Berriman and Tina Chen
 	 */
-	
-	private void buildRecursiveSolution(ArrayList<Task> solutionArrayList) {		
+	private ArrayList<Task> buildRecursiveSolution(ArrayList<Task> solutionArrayList) {		
 		ArrayList<Task> privateSolutionArrayList = solutionArrayList;
-		ArrayList<Node> availableNodes = availableNode(solutionArrayList);
-		
-		if (availableNodes.size() == 0 ) {
-			System.out.println("EMPTY");
-			addSolution(privateSolutionArrayList);
-			System.out.println("ADDED SOLUTION");
-			System.out.println(privateSolutionArrayList);
-			
-			
-		} else {
-		
-			System.out.println("Hello?");
-			System.out.println("OUTSIDE OF FOR IN buildRecursive");
+		ArrayList<Node> availableNodes = availableNode(privateSolutionArrayList);	
+		if (availableNodes.size() != 0 ) {
 			for (Node node : availableNodes) {
 				for (int i = 1; i <= _processors; i++) {
-					System.out.println("Processor: " + i + " with node: " + node);
-				
 					int startTime = getStartTime(privateSolutionArrayList, node, i);
 					Task task = new Task(node, startTime, i);
-					System.out.println("New task: " + task);
-					privateSolutionArrayList.add(task);
-					
-					System.out.println("About to pass in: " + privateSolutionArrayList);
-					
-					buildRecursiveSolution(privateSolutionArrayList);
-					//TO TESSST
-					//addSolution(solutionArrayList);
-				
+					privateSolutionArrayList.add(task);					
+					ArrayList<Task> newSolution = buildRecursiveSolution(privateSolutionArrayList);
+					addSolution(newSolution);					
 				}
 			}
-		}
-		
+			return null;
+		} 		
+		System.out.println("Return the full array: " + privateSolutionArrayList);
+		return privateSolutionArrayList;	
 	}
+	
 	
 	/**
 	 * Returns the earliest start time of the node on the processor
@@ -161,6 +147,14 @@ public class SolutionSpaceManager {
 		
 	}
 	
+	/**
+	 * Find the node
+	 * @param node
+	 * @param currentTasks
+	 * @return
+	 * 
+	 * @author Sean Oldfield and Rebekah Berriman
+	 */
 	private Task findNode(Node node, ArrayList<Task> currentTasks) {
 		
 		for (Task t : currentTasks) {
@@ -217,7 +211,7 @@ public class SolutionSpaceManager {
 	}
 	
 	/**
-	 * 
+	 * Find the available nodes that can be scheduled.
 	 * @param scheduledNodes
 	 * @return ArrayList of available nodes
 	 * 
@@ -270,18 +264,51 @@ public class SolutionSpaceManager {
 	 * 
 	 * @author Rebekah Berriman, Tina Chen
 	 */
-	private void addSolution(ArrayList<Task> solution) {
-		_allSolutions.add(solution);
+	private static void addSolution(ArrayList<Task> solution) {
+		if (solution != null) {
+			_allSolutions.add(solution);
+		}
+		
 	}
 	
-	// get start time of last task in list IN EACH PROCESSOR and then add task time to find smallest
 	/**
-	 * Returns the full task schedule solution with the shorted completion time
+	 * Returns a full task schedule solution with the shorted completion time
 	 * @return an ArrayList<Task> of the optimal solution
 	 * 
-	 * @author 
+	 * @author Rebekah Berriman
 	 */
-	private ArrayList<Task> getOptimal() {
+	public ArrayList<Task> getOptimal() {
+		int minimumTime=0;
+		
+		for (int i=0; i<_allSolutions.size(); i++) {
+			int solutionTime = 0;
+			for (int j=0; j <= _processors; j++) {
+				int possibleSolutionTime = getProcessorFinishTime(_allSolutions.get(i), j);
+				if (solutionTime < possibleSolutionTime) {
+					solutionTime = possibleSolutionTime;
+				}
+			}
+			if (minimumTime == 0 || minimumTime > solutionTime ) {
+				_solution = _allSolutions.get(i);
+			}
+		}
 		return _solution;
+	}
+	
+	/**
+	 * Labels the output graph with the startTime and processor numbers of each of the nodes for the optimal solution
+	 * @param optimalSolution
+	 * @return Graph with labels
+	 * 
+	 * @author Rebekah Berriman
+	 */
+	public Graph labelGraph(ArrayList<Task> optimalSolution) {
+		for (Task t : optimalSolution) {
+			Node node = t.get_node();
+			node.addAttribute("Start Time", t.get_startTime());
+			node.addAttribute("Processor", t.get_processor());
+		}
+		return _graph;
+		
 	}
 }

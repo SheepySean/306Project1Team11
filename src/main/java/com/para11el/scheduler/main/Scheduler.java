@@ -1,11 +1,13 @@
 package com.para11el.scheduler.main;
 
 import com.para11el.scheduler.algorithm.SolutionSpaceManager;
+import com.para11el.scheduler.algorithm.Task;
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
 import org.graphstream.graph.Graph;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Main runner class of the program
@@ -51,7 +53,11 @@ public class Scheduler {
 			return;
 		}
 		
+		//THIS IS JUST FOR TESTING JUST FOR NOWS - WILL SPLIT INTO SEPARATE THINGS!!
+		//Create the SolutionSpace
 		SolutionSpaceManager s = new SolutionSpaceManager(_inGraph, 1);
+		ArrayList<Task> optimalSolution = s.getOptimal(); // getOptimal solution
+		Graph newGraph = s.labelGraph(optimalSolution); //create a new graph with optimal
 
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
@@ -68,7 +74,7 @@ public class Scheduler {
 		// Write the output file
 		try {
 			fileManager.writeGraphFile(_outputFilename,
-					_inGraph, true);
+					newGraph, true);
 		} catch(IOException e) {
 			System.out.println("Unable to write the graph to the file '" + _filename +
 					"'");
