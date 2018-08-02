@@ -74,6 +74,9 @@ public class GraphResourceIT {
         }
     }
 
+    /**
+     * Ensure the program runs as expected
+     */
     @Test
     public void testSchedulerRun() {
 	    try {
@@ -85,5 +88,5 @@ public class GraphResourceIT {
 	        fail();
         }
     }
-
 }
+
