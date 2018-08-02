@@ -2,8 +2,6 @@ package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -37,9 +35,6 @@ public class SolutionSpaceManager {
 		
 		initialise();
 		getOptimal();
-		
-		//System.out.println(_allSolutions);
-		//System.out.println(_solution);
 		
 	}
 	
@@ -83,7 +78,7 @@ public class SolutionSpaceManager {
 	 *@author Rebekah Berriman and Tina Chen
 	 */
 	private ArrayList<Task> buildRecursiveSolution(ArrayList<Task> solutionArrayList) {		
-		ArrayList<Task> privateSolutionArrayList = solutionArrayList;
+		ArrayList<Task> privateSolutionArrayList = (ArrayList<Task>) solutionArrayList.clone();
 		ArrayList<Node> availableNodes = availableNode(solutionArrayList);	
 		if (availableNodes.size() != 0 ) {
 			for (Node node : availableNodes) {
@@ -123,7 +118,7 @@ public class SolutionSpaceManager {
 				if (task.get_processor() == processor) {
 					possibleTime = task.get_startTime() + nodeWeightInt;
 				} else {
-					double edgeWeightDouble = task.get_node().getEdgeFrom(parents).getAttribute("Weight");
+					double edgeWeightDouble = task.get_node().getEdgeToward(node).getAttribute("Weight");
 					int edgeWeightInt = (int)edgeWeightDouble;
 					possibleTime = task.get_startTime() + nodeWeightInt + edgeWeightInt;
 				}
@@ -131,8 +126,7 @@ public class SolutionSpaceManager {
 				if (startTime < possibleTime) {
 					startTime = possibleTime;
 				}
-			}
-				
+			}		
 		}
 		
 		possibleTime = getProcessorFinishTime(solutionArrayList, processor);
