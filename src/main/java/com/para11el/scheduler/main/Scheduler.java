@@ -5,6 +5,8 @@ import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
 import org.graphstream.graph.Graph;
+import org.graphstream.ui.fx_viewer.FxViewer;
+
 import java.io.IOException;
 
 /**
@@ -25,6 +27,8 @@ public class Scheduler {
 	 * @param args Command line arguments
 	 */
 	public static void main(String[] args) {
+        // Set the Graph to be viewed with JavaFx
+        System.setProperty("org.graphstream.ui", "javafx");
 		// Read the parameters provided on the command line
 		try {
 			Scheduler.readParameters(args);
@@ -54,10 +58,9 @@ public class Scheduler {
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
 		viewManager.labelGraph();
-
 		if(_visualise) {
-			_inGraph.display();
-		}
+            _inGraph.display();
+        }
 		// Name the file if no specific output name was provided
 		if(_outputFilename == null) {
 			_outputFilename = _filename.substring(0, _filename.lastIndexOf('.'))
