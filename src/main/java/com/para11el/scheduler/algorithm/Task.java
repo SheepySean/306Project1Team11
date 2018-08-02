@@ -47,5 +47,21 @@ public class Task {
 	public void set_processor(int _processor) {
 		this._processor = _processor;
 	}
+	
+	// for testing, can probably delete later -T
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("Node:  "); 
+		buffer.append(_node);
+		buffer.append(", Start Time: ");
+		buffer.append(_startTime);
+		buffer.append(", Processor: ");
+		buffer.append(_processor);
+		
+		return buffer.toString();
+	}
+	
+	
 }
 
