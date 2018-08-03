@@ -54,11 +54,11 @@ public class Scheduler {
 		}
 		
 		//Create the SolutionSpace
-		SolutionSpaceManager s = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
-		s.initialise();
-		ArrayList<Task> optimalSolution = s.getOptimal(); // getOptimal solution
+		SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
+		solutionSpaceManager.initialise();
+		ArrayList<Task> optimalSolution = solutionSpaceManager.getOptimal(); // getOptimal solution
 
-		Graph newGraph = s.getGraph();
+		Graph newGraph = solutionSpaceManager.getGraph();
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
