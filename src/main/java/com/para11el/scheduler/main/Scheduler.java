@@ -53,11 +53,11 @@ public class Scheduler {
 			return;
 		}
 		
-		//THIS IS JUST FOR TESTING JUST FOR NOWS - WILL SPLIT INTO SEPARATE THINGS!!
 		//Create the SolutionSpace
 		SolutionSpaceManager s = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
-		//ArrayList<Task> optimalSolution = s.getOptimal(); // getOptimal solution
-		//Graph newGraph = s.labelGraph(optimalSolution); //create a new graph with optimal
+		s.initialise();
+		ArrayList<Task> optimalSolution = s.getOptimal(); // getOptimal solution
+
 		Graph newGraph = s.getGraph();
 		
 		// For viewing the Graph

@@ -3,21 +3,25 @@ package com.para11el.scheduler.algorithm;
 import org.graphstream.graph.Node;
 
 /**
- * Task class to represent an object Task with parameters:
- * @param _node = a task in the input graph
- * @param _startTime = the start time of the task in scheduled processor
- * @param _processor = the scheduled processor
- * 
+ * Task class to represent an object Task
+ *
  * @author Tina Chen, Rebekah Berriman
- * 
  */
-
 public class Task {
 	
 	private Node _node;
 	private int _startTime;
 	private int _processor;
 	
+	/**
+	 * Task constructor
+	 * 
+	 * @param node a task in input graph
+	 * @param startTime the start time of a scheduled task
+	 * @param processor the processor a task is scheduled on
+	 * 
+	 * @author Tina Chen, Rebekah Berriman
+	 */
 	public Task(Node node, int startTime, int processor) {
 		_node = node;
 		_startTime = startTime;
@@ -48,7 +52,11 @@ public class Task {
 		this._processor = _processor;
 	}
 	
-	// for testing, can probably delete later -T
+	/**
+	 * Returns a string representation of a Task object
+	 * 
+	 * @author Tina Chen
+	 */
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
@@ -61,7 +69,5 @@ public class Task {
 		
 		return buffer.toString();
 	}
-	
-	
 }
 

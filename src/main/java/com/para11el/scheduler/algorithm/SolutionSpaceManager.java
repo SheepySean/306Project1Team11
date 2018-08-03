@@ -8,8 +8,8 @@ import org.graphstream.graph.Node;
 
 /**
  * DFS Recursive Algorithm to find the solution 
- * @author Rebekah Berriman and Tina Chen
- *
+ * 
+ * @author Rebekah Berriman, Tina Chen
  */
 public class SolutionSpaceManager {
 
@@ -23,8 +23,8 @@ public class SolutionSpaceManager {
 	/**
 	 * Constructor for SolutionSpaceManager if user does not specify number
 	 * of cores for execution in parallel
-	 * @param g = input graph
-	 * @param p = number of processors
+	 * @param g input graph
+	 * @param p number of processors
 	 * 
 	 * @author Tina Chen, Rebekah Berriman
 	 */
@@ -32,23 +32,14 @@ public class SolutionSpaceManager {
 		_graph = graph;
 		_processors = processor;
 		_cores = 1;
-
-		initialise();
-		getOptimal();
-		for (int i = 0; i < _allSolutions.size(); i++) {
-			System.out.println(_allSolutions.get(i));
-		}
-		
-		System.out.println("THIS IS OPTIMAL: " + _solution );
-
 	}
 
 	/**
 	 * Constructor for SolutionSpaceManager if user specifies number
 	 * of cores for execution in parallel
-	 * @param g = input graph
-	 * @param p = number of processors
-	 * @param c = number of cores
+	 * @param g input graph
+	 * @param p number of processors
+	 * @param c number of cores
 	 * 
 	 * @author Tina Chen, Rebekah Berriman
 	 */
@@ -59,125 +50,56 @@ public class SolutionSpaceManager {
 	}
 
 	/**
-	 * Finds the solution
-	 * @author Rebekah Berriman and Tina Chen
+	 * Initialises the root nodes in a schedule for each available processor
+	 * and begins the recursive buildRecursiveSolution() call
+	 * 
+	 * @author Rebekah Berriman, Tina Chen
 	 */
-	private void initialise() {
-		
-		System.out.println("number of processors!!!!!: " + _processors);
+	public void initialise() {
 
 		for (Node node : _graph.getNodeSet()) {
 			if (node.getInDegree() == 0) {
 				for (int i = 1; i <= _processors; i++) {
-					System.out.println("process");
 					Task t = new Task(node, 0, i);
 					ArrayList<Task> _solutionPart = new ArrayList<Task>();
 					_solutionPart.add(t);
 					buildRecursiveSolution(_solutionPart);
-
 				}
 			}
 		}
 	}
-
+	
 	/**
-	 * PURPOSE: at each recursion, add new node as early as possible on each processor
+	 * Recursively builds a potential schedule to the total solution schedule 
+	 * ArrayList<ArrayList<Task>> using a DFS approach
+	 * 
+	 * @param solutionArrayList of the current scheduled nodes
 	 *
-	 *@author Rebekah Berriman and Tina Chen
-	 */
-	private ArrayList<Task> buildRecursiveSolutionOG(ArrayList<Task> solutionArrayList) {		
-		ArrayList<Task> privateSolutionArrayList = (ArrayList<Task>) solutionArrayList.clone();
-		ArrayList<Node> availableNodes = availableNode(solutionArrayList);	
-		if (availableNodes.size() != 0 ) {
-			System.out.println("hi");
-			System.out.println(availableNodes); //[b,c] 
-			for (Node node : availableNodes) { // [b]
-				System.out.println("this is node: " + node);
-				for (int i = 1; i <= _processors; i++) {
-					System.out.println("this is processor: " + _processors);
-					int startTime = getStartTime(privateSolutionArrayList, node, i);
-					Task task = new Task(node, startTime, i);
-					privateSolutionArrayList.add(task);			
-					System.out.println("this is proviate solution arry: " + privateSolutionArrayList);
-					ArrayList<Task> newSolution = buildRecursiveSolutionOG(privateSolutionArrayList);
-					addSolution(newSolution);					
-				}
-			}
-			return null;
-		}
-		System.out.println("---------");
-		System.out.println("returned");
-		System.out.println("---------");
-		return privateSolutionArrayList;	
-	}
-
-	/**
-	 * PURPOSE: at each recursion, add new node as early as possible on each processor
-	 *
-	 *@author Rebekah Berriman and Tina Chen
+	 * @author Rebekah Berriman, Tina Chen
 	 */
 	private void buildRecursiveSolution(ArrayList<Task> solutionArrayList) {		
 
-		/*
-		 * we are passing in a solution arraylist
-		 */
-
+		// Finding available nodes to add
 		ArrayList<Node> availableNodes = availableNode(solutionArrayList);
-
 		ArrayList<Task> privateSolutionArrayList = (ArrayList<Task>) solutionArrayList.clone();
-		
-		System.out.println("num of processors : " + _processors);
-
 
 		if (availableNodes.size() != 0) {
-
-			System.out.println("num of avail nodes: " + availableNodes.size());
 			for (Node node : availableNodes) {
-
+				// For each available processor add available node to possible schedule
 				for (int i = 1; i <= _processors; i++) {
-					privateSolutionArrayList = (ArrayList<Task>) solutionArrayList.clone();
-
-					System.out.println("this is node: " + node);
+					privateSolutionArrayList = (ArrayList<Task>) solutionArrayList.clone();		
 					int startTime = getStartTime(privateSolutionArrayList, node, i);
 					Task task = new Task(node, startTime, i);
 					privateSolutionArrayList.add(task);			
 					buildRecursiveSolution(privateSolutionArrayList);	
 				}
-
 			}
 		} else {
-			System.out.println("hi");
+			// If no more available nodes, add the possible solution schedule to full solution space
 			if (privateSolutionArrayList.size() == _graph.getNodeCount()) {
 				addSolution(privateSolutionArrayList);
 			}
 		}
-
-		//		ArrayList<Task> privateSolutionArrayList = (ArrayList<Task>) solutionArrayList.clone();
-		//		ArrayList<Node> availableNodes = availableNode(solutionArrayList);	
-		//		if (availableNodes.size() != 0 ) {
-		//			System.out.println("hi");
-		//			System.out.println(availableNodes); //[b,c] 
-		//			for (Node node : availableNodes) { // [b]
-		//				System.out.println("this is node: " + node);
-		//				for (int i = 1; i <= _processors; i++) {
-		//					System.out.println("this is processor: " + _processors);
-		//					int startTime = getStartTime(privateSolutionArrayList, node, i);
-		//					Task task = new Task(node, startTime, i);
-		//					privateSolutionArrayList.add(task);			
-		//					System.out.println("this is proviate solution arry: " + privateSolutionArrayList);
-		//					ArrayList<Task> newSolution = buildRecursiveSolution(privateSolutionArrayList);
-		//					addSolution(newSolution);					
-		//				}
-		//			}
-		//			return null;
-		//		}
-		//		System.out.println("---------");
-		//		System.out.println("returned");
-		//		System.out.println("---------");
-		//		return privateSolutionArrayList;	
-
-
-
 	}
 
 
@@ -218,9 +140,7 @@ public class SolutionSpaceManager {
 		if (startTime < possibleTime ) {
 			startTime = possibleTime;
 		}
-
 		return startTime;
-
 	}
 
 	/**
@@ -229,7 +149,7 @@ public class SolutionSpaceManager {
 	 * @param currentTasks 
 	 * @return Task object node
 	 * 
-	 * @author Sean Oldfield and Rebekah Berriman
+	 * @author Sean Oldfield, Rebekah Berriman
 	 */
 	private Task findNode(Node node, ArrayList<Task> currentTasks) {
 
@@ -238,9 +158,7 @@ public class SolutionSpaceManager {
 				return task;
 			}
 		}
-
 		return null;
-
 	}
 
 	/**
@@ -265,7 +183,6 @@ public class SolutionSpaceManager {
 				}
 			}	
 		}
-
 		return finishTime;
 	}
 
@@ -302,14 +219,14 @@ public class SolutionSpaceManager {
 		}
 
 		for (Node node : _graph.getNodeSet()) {
-			if (!scheduledNodes.contains(node)) { //if Node is not already scheduled
+			if (!scheduledNodes.contains(node)) { // If Node is not already scheduled
 				ArrayList<Node> _parents = getParents(node);
-				if (_parents.size() == 0) { //Node has no parents so can be scheduled
+				if (_parents.size() == 0) { // Node has no parents so can be scheduled
 					_available.add(node);
 				} else {
 					boolean availableNode = true;
 					for (Node parentNode : _parents) {
-						if (!scheduledNodes.contains(parentNode)) { //if the schedule does not contain a parent node of the node, set availableNode to false
+						if (!scheduledNodes.contains(parentNode)) { // If the schedule does not contain a parent node of the node, set availableNode to false
 							availableNode = false;
 						}
 					}
@@ -319,10 +236,8 @@ public class SolutionSpaceManager {
 				}
 			}
 		}
-
 		return _available;	
 	}
-
 
 	/**
 	 * Adds a solution to the solution list
@@ -335,7 +250,6 @@ public class SolutionSpaceManager {
 			ArrayList<Task> newSolution = (ArrayList<Task>) solution.clone();
 			_allSolutions.add(newSolution);
 		}
-
 	}
 
 	/**
@@ -345,31 +259,29 @@ public class SolutionSpaceManager {
 	 * 
 	 * @author Rebekah Berriman
 	 */
-	private void getOptimal() {
+	public ArrayList<Task> getOptimal() {
 		int minimumTime=0;
 
 		for (int possibleSolution=0; possibleSolution<_allSolutions.size(); possibleSolution++) {
-			//Set the finish time of this solution
+			// Set the finish time of this solution
 			int solutionTime = 0; 
 			for (int processor=0; processor <= _processors; processor++) {
 				int possibleSolutionTime = getProcessorFinishTime(_allSolutions.get(possibleSolution), processor);
-				//if the finishTime of one processor is later than another, update the finish time of the task
+				// If the finishTime of one processor is later than another, update the finish time of the task
 				if (solutionTime < possibleSolutionTime) {
 					solutionTime = possibleSolutionTime;
 				}
 			}
 
-			//if the minimum run time is still zero, or the solution time is less than the minimal time, update it
+			// If the minimum run time is still zero, or the solution time is less than the minimal time, update it
 			if (minimumTime == 0 || minimumTime > solutionTime ) {
 				minimumTime = solutionTime;
 				_solution = _allSolutions.get(possibleSolution);
 			}
-
-			//System.out.println("Optimal solution: " + _solution);
 		}
-
-		//Call labelGraph() to label the nodes of the graph with the start time and processor of the optimal solution
+		// Call labelGraph() to label the nodes of the graph with the start time and processor of the optimal solution
 		labelGraph();
+		return _solution;
 	}
 
 	/**
@@ -384,7 +296,6 @@ public class SolutionSpaceManager {
 			node.addAttribute("Start Time", task.get_startTime());
 			node.addAttribute("Processor", task.get_processor());
 		}
-
 	}
 
 	/**
