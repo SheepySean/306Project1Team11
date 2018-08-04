@@ -2,10 +2,8 @@ package com.para11el.scheduler.graph;
 
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
-import org.graphstream.stream.file.FileSink;
-import org.graphstream.stream.file.FileSinkDOT;
-import org.graphstream.stream.file.FileSource;
-import org.graphstream.stream.file.FileSourceDOT;
+import org.graphstream.stream.file.*;
+
 import java.io.IOException;
 
 /**
@@ -42,12 +40,12 @@ public class GraphFileManager {
      * Write a specified graph to an output .dot file
      * @param filename Name of the output file
      * @param graph The graph to be written to the output file
-     * @param isDigraph True if the graph is a digraph, false otherwise
+     * @param isDigraph True if the graph is a _digraph, false otherwise
      * @throws IOException Thrown if the graph file cannot be written
      * @author Sean Oldfield
      */
     public void writeGraphFile(String filename, Graph graph, boolean isDigraph) throws IOException {
-        FileSink fso = new FileSinkDOT(isDigraph);
+        CustomFileSinkDot fso = new CustomFileSinkDot(true, graph.getId());
         fso.writeAll(graph, filename); // Write to .dot file
     }
 }

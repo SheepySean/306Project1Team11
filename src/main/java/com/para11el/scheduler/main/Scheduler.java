@@ -1,13 +1,18 @@
 package com.para11el.scheduler.main;
 
+
 import com.para11el.scheduler.algorithm.SolutionSpaceManager;
 import com.para11el.scheduler.algorithm.Task;
+
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
 import org.graphstream.graph.Graph;
+import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.nio.file.Paths;
+
 
 /**
  * Main runner class of the program
@@ -27,9 +32,11 @@ public class Scheduler {
 	 * @param args Command line arguments
 	 */
 	public static void main(String[] args) {
+        // Set the Graph to be viewed with JavaFx
+        System.setProperty("org.graphstream.ui", "javafx");
 		// Read the parameters provided on the command line
 		try {
-			Scheduler.readParameters(args);
+            readParameters(args);
 		} catch (ParameterLengthException e) {
 			System.out.println("At least 2 parameters required");
 			return; // Exit
@@ -42,14 +49,18 @@ public class Scheduler {
 			return;
 		}
 
+		// Get just the name of the graph file, removing dir paths and extensions
+		String trueFileName = removeFileExt(Paths.get(_filename).getFileName().toString());
+		// Name the graph "outputFilename"
+		String graphName = "output" + StringUtils.capitalize(trueFileName);
+
 		// Read the supplied graph file in
 		GraphFileManager fileManager = new GraphFileManager();
 		try {
 			_inGraph = fileManager.readGraphFile(_filename,
-					"Example Graph");
+					graphName);
 		} catch(IOException e) {
-			System.out.println("Cannot find the specified input file '" + _filename +
-					"'");
+			System.out.println("Cannot find the specified input file '" + _filename + "'");
 			return;
 		}
 		
@@ -63,13 +74,12 @@ public class Scheduler {
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
 		viewManager.labelGraph();
-
 		if(_visualise) {
-			_inGraph.display();
-		}
+            _inGraph.display();
+        }
 		// Name the file if no specific output name was provided
 		if(_outputFilename == null) {
-			_outputFilename = _filename.substring(0, _filename.lastIndexOf('.'))
+			_outputFilename = removeFileExt(_filename)
 					+ "-output" + GraphConstants.FILE_EXT.getValue();
 		}
 		// Write the output file
@@ -77,8 +87,7 @@ public class Scheduler {
 			fileManager.writeGraphFile(_outputFilename,
 					newGraph, true);
 		} catch(IOException e) {
-			System.out.println("Unable to write the graph to the file '" + _filename +
-					"'");
+			System.out.println("Unable to write the graph to the file '" + _filename + "'");
 		}
 	}
 
@@ -117,4 +126,19 @@ public class Scheduler {
 			}
 		}
 	}
+
+    /**
+     * Remove a . extension from a file name
+     * @param filename Filename to remove the .dot from
+     * @return Name of the file without the extension
+     *
+     * @author Sean Oldfield
+     */
+	private static String removeFileExt(String filename) {
+	    try {
+            return filename.substring(0, filename.lastIndexOf('.'));
+        } catch(StringIndexOutOfBoundsException e) {
+	        return filename;
+        }
+    }
 }
