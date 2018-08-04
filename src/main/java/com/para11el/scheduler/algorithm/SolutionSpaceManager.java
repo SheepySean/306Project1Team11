@@ -250,7 +250,7 @@ public class SolutionSpaceManager {
 			ArrayList<Task> newSolution = (ArrayList<Task>) solution.clone();
 			_allSolutions.add(newSolution);
 			
-			getOptimal();
+			findOptimal();
 		}
 	}
 
@@ -261,7 +261,7 @@ public class SolutionSpaceManager {
 	 * 
 	 * @author Rebekah Berriman
 	 */
-	public void getOptimal() {
+	private void findOptimal() {
 		int minimumTime=0;
 
 		for (int possibleSolution=0; possibleSolution<_allSolutions.size(); possibleSolution++) {
@@ -285,6 +285,17 @@ public class SolutionSpaceManager {
 		//Clear all solutions array list and only add the current optimal back. 
 		_allSolutions.clear();
 		_allSolutions.add(_solution);
+	}
+	
+	/**
+	 * Returns the optimal schedule in an arraylist of type Task.
+	 * 
+	 * @return the optimal schedule
+	 * 
+	 * @author Rebekah Berriman
+	 */
+	public ArrayList<Task> getOptimal() {
+		return _solution;
 	}
 
 	/**
