@@ -1,6 +1,5 @@
 package com.para11el.scheduler.processor;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,16 +7,13 @@ import java.util.List;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.SingleGraph;
-import org.graphstream.stream.file.FileSource;
-import org.graphstream.stream.file.FileSourceDOT;
 
 /**
- * Manager class that parses the .dot files for the scheduler's processor
+ * Class that creates a search tree from the input graph.
  *
  * @author Jessica Alcantara, Holly Hagenson
  */
-public class ProcessorFileManager {
+public class ProcessorSearchTree {
 	
 private HashMap<List<Node>, Double> _pathsWithCosts = new HashMap<List<Node>, Double>(); 
 	
@@ -25,11 +21,8 @@ private HashMap<List<Node>, Double> _pathsWithCosts = new HashMap<List<Node>, Do
 	
 	private double _cost;
 	
-	public ProcessorFileManager(String filename, String graphID) throws IOException {
-		_graph = new SingleGraph(graphID);
-		FileSource fs = new FileSourceDOT();
-		fs.addSink(_graph);
-		fs.readAll(filename); // Read .dot file
+	public ProcessorSearchTree(Graph graph) {
+		_graph = graph;
 		_cost = 0;
 	}
 	
@@ -75,7 +68,7 @@ private HashMap<List<Node>, Double> _pathsWithCosts = new HashMap<List<Node>, Do
 		if (node.getOutDegree() == 0) {
 			// Find cost of path, assuming one processor
 			for (Node n : path){
-				_cost += (double)n.getAttribute("Weight");
+				_cost += Double.parseDouble(n.getAttribute("Weight").toString());
 			}
 			_pathsWithCosts.put(path, _cost); 
 			_cost = 0; 
