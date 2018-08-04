@@ -249,6 +249,8 @@ public class SolutionSpaceManager {
 		if (solution != null) {
 			ArrayList<Task> newSolution = (ArrayList<Task>) solution.clone();
 			_allSolutions.add(newSolution);
+			
+			getOptimal();
 		}
 	}
 
@@ -259,7 +261,7 @@ public class SolutionSpaceManager {
 	 * 
 	 * @author Rebekah Berriman
 	 */
-	public ArrayList<Task> getOptimal() {
+	public void getOptimal() {
 		int minimumTime=0;
 
 		for (int possibleSolution=0; possibleSolution<_allSolutions.size(); possibleSolution++) {
@@ -279,9 +281,10 @@ public class SolutionSpaceManager {
 				_solution = _allSolutions.get(possibleSolution);
 			}
 		}
-		// Call labelGraph() to label the nodes of the graph with the start time and processor of the optimal solution
-		labelGraph();
-		return _solution;
+		
+		//Clear all solutions array list and only add the current optimal back. 
+		_allSolutions.clear();
+		_allSolutions.add(_solution);
 	}
 
 	/**
@@ -305,6 +308,7 @@ public class SolutionSpaceManager {
 	 * @author Rebekah Berriman
 	 */
 	public Graph getGraph() {
+		labelGraph();
 		return _graph;
 	}
 }
