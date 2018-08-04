@@ -66,8 +66,18 @@ The projects folder structure is as follows:
 |  |  |  |__com
 |  |  |     |__para11el
 |  |  |        |__scheduler (Main project package)
-|  |  |           |__util (Utilities)
+|  |  |        |__algorithm
+|  |  |           |  |__SolutionSpaceManager.java  
+|  |  |           |  |__Task.java  
+|  |  |           |__graph
 |  |  |           |  |__GraphFileManager.java
+|  |  |           |  |__GraphViewManager.java
+|  |  |           |  |__GraphConstants.java
+|  |  |           |  |__CustomFileSinkDot.java
+|  |  |           |__main
+|  |  |           |  |__ParameterLengthException.java
+|  |  |           |  |__ParameterType.java
+|  |  |           |  |__Scheduler.java
 |  |  |           |
 |  |  |           |__...
 |  |  |
@@ -76,12 +86,24 @@ The projects folder structure is as follows:
 |  |
 |  |__test (Test files)
 |     |__java
-|        |__...
+|        |__com
+|           |__para11el
+|              |__scheduler 
+|              |  |__algorithm
+|                 |  |__test
+|                 |     |__SolutionSpaceIT.java
+|                 |__main
+|                     |__test
+|                       |__GraphResourceIT.java
 |
 |
 |__.gitignore
 |
+|__img.png (Team logo)
+|
 |__pom.xml (Maven file for building the project)
+|
+|__Project1Plan_Team11.pdf (First Milestone Deliverable)
 |
 |__README.md (You Are Here)
 ```
