@@ -110,14 +110,12 @@ public class CustomFileSinkDot extends FileSinkDOT {
                 if(count > 0) {
                     first = false;
                 }
-                boolean quote = true;
                 Object value = e.getAttribute(key);
                 if (value instanceof Number) {
-                    quote = false;
                     value = ((Number) value).intValue(); // Write a number as an int
                 }
                 count++;
-                buffer.append(String.format("%s%s=%s%s%s", first ? "" : ",", key, quote ? "" : "", value, quote ? "" : ""));
+                buffer.append(String.format("%s%s=%s", first ? "" : ",", key, value));
             }
 
             return buffer.append(']').toString();
