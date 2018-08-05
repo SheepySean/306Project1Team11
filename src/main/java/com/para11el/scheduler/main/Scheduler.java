@@ -7,6 +7,7 @@ import com.para11el.scheduler.algorithm.Task;
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
@@ -74,9 +75,13 @@ public class Scheduler {
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
 		viewManager.labelGraph();
+		viewManager.unlabelGraph();
 		if(_visualise) {
             _inGraph.display();
         }
+        for(Edge e: _inGraph.getEdgeSet()) {
+			int num = ((Number)e.getAttribute("Weight")).intValue();
+		}
 		// Name the file if no specific output name was provided
 		if(_outputFilename == null) {
 			_outputFilename = removeFileExt(_filename)
