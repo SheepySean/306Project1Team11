@@ -119,19 +119,12 @@ public class SolutionSpaceManager {
 		if (getParents(node).size() != 0) {
 			for (Node parents : getParents(node)) {
 				Task task = findNode(parents, solutionArrayList);
-
-				// Check if input type is double or integer
-				int nodeWeightInt;
-				try {
-					nodeWeightInt = task.get_node().getAttribute("Weight");
-				} catch (ClassCastException e) {
-					nodeWeightInt = (int) ((double) task.get_node().getAttribute("Weight"));
-				}
+				int nodeWeightInt = ((Number) task.get_node().getAttribute("Weight")).intValue();
 	
 				if (task.get_processor() == processor) {
 					possibleTime = task.get_startTime() + nodeWeightInt;
 				} else {
-					double edgeWeightDouble = task.get_node().getEdgeToward(node).getAttribute("Weight");
+					int edgeWeightDouble = ((Number) task.get_node().getEdgeToward(node).getAttribute("Weight")).intValue();
 					int edgeWeightInt = (int)edgeWeightDouble;
 					possibleTime = task.get_startTime() + nodeWeightInt + edgeWeightInt;
 				}
@@ -181,14 +174,7 @@ public class SolutionSpaceManager {
 
 		for (Task task : currentSchedule) {
 			if (task.get_processor() == processor) {
-				// Check if input type is double or integer
-				int nodeWeightInt;
-				try {
-					nodeWeightInt = task.get_node().getAttribute("Weight");
-				} catch (ClassCastException e) {
-					nodeWeightInt = (int) ((double) task.get_node().getAttribute("Weight"));
-				}
-				
+				int nodeWeightInt = ((Number) task.get_node().getAttribute("Weight")).intValue();
 				possibleTime = task.get_startTime() + nodeWeightInt;
 				if (finishTime < possibleTime) {
 					finishTime = possibleTime;
