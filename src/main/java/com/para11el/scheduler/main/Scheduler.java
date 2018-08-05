@@ -1,12 +1,19 @@
 package com.para11el.scheduler.main;
 
+
+import com.para11el.scheduler.algorithm.SolutionSpaceManager;
+import com.para11el.scheduler.algorithm.Task;
+
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.nio.file.Paths;
+
 
 /**
  * Main runner class of the program
@@ -53,14 +60,23 @@ public class Scheduler {
 		try {
 			_inGraph = fileManager.readGraphFile(_filename,
 					graphName);
+			System.out.println("Found and loaded the graph file '" + _filename + "'");
 		} catch(IOException e) {
 			System.out.println("Cannot find the specified input file '" + _filename + "'");
 			return;
 		}
-
+		
+		//Create the SolutionSpace
+		SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
+		solutionSpaceManager.initialise();
+		
+		//Get the graph labeled with the optimal solution
+		Graph newGraph = solutionSpaceManager.getGraph();
+		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
-		viewManager.labelGraph();
+/*		viewManager.labelGraph();
+		viewManager.unlabelGraph();*/
 		if(_visualise) {
             _inGraph.display();
         }
@@ -72,9 +88,10 @@ public class Scheduler {
 		// Write the output file
 		try {
 			fileManager.writeGraphFile(_outputFilename,
-					_inGraph, true);
+					newGraph, true);
+            System.out.println("Graph file successfully written to '" + _outputFilename+ "'");
 		} catch(IOException e) {
-			System.out.println("Unable to write the graph to the file '" + _filename + "'");
+			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
 		}
 	}
 
