@@ -60,6 +60,7 @@ public class Scheduler {
 		try {
 			_inGraph = fileManager.readGraphFile(_filename,
 					graphName);
+			System.out.println("Found and loaded the graph file '" + _filename + "'");
 		} catch(IOException e) {
 			System.out.println("Cannot find the specified input file '" + _filename + "'");
 			return;
@@ -74,14 +75,11 @@ public class Scheduler {
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
-		viewManager.labelGraph();
-		viewManager.unlabelGraph();
+/*		viewManager.labelGraph();
+		viewManager.unlabelGraph();*/
 		if(_visualise) {
             _inGraph.display();
         }
-        for(Edge e: _inGraph.getEdgeSet()) {
-			int num = ((Number)e.getAttribute("Weight")).intValue();
-		}
 		// Name the file if no specific output name was provided
 		if(_outputFilename == null) {
 			_outputFilename = removeFileExt(_filename)
@@ -91,8 +89,9 @@ public class Scheduler {
 		try {
 			fileManager.writeGraphFile(_outputFilename,
 					newGraph, true);
+            System.out.println("Graph file successfully written to '" + _outputFilename+ "'");
 		} catch(IOException e) {
-			System.out.println("Unable to write the graph to the file '" + _filename + "'");
+			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
 		}
 	}
 
