@@ -28,28 +28,28 @@ public class Task {
 		_processor = processor;
 	}
 
-	public Node get_node() {
+	public Node getNode() {
 		return _node;
 	}
 
-	public void set_node(Node _node) {
-		this._node = _node;
+	public void setNode(Node node) {
+		this._node = node;
 	}
 
-	public int get_startTime() {
+	public int getStartTime() {
 		return _startTime;
 	}
 
-	public void set_startTime(int _startTime) {
-		this._startTime = _startTime;
+	public void setStartTime(int startTime) {
+		this._startTime = startTime;
 	}
 
-	public int get_processor() {
+	public int getProcessor() {
 		return _processor;
 	}
 
-	public void set_processor(int _processor) {
-		this._processor = _processor;
+	public void setProcessor(int processor) {
+		this._processor = processor;
 	}
 	
 	/**

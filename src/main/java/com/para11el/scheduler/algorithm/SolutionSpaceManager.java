@@ -23,8 +23,8 @@ public class SolutionSpaceManager {
 	/**
 	 * Constructor for SolutionSpaceManager if user does not specify number
 	 * of cores for execution in parallel
-	 * @param g input graph
-	 * @param p number of processors
+	 * @param graph input graph
+	 * @param processor number of processors
 	 * 
 	 * @author Tina Chen, Rebekah Berriman
 	 */
@@ -37,9 +37,9 @@ public class SolutionSpaceManager {
 	/**
 	 * Constructor for SolutionSpaceManager if user specifies number
 	 * of cores for execution in parallel
-	 * @param g input graph
-	 * @param p number of processors
-	 * @param c number of cores
+	 * @param graph input graph
+	 * @param processor number of processors
+	 * @param cores number of cores
 	 * 
 	 * @author Tina Chen, Rebekah Berriman
 	 */
@@ -61,9 +61,9 @@ public class SolutionSpaceManager {
 			if (node.getInDegree() == 0) {
 				for (int i = 1; i <= _processors; i++) {
 					Task t = new Task(node, 0, i);
-					ArrayList<Task> _solutionPart = new ArrayList<Task>();
-					_solutionPart.add(t);
-					buildRecursiveSolution(_solutionPart);
+					ArrayList<Task> solutionPart = new ArrayList<Task>();
+					solutionPart.add(t);
+					buildRecursiveSolution(solutionPart);
 				}
 			}
 		}
@@ -119,14 +119,14 @@ public class SolutionSpaceManager {
 		if (getParents(node).size() != 0) {
 			for (Node parents : getParents(node)) {
 				Task task = findNode(parents, solutionArrayList);
-				int nodeWeightInt = ((Number) task.get_node().getAttribute("Weight")).intValue();
+				int nodeWeightInt = ((Number) task.getNode().getAttribute("Weight")).intValue();
 	
-				if (task.get_processor() == processor) {
-					possibleTime = task.get_startTime() + nodeWeightInt;
+				if (task.getProcessor() == processor) {
+					possibleTime = task.getStartTime() + nodeWeightInt;
 				} else {
-					int edgeWeightDouble = ((Number) task.get_node().getEdgeToward(node).getAttribute("Weight")).intValue();
+					int edgeWeightDouble = ((Number) task.getNode().getEdgeToward(node).getAttribute("Weight")).intValue();
 					int edgeWeightInt = (int)edgeWeightDouble;
-					possibleTime = task.get_startTime() + nodeWeightInt + edgeWeightInt;
+					possibleTime = task.getStartTime() + nodeWeightInt + edgeWeightInt;
 				}
 
 				if (startTime < possibleTime) {
@@ -153,7 +153,7 @@ public class SolutionSpaceManager {
 	private Task findNode(Node node, ArrayList<Task> currentTasks) {
 
 		for (Task task : currentTasks) {
-			if (task.get_node().equals(node)) {
+			if (task.getNode().equals(node)) {
 				return task;
 			}
 		}
@@ -173,9 +173,9 @@ public class SolutionSpaceManager {
 		int possibleTime;
 
 		for (Task task : currentSchedule) {
-			if (task.get_processor() == processor) {
-				int nodeWeightInt = ((Number) task.get_node().getAttribute("Weight")).intValue();
-				possibleTime = task.get_startTime() + nodeWeightInt;
+			if (task.getProcessor() == processor) {
+				int nodeWeightInt = ((Number) task.getNode().getAttribute("Weight")).intValue();
+				possibleTime = task.getStartTime() + nodeWeightInt;
 				if (finishTime < possibleTime) {
 					finishTime = possibleTime;
 				}
@@ -186,60 +186,60 @@ public class SolutionSpaceManager {
 
 	/**
 	 * Returns an ArrayList<Node> of the parents nodes a node has
-	 * @param n the node to find parents of
+	 * @param node the node to find parents of
 	 * 
 	 * @author Tina Chen 
 	 */
 	private ArrayList<Node> getParents(Node node) {
 
-		ArrayList<Node> _parents = new ArrayList<Node>();
+		ArrayList<Node> parents = new ArrayList<Node>();
 		Iterator<Edge> edge = node.getEnteringEdgeIterator();
 
 		while (edge.hasNext()) {
-			_parents.add(edge.next().getSourceNode());
+			parents.add(edge.next().getSourceNode());
 		}
-		return _parents;
+		return parents;
 	}
 
 	/**
 	 * Find the available nodes that can be scheduled given what nodes have already been scheduled.
-	 * @param scheduledNodes
+	 * @param scheduledTasks
 	 * @return ArrayList of available nodes
 	 * 
 	 * @author Rebekah Berriman, Tina Chen
 	 */
 	private ArrayList<Node>  availableNode(ArrayList<Task> scheduledTasks) {
 		ArrayList<Node> scheduledNodes =  new ArrayList<Node>();
-		ArrayList<Node> _available = new ArrayList<Node>();
+		ArrayList<Node> available = new ArrayList<Node>();
 
 		for (Task task : scheduledTasks) {
-			scheduledNodes.add(task.get_node());
+			scheduledNodes.add(task.getNode());
 		}
 
 		for (Node node : _graph.getNodeSet()) {
 			if (!scheduledNodes.contains(node)) { // If Node is not already scheduled
-				ArrayList<Node> _parents = getParents(node);
-				if (_parents.size() == 0) { // Node has no parents so can be scheduled
-					_available.add(node);
+				ArrayList<Node> parents = getParents(node);
+				if (parents.size() == 0) { // Node has no parents so can be scheduled
+					available.add(node);
 				} else {
 					boolean availableNode = true;
-					for (Node parentNode : _parents) {
+					for (Node parentNode : parents) {
 						if (!scheduledNodes.contains(parentNode)) { // If the schedule does not contain a parent node of the node, set availableNode to false
 							availableNode = false;
 						}
 					}
 					if (availableNode) {
-						_available.add(node);
+						available.add(node);
 					}
 				}
 			}
 		}
-		return _available;	
+		return available;
 	}
 
 	/**
 	 * Adds a solution to the solution list
-	 * @param s = a full task schedule solution
+	 * @param solution a full task schedule solution
 	 * 
 	 * @author Rebekah Berriman, Tina Chen
 	 */
@@ -298,15 +298,14 @@ public class SolutionSpaceManager {
 
 	/**
 	 * Labels the graph with the startTime and processor numbers of each of the nodes for the optimal solution
-	 * @param optimalSolution
 	 * 
 	 * @author Rebekah Berriman
 	 */
 	private void labelGraph() {
 		for (Task task : _solution) {
-			Node node = task.get_node();
-			node.addAttribute("Start", task.get_startTime());
-			node.addAttribute("Processor", task.get_processor());
+			Node node = task.getNode();
+			node.addAttribute("Start", task.getStartTime());
+			node.addAttribute("Processor", task.getProcessor());
 		}
 	}
 
