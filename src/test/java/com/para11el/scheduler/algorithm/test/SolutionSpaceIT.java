@@ -52,21 +52,21 @@ public class SolutionSpaceIT {
 		Graph output = _ssManager.getGraph();
 
 		for (Task t : _tasks){
-			if (t.get_node().getId().equals("1")){
-				assertEquals(t.get_startTime(), 0);
-				assertEquals(t.get_processor(), 1);
+			if (t.getNode().getId().equals("1")){
+				assertEquals(t.getStartTime(), 0);
+				assertEquals(t.getProcessor(), 1);
 			}
-			if (t.get_node().getId().equals("2")){
-				assertEquals(t.get_startTime(), 4);
-				assertEquals(t.get_processor(), 2);
+			if (t.getNode().getId().equals("2")){
+				assertEquals(t.getStartTime(), 4);
+				assertEquals(t.getProcessor(), 2);
 			}
-			if (t.get_node().getId().equals("3")){
-				assertEquals(t.get_startTime(), 3);
-				assertEquals(t.get_processor(), 1);
+			if (t.getNode().getId().equals("3")){
+				assertEquals(t.getStartTime(), 3);
+				assertEquals(t.getProcessor(), 1);
 			}
-			if (t.get_node().getId().equals("4")){
-				assertEquals(t.get_startTime(), 8);
-				assertEquals(t.get_processor(), 2);
+			if (t.getNode().getId().equals("4")){
+				assertEquals(t.getStartTime(), 8);
+				assertEquals(t.getProcessor(), 2);
 			}
 		}
 		
@@ -84,17 +84,17 @@ public class SolutionSpaceIT {
 		
 		//_tasks = _ssManager.getOptimal();
 		for (Task t : _tasks){
-			if (t.get_node().getId().equals("1")){
-				assertEquals(t.get_startTime(), 0);
+			if (t.getNode().getId().equals("1")){
+				assertEquals(t.getStartTime(), 0);
 			}
-			if (t.get_node().getId().equals("2")){
-				assertEquals(t.get_startTime(), 5);
+			if (t.getNode().getId().equals("2")){
+				assertEquals(t.getStartTime(), 5);
 			}
-			if (t.get_node().getId().equals("3")){
-				assertEquals(t.get_startTime(), 11);
+			if (t.getNode().getId().equals("3")){
+				assertEquals(t.getStartTime(), 11);
 			}
-			if (t.get_node().getId().equals("4")){
-				assertEquals(t.get_startTime(), 15);
+			if (t.getNode().getId().equals("4")){
+				assertEquals(t.getStartTime(), 15);
 			}
 		}
 	}
@@ -112,17 +112,17 @@ public class SolutionSpaceIT {
 		
 		_tasks = _ssManager.getOptimal();
 		for (Task t : _tasks){
-			if (t.get_node().getId().equals("1")){
-				assertEquals(t.get_startTime(), 0);
+			if (t.getNode().getId().equals("1")){
+				assertEquals(t.getStartTime(), 0);
 			}
-			if (t.get_node().getId().equals("2")){
-				assertEquals(t.get_startTime(), 4);
+			if (t.getNode().getId().equals("2")){
+				assertEquals(t.getStartTime(), 4);
 			}
-			if (t.get_node().getId().equals("3")){
-				assertEquals(t.get_startTime(), 3);
+			if (t.getNode().getId().equals("3")){
+				assertEquals(t.getStartTime(), 3);
 			}
-			if (t.get_node().getId().equals("4")){
-				assertEquals(t.get_startTime(), 8);
+			if (t.getNode().getId().equals("4")){
+				assertEquals(t.getStartTime(), 8);
 			}
 		}
 	}
