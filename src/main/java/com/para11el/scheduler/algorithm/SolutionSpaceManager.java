@@ -305,7 +305,7 @@ public class SolutionSpaceManager {
 	private void labelGraph() {
 		for (Task task : _solution) {
 			Node node = task.get_node();
-			node.addAttribute("Start Time", task.get_startTime());
+			node.addAttribute("Start", task.get_startTime());
 			node.addAttribute("Processor", task.get_processor());
 		}
 	}
