@@ -119,7 +119,7 @@ The projects folder structure is as follows:
 ## authors
 
 * **Sean Oldfield** (sold940 - ID: ) - *Development* - [SheepySean](https://github.com/SheepySean)
-* **Tina Chen** (tche - ID: ) - *Development* - [twchen97](https://github.com/twchen97)
+* **Tina Chen** (tche278 - ID: 831524296) - *Development* - [twchen97](https://github.com/twchen97)
 * **Rebekah Berriman** (rber798 - ID: 766858096) - *Development* - [rmberriman](https://github.com/rmberriman)
 * **Jessica Alcantara** (jalc504 - ID: 684627681) - *Development* - [Jess-Alcantara](https://github.com/Jess-Alcantara)
 * **Holly Hagenson** (hhag - ID: ) - *Development* - [hhagenson28](https://github.com/hhagenson28)
