@@ -59,8 +59,8 @@ public class SolutionValidityTest {
 		
 		for (Task task : schedule) {
 			int startTime = task.get_startTime();
-			int finishTime = (int) ((double) task.get_node().getAttribute("Weight") 
-					+ startTime);
+			int finishTime = (int) task.get_node().getAttribute("Weight") 
+					+ startTime;
 			if (finishTime > latestFinish) {
 				latestFinish = finishTime;
 			}
@@ -120,8 +120,8 @@ public class SolutionValidityTest {
 		
 		for (Task task : solution) {
 			int startTime = task.get_startTime();
-			int finishTime = (int) ((double) task.get_node().getAttribute("Weight") 
-					+ startTime);
+			int finishTime = (int) task.get_node().getAttribute("Weight") 
+					+ startTime;
 			if (finishTime > latestFinish) {
 				latestFinish = finishTime;
 			}
@@ -156,8 +156,8 @@ public class SolutionValidityTest {
 		
 		for (Task task : schedule) {
 			int startTime = task.get_startTime();
-			int finishTime = (int) ((double) task.get_node().getAttribute("Weight") 
-					+ startTime);
+			int finishTime = (int) task.get_node().getAttribute("Weight") 
+					+ startTime;
 			taskTimes.put(startTime, finishTime);
 		}
 		

@@ -68,7 +68,7 @@ public class SolutionSpaceManager {
 			}
 		}
 	}
-	
+
 	/**
 	 * Recursively builds a potential schedule to the total solution schedule 
 	 * ArrayList<ArrayList<Task>> using a DFS approach
@@ -120,8 +120,14 @@ public class SolutionSpaceManager {
 			for (Node parents : getParents(node)) {
 				Task task = findNode(parents, solutionArrayList);
 
-				double nodeWeightDouble = task.get_node().getAttribute("Weight");
-				int nodeWeightInt = (int)nodeWeightDouble;
+				// Check if input type is double or integer
+				int nodeWeightInt;
+				try {
+					nodeWeightInt = task.get_node().getAttribute("Weight");
+				} catch (ClassCastException e) {
+					nodeWeightInt = (int) ((double) task.get_node().getAttribute("Weight"));
+				}
+	
 				if (task.get_processor() == processor) {
 					possibleTime = task.get_startTime() + nodeWeightInt;
 				} else {
@@ -175,8 +181,14 @@ public class SolutionSpaceManager {
 
 		for (Task task : currentSchedule) {
 			if (task.get_processor() == processor) {
-				double nodeWeightDouble = task.get_node().getAttribute("Weight");
-				int nodeWeightInt = (int)nodeWeightDouble;
+				// Check if input type is double or integer
+				int nodeWeightInt;
+				try {
+					nodeWeightInt = task.get_node().getAttribute("Weight");
+				} catch (ClassCastException e) {
+					nodeWeightInt = (int) ((double) task.get_node().getAttribute("Weight"));
+				}
+				
 				possibleTime = task.get_startTime() + nodeWeightInt;
 				if (finishTime < possibleTime) {
 					finishTime = possibleTime;
@@ -249,7 +261,7 @@ public class SolutionSpaceManager {
 		if (solution != null) {
 			ArrayList<Task> newSolution = (ArrayList<Task>) solution.clone();
 			_allSolutions.add(newSolution);
-			
+
 			findOptimal();
 		}
 	}
@@ -281,12 +293,12 @@ public class SolutionSpaceManager {
 				_solution = _allSolutions.get(possibleSolution);
 			}
 		}
-		
+
 		//Clear all solutions array list and only add the current optimal back. 
 		_allSolutions.clear();
 		_allSolutions.add(_solution);
 	}
-	
+
 	/**
 	 * Returns the optimal schedule in an arraylist of type Task.
 	 * 
