@@ -3,8 +3,6 @@ package com.para11el.scheduler.algorithm.test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;

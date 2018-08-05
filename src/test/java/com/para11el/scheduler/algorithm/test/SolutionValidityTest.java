@@ -34,7 +34,7 @@ public class SolutionValidityTest {
 		TreeMap<String,Integer> solution = new TreeMap<String,Integer>();
 		
 		for (Task t : _ssManager.getOptimal()) {
-			solution.put(t.get_node().getId(), t.get_startTime());
+			solution.put(t.getNode().getId(), t.getStartTime());
 		}
 		
 		assertTrue(isBefore(solution.get("a"), solution.get("b")));
@@ -58,8 +58,8 @@ public class SolutionValidityTest {
 		int latestFinish = 0;
 		
 		for (Task task : schedule) {
-			int startTime = task.get_startTime();
-			int finishTime = (int) task.get_node().getAttribute("Weight") 
+			int startTime = task.getStartTime();
+			int finishTime = (int) task.getNode().getAttribute("Weight")
 					+ startTime;
 			if (finishTime > latestFinish) {
 				latestFinish = finishTime;
@@ -97,7 +97,7 @@ public class SolutionValidityTest {
 		TreeMap<String,Integer> solution = new TreeMap<String,Integer>();
 		
 		for (Task t : _ssManager.getOptimal()) {
-			solution.put(t.get_node().getId(), t.get_startTime());
+			solution.put(t.getNode().getId(), t.getStartTime());
 		}
 		
 		assertTrue(isBefore(solution.get("a"), solution.get("c")));
@@ -119,8 +119,8 @@ public class SolutionValidityTest {
 		int latestFinish = 0;
 		
 		for (Task task : solution) {
-			int startTime = task.get_startTime();
-			int finishTime = (int) task.get_node().getAttribute("Weight") 
+			int startTime = task.getStartTime();
+			int finishTime = (int) task.getNode().getAttribute("Weight")
 					+ startTime;
 			if (finishTime > latestFinish) {
 				latestFinish = finishTime;
@@ -131,8 +131,8 @@ public class SolutionValidityTest {
 	
 	/**
 	 * Compares order of tasks
-	 * @param int start time of taskA
-	 * @param int start time of taskB
+	 * @param taskA start time of taskA
+	 * @param taskB start time of taskB
 	 * @return Boolean true taskA starts before taskB
 	 * @author Jessica Alcantara
 	 */
@@ -147,7 +147,7 @@ public class SolutionValidityTest {
 	
 	/**
 	 * Checks if tasks times overlap
-	 * @param List list representing a schedule
+	 * @param schedule list representing a schedule
 	 * @return Boolean true if no task time overlap
 	 * @author Jessica Alcantara
 	 */
@@ -155,8 +155,8 @@ public class SolutionValidityTest {
 		TreeMap<Integer,Integer> taskTimes = new TreeMap<Integer,Integer>();
 		
 		for (Task task : schedule) {
-			int startTime = task.get_startTime();
-			int finishTime = (int) task.get_node().getAttribute("Weight") 
+			int startTime = task.getStartTime();
+			int finishTime = (int) task.getNode().getAttribute("Weight")
 					+ startTime;
 			taskTimes.put(startTime, finishTime);
 		}
