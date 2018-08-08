@@ -17,7 +17,7 @@ import com.para11el.scheduler.algorithm.Task;
  * @author Jessica Alcantara
  *
  */
-public class SolutionValidityTest {
+public class SolutionValidityIT {
 	
 	private SolutionSpaceManager _ssManager;
 	
