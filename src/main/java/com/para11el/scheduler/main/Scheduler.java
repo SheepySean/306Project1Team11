@@ -7,6 +7,7 @@ import com.para11el.scheduler.algorithm.Task;
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
@@ -59,6 +60,7 @@ public class Scheduler {
 		try {
 			_inGraph = fileManager.readGraphFile(_filename,
 					graphName);
+			System.out.println("Found and loaded the graph file '" + _filename + "'");
 		} catch(IOException e) {
 			System.out.println("Cannot find the specified input file '" + _filename + "'");
 			return;
@@ -73,7 +75,8 @@ public class Scheduler {
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
-		viewManager.labelGraph();
+/*		viewManager.labelGraph();
+		viewManager.unlabelGraph();*/
 		if(_visualise) {
             _inGraph.display();
         }
@@ -86,8 +89,9 @@ public class Scheduler {
 		try {
 			fileManager.writeGraphFile(_outputFilename,
 					newGraph, true);
+            System.out.println("Graph file successfully written to '" + _outputFilename+ "'");
 		} catch(IOException e) {
-			System.out.println("Unable to write the graph to the file '" + _filename + "'");
+			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
 		}
 	}
 

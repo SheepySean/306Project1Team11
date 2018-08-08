@@ -66,8 +66,18 @@ The projects folder structure is as follows:
 |  |  |  |__com
 |  |  |     |__para11el
 |  |  |        |__scheduler (Main project package)
-|  |  |           |__util (Utilities)
+|  |  |        |__algorithm
+|  |  |           |  |__SolutionSpaceManager.java  
+|  |  |           |  |__Task.java  
+|  |  |           |__graph
 |  |  |           |  |__GraphFileManager.java
+|  |  |           |  |__GraphViewManager.java
+|  |  |           |  |__GraphConstants.java
+|  |  |           |  |__CustomFileSinkDot.java
+|  |  |           |__main
+|  |  |           |  |__ParameterLengthException.java
+|  |  |           |  |__ParameterType.java
+|  |  |           |  |__Scheduler.java
 |  |  |           |
 |  |  |           |__...
 |  |  |
@@ -76,12 +86,24 @@ The projects folder structure is as follows:
 |  |
 |  |__test (Test files)
 |     |__java
-|        |__...
+|        |__com
+|           |__para11el
+|              |__scheduler 
+|              |  |__algorithm
+|                 |  |__test
+|                 |     |__SolutionSpaceIT.java
+|                 |__main
+|                     |__test
+|                       |__GraphResourceIT.java
 |
 |
 |__.gitignore
 |
+|__img.png (Team logo)
+|
 |__pom.xml (Maven file for building the project)
+|
+|__Project1Plan_Team11.pdf (First Milestone Deliverable)
 |
 |__README.md (You Are Here)
 ```
@@ -96,11 +118,11 @@ The projects folder structure is as follows:
 
 ## authors
 
-* **Sean Oldfield** - *Development* - [SheepySean](https://github.com/SheepySean)
-* **Tina Chen** - *Development* - [twchen97](https://github.com/twchen97)
-* **Rebekah Berriman** - *Development* - [rmberriman](https://github.com/rmberriman)
-* **Jessica Alcantara** - *Development* - [Jess-Alcantara](https://github.com/Jess-Alcantara)
-* **Holly Hagenson** - *Development* - [hhagenson28](https://github.com/hhagenson28)
+* **Sean Oldfield** (sold940 - ID: 495219908) - *Development* - [SheepySean](https://github.com/SheepySean)
+* **Tina Chen** (tche278 - ID: 831524296) - *Development* - [twchen97](https://github.com/twchen97)
+* **Rebekah Berriman** (rber798 - ID: 766858096) - *Development* - [rmberriman](https://github.com/rmberriman)
+* **Jessica Alcantara** (jalc504 - ID: 684627681) - *Development* - [Jess-Alcantara](https://github.com/Jess-Alcantara)
+* **Holly Hagenson** (hhag130 - ID: 731300076) - *Development* - [hhagenson28](https://github.com/hhagenson28)
 
 ## Acknowledgments
 

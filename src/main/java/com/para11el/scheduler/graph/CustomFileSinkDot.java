@@ -2,6 +2,9 @@ package com.para11el.scheduler.graph;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Element;
@@ -95,15 +98,24 @@ public class CustomFileSinkDot extends FileSinkDOT {
             StringBuilder buffer = new StringBuilder("[");
             boolean first = true;
 
-            for(Iterator i$ = e.getEachAttributeKey().iterator(); i$.hasNext(); first = false) {
-                String key = (String)i$.next();
-                boolean quote = true;
+            // Convert the key atrributes into an ArrayList as opposed to an Iterator
+            ArrayList<String> keys = new ArrayList<>();
+            Iterator<String> i$ = e.getEachAttributeKey().iterator();
+            while (i$.hasNext()) {
+                keys.add(i$.next());
+            }
+            Collections.reverse(keys); // Reverse the list for correct output formatting
+            int count = 0;
+            for(String key : keys) {
+                if(count > 0) {
+                    first = false;
+                }
                 Object value = e.getAttribute(key);
                 if (value instanceof Number) {
-                    quote = false;
+                    value = ((Number) value).intValue(); // Write a number as an int
                 }
-
-                buffer.append(String.format("%s%s=%s%s%s", first ? "" : ",", key, quote ? "" : "", value, quote ? "" : ""));
+                count++;
+                buffer.append(String.format("%s%s=%s", first ? "" : ",", key, value));
             }
 
             return buffer.append(']').toString();
