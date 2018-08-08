@@ -59,12 +59,10 @@ public class SolutionSpaceManager {
 
 		for (Node node : _graph.getNodeSet()) {
 			if (node.getInDegree() == 0) {
-				for (int i = 1; i <= _processors; i++) {
-					Task t = new Task(node, 0, i);
-					ArrayList<Task> solutionPart = new ArrayList<Task>();
-					solutionPart.add(t);
-					buildRecursiveSolution(solutionPart);
-				}
+				Task t = new Task(node, 0, 1);
+				ArrayList<Task> solutionPart = new ArrayList<Task>();
+				solutionPart.add(t);
+				buildRecursiveSolution(solutionPart);
 			}
 		}
 	}
@@ -120,7 +118,7 @@ public class SolutionSpaceManager {
 			for (Node parents : getParents(node)) {
 				Task task = findNode(parents, solutionArrayList);
 				int nodeWeightInt = ((Number) task.getNode().getAttribute("Weight")).intValue();
-	
+
 				if (task.getProcessor() == processor) {
 					possibleTime = task.getStartTime() + nodeWeightInt;
 				} else {
