@@ -5,8 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<AnchorPane fx:id="pane" prefHeight="640.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.para11el.scheduler.ui.ViewerPaneController">
+<AnchorPane fx:id="anchor" prefHeight="640.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.para11el.scheduler.ui.ViewerPaneController">
    <children>
       <BorderPane minWidth="-Infinity" prefHeight="640.0" prefWidth="1024.0">
          <center>
@@ -17,7 +16,7 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                            <children>
-                              <SwingNode fx:id="swing" />
+                              <SwingNode fx:id="inGraph" />
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
