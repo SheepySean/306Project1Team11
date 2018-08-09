@@ -58,7 +58,6 @@ public class SolutionSpaceManager {
 	public void initialise() {
 		
 		setMinimumTime();
-		System.out.println("minimum time at set up: " + _minimumTime);
 
 		for (Node node : _graph.getNodeSet()) {
 			if (node.getInDegree() == 0) {
@@ -294,7 +293,6 @@ public class SolutionSpaceManager {
 	 * @author Rebekah Berriman
 	 */
 	public ArrayList<Task> getOptimal() {
-		System.out.println("At get optimal: " + _minimumTime);
 		return _optimalSolution;
 	}
 
@@ -320,5 +318,15 @@ public class SolutionSpaceManager {
 	public Graph getGraph() {
 		labelGraph();
 		return _graph;
+	}
+	
+	/**
+	 * Ensures that testing can ensure that the minimum test time is found
+	 * @return int of the finish time of the optimal solution (the earliest time that the tasks can be computed).
+	 * 
+	 * @author Rebekah Berriman
+	 */
+	public int getOptimalFinishTime() {
+		return _minimumTime;
 	}
 }

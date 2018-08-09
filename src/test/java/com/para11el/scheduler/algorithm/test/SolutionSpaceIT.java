@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -15,7 +16,7 @@ import com.para11el.scheduler.algorithm.Task;
 /**
  * JUnit test to test the behaviour of the SolutionSpaceManager.
  * 
- * @author Holly Hagenson
+ * @author Holly Hagenson, Rebekah Berriman
  *
  */
 public class SolutionSpaceIT {
@@ -24,6 +25,7 @@ public class SolutionSpaceIT {
 	private static Graph _graph2;
 	private static Graph _graph3;
 	private static Graph _graph4;
+	private static Graph _graph5;
 	private int _processors;
 	private ArrayList<Task> _tasks = new ArrayList<Task>();
 	
@@ -36,11 +38,11 @@ public class SolutionSpaceIT {
 	}
 	
 	/**
-	 * Test output is correct for multiple processors being utilised.
+	 * Test output is correct for multiple processors
+	 * @author Rebekah Berriman, Holly Hagenson
 	 */
 	@Test
 	public void testMultipleProcessors(){
-		System.out.println("testMultipleProcessors");
 		_processors = 2; 
 		
 		_ssManager = new SolutionSpaceManager(_graph1, _processors);
@@ -48,94 +50,230 @@ public class SolutionSpaceIT {
 		
 		_tasks = _ssManager.getOptimal();
 		
-		Graph output = _ssManager.getGraph();
+		//Check finish time of optimal schedule meets the true optimal
+		assertEquals(10, _ssManager.getOptimalFinishTime());
 
-		for (Task t : _tasks){
-			if (t.getNode().getId().equals("1")){
-				assertEquals(0, t.getStartTime());
-				assertEquals(1, t.getProcessor());
+		//Iterate through the tasks in the schedule
+		for (Task task : _tasks){
+			if (task.getNode().getId().equals("1")){
+				assertEquals(0, task.getStartTime());
+				assertEquals(1, task.getProcessor());
 			}
-			if (t.getNode().getId().equals("2")){
-				assertEquals(4, t.getStartTime());
-				assertEquals(2, t.getProcessor());
+			if (task.getNode().getId().equals("2")){
+				assertEquals(3, task.getStartTime());
+				assertEquals(1, task.getProcessor());
 			}
-			if (t.getNode().getId().equals("3")){
-				assertEquals(3, t.getStartTime());
-				assertEquals(1, t.getProcessor());
+			if (task.getNode().getId().equals("3")){
+				assertEquals(5, task.getStartTime());
+				assertEquals(2, task.getProcessor());
 			}
-			if (t.getNode().getId().equals("4")){
-				assertEquals(8, t.getStartTime());
-				assertEquals(2, t.getProcessor());
+			if (task.getNode().getId().equals("4")){
+				assertEquals(9, task.getStartTime());
+				assertEquals(1, task.getProcessor());
 			}
 		}
 		
 	}
 	
 	/**
-	 * Test output is correct for graph with multiple entry nodes.
+	 * Test output is correct for graph with multiple entry nodes on a single processor.
+	 * @author Rebekah Berriman
 	 */
 	@Test
 	public void testMultipleEntryNodes(){
 		_processors = 1;
 		
-		System.out.println("testMultipleEntryNodes");
-		
 		_ssManager = new SolutionSpaceManager(_graph2, _processors);
 		_ssManager.initialise();
 		
 		_tasks = _ssManager.getOptimal();
-		for (Task t : _tasks){
-			if (t.getNode().getId().equals("1")){
-				System.out.println("is 1: " + t);
-				assertEquals(0, t.getStartTime());
+		
+		//Check finish time of optimal schedule
+		assertEquals(18, _ssManager.getOptimalFinishTime());
+		
+		//Iterate through the tasks in the schedule
+		for (Task task : _tasks){
+			//As only a single processor all tasks should be on the first processor
+			assertEquals(1, task.getProcessor());
+			if (task.getNode().getId().equals("1")){
+				assertEquals(10, task.getStartTime());
 			}
-			if (t.getNode().getId().equals("2")){
-				assertEquals(5, t.getStartTime());
-				System.out.println("is 2: " + t);
+			if (task.getNode().getId().equals("2")){
+				assertEquals(4, task.getStartTime());
 			}
-			if (t.getNode().getId().equals("3")){
-				assertEquals(11, t.getStartTime());
-				System.out.println("is 3: " + t);
+			if (task.getNode().getId().equals("3")){
+				assertEquals(0, task.getStartTime());
 			}
-			if (t.getNode().getId().equals("4")){
-				assertEquals(15, t.getStartTime());
-				System.out.println("is 4: " + t);
+			if (task.getNode().getId().equals("4")){
+				assertEquals(15, task.getStartTime());
 			}
 		}
 	}
 	
 	/**
-	 * Test output is correct for graph with multiple exit nodes.
+	 * Test output is correct for graph with multiple entry nodes on two processors.
+	 * @author Rebekah Berriman
+	 */
+	@Test
+	public void testMultipleEntryNodesMultiProcessor(){
+		_processors = 2;
+		
+		_ssManager = new SolutionSpaceManager(_graph2, _processors);
+		_ssManager.initialise();
+		
+		_tasks = _ssManager.getOptimal();
+		
+		//Ensure that the optimal finish time is met
+		assertEquals(12, _ssManager.getOptimalFinishTime());
+		
+		//Iterate through the tasks of the optimal solution
+		for (Task task : _tasks){
+			if (task.getNode().getId().equals("1")){
+				assertEquals(4, task.getStartTime());
+				assertEquals(1, task.getProcessor());
+			}
+			if (task.getNode().getId().equals("2")){
+				assertEquals(0, task.getStartTime());
+				assertEquals(2, task.getProcessor());
+			}
+			if (task.getNode().getId().equals("3")){
+				assertEquals(0, task.getStartTime());
+				assertEquals(1, task.getProcessor());
+			}
+			if (task.getNode().getId().equals("4")){
+				assertEquals(9, task.getStartTime());
+				assertEquals(1, task.getProcessor());
+			}
+		}
+	}
+	
+	/**
+	 * Test output is correct for graph with multiple exit nodes on a single processor
+	 * @author Rebekah Berriman
 	 */
 	@Test
 	public void testMultipleExitNodes(){
-		System.out.println("testmultipleexitnodes");
 		_processors = 1; 
 		
 		_ssManager = new SolutionSpaceManager(_graph3, _processors);
 		_ssManager.initialise();
 		
 		_tasks = _ssManager.getOptimal();
+		
+		assertEquals(14, _ssManager.getOptimalFinishTime());
+		
+		//Iterate through the scheduled tasks
 		for (Task t : _tasks){
+			//Only one processor so each task should be on processor 1
+			assertEquals(1, t.getProcessor());
 			if (t.getNode().getId().equals("1")){
 				assertEquals(0, t.getStartTime());
 			}
 			if (t.getNode().getId().equals("2")){
-				assertEquals(4, t.getStartTime());
+				assertEquals(11, t.getStartTime());
 			}
 			if (t.getNode().getId().equals("3")){
-				assertEquals(3, t.getStartTime());
+				assertEquals(9, t.getStartTime());
 			}
 			if (t.getNode().getId().equals("4")){
-				assertEquals(8, t.getStartTime());
+				assertEquals(4, t.getStartTime());
 			}
 		}
 	}
 	
+	/**
+	 * Test output is correct for graph with multiple exit nodes on multiple processors
+	 * @author Rebekah Berriman
+	 */
+	@Test
+	public void testMultipleExitNodesMultiProcessor(){
+		_processors = 2; 
+		
+		_ssManager = new SolutionSpaceManager(_graph3, _processors);
+		_ssManager.initialise();
+		
+		_tasks = _ssManager.getOptimal();
+		
+		//Check finish time of optimal schedule is accurate
+		assertEquals(11, _ssManager.getOptimalFinishTime());
+		
+		//Iterate through the scheduled tasks
+		for (Task task : _tasks){
+			if (task.getNode().getId().equals("1")){
+				assertEquals(0, task.getStartTime());
+				assertEquals(1, task.getProcessor());
+			}
+			if (task.getNode().getId().equals("2")){
+				assertEquals(6, task.getStartTime());
+				assertEquals(1, task.getProcessor());
+			}
+			if (task.getNode().getId().equals("3")){
+				assertEquals(4, task.getStartTime());
+				assertEquals(1, task.getProcessor());
+			}
+			if (task.getNode().getId().equals("4")){
+				assertEquals(6, task.getStartTime());
+				assertEquals(2, task.getProcessor());
+			}
+		}
+	}
+	
+	/**
+	 * Test that the finish time of a sequential graph on a single processor is the actual finish time of the optimal solution
+	 *  @author Rebekah Berriman
+	 */
+	@Test 
+	public void testSequentialGraphSingle(){
+		_processors = 1;
+		
+		_ssManager = new SolutionSpaceManager(_graph5, _processors);
+		_ssManager.initialise();
+		
+		_tasks = _ssManager.getOptimal();
+		
+		//Check finish time is optimal
+		assertEquals(14, _ssManager.getOptimalFinishTime());
+		
+		//Checks all tasks are scheduled on the correct processor
+		for (Task task : _tasks) {
+			assertTrue(task.getProcessor() == 1);
+		}
+	
+	}
+	
+	/**
+	 * Test that the finish time of a sequential graph on multiple processors is the actual finish time of the optimal solution
+	 *  @author Rebekah Berriman
+	 */
+	@Test 
+	public void testSequentialGraphMulti(){
+		_processors = 3;
+		
+		_ssManager = new SolutionSpaceManager(_graph5, _processors);
+		_ssManager.initialise();
+		
+		_tasks = _ssManager.getOptimal();
+		
+		//Check finish time is optimal
+		assertEquals(14, _ssManager.getOptimalFinishTime());
+		
+		//Check all tasks are scheduled on the first processor
+		for (Task task : _tasks) {
+			assertTrue(task.getProcessor() == 1);
+		}
+	}
+	
+	/**
+	 * Test that the output graph has the three labels for each node that we expect:
+	 *  - Weight
+	 *  - Start
+	 *  - Processor
+	 *  and that the output graph only has one label for each edge:
+	 *  - Weight
+	 *  @author Rebekah Berriman
+	 */
 	@Test 
 	public void testOutputGraph(){
-		
-		System.out.println("testOutputGraph");
 		_processors = 1;
 		
 		_ssManager = new SolutionSpaceManager(_graph4, _processors);
@@ -143,17 +281,80 @@ public class SolutionSpaceIT {
 		
 		_tasks = _ssManager.getOptimal();
 		Graph outputGraph = _ssManager.getGraph();
+
+		for(Node node : outputGraph.getNodeSet()){
+			//Each node should have three attributes
+			assertEquals(3, node.getAttributeCount());
+			
+			//Check that each node has the attributes we expect
+			assertTrue(node.getAttribute("Weight")!=null);
+			assertTrue(node.getAttribute("Start")!=null);
+			assertTrue(node.getAttribute("Processor")!=null);
+		}
 		
-		System.out.println(outputGraph);
-		
-		for(Node n : outputGraph.getNodeSet()){
-			System.out.println(n + " what the heck " + n.getAttributeCount());
-			assertEquals(1, n.getAttributeCount());
+		for (Edge edge : outputGraph.getEdgeSet()) {
+			//Each edge should have one attribute
+			assertEquals(1, edge.getAttributeCount());
+			
+			//Check that each edge has only the Weight attribute
+			assertTrue(edge.getAttribute("Weight")!=null);
+			assertTrue(edge.getAttribute("Start")==null);
+			assertTrue(edge.getAttribute("Processor")==null);
+			
 		}
 		 
 	}
 	
+	/**
+	 * Test that the output graph for a task that can be scheduled on multiple processes
+	 * has the three labels for each node that we expect:
+	 *  - Weight
+	 *  - Start
+	 *  - Processor
+	 *  and that the output graph only has one label for each edge:
+	 *  - Weight
+	 *  
+	 *  @author Rebekah Berriman
+	 */
+	@Test 
+	public void testOutputGraphMultipleProcessors(){
+		_processors = 3;
+		
+		_ssManager = new SolutionSpaceManager(_graph4, _processors);
+		_ssManager.initialise();
+		
+		_tasks = _ssManager.getOptimal();
+		Graph outputGraph = _ssManager.getGraph();
+
+		//Iterate through the node set of the output graph
+		for(Node node : outputGraph.getNodeSet()){
+			//Each node should have three attributes
+			assertEquals(3, node.getAttributeCount());
+			
+			//Check that each node has the attributes we expect
+			assertTrue(node.getAttribute("Weight")!=null);
+			assertTrue(node.getAttribute("Start")!=null);
+			assertTrue(node.getAttribute("Processor")!=null);
+		}
+		
+		//Iterate through the edge set of the output graph 
+		for (Edge edge : outputGraph.getEdgeSet()) {
+			//Each edge should have one attribute
+			assertEquals(1, edge.getAttributeCount());
+			
+			//Check that each edge has only the Weight attribute
+			assertTrue(edge.getAttribute("Weight")!=null);
+			assertTrue(edge.getAttribute("Start")==null);
+			assertTrue(edge.getAttribute("Processor")==null);
+			
+		}
+		 
+	}
 	
+	/**
+	 * Graphs to use for testing
+	 * @author Holly Hagenson
+	 */
 	public static void createGraphs(){
 		_graph1 = new SingleGraph("graphWithMultipleProcessors");
 		_graph1.addNode("1");
@@ -212,6 +413,22 @@ public class SolutionSpaceIT {
 		_graph4.getNode("2").addAttribute("Weight", 3.0);
 		_graph4.addEdge("1 -> 2", "1", "2", true);
 		_graph4.getEdge("1 -> 2").setAttribute("Weight", 1.0);
+		
+		_graph5 = new SingleGraph("sequentialGraph");
+		_graph5.addNode("1");
+		_graph5.addNode("2");
+		_graph5.addNode("3");
+		_graph5.addNode("4");
+		_graph5.getNode("1").addAttribute("Weight", 4.0);
+		_graph5.getNode("2").addAttribute("Weight", 3.0);
+		_graph5.getNode("3").addAttribute("Weight", 4.0);
+		_graph5.getNode("4").addAttribute("Weight", 3.0);
+		_graph5.addEdge("1 -> 2", "1", "2", true);
+		_graph5.getEdge("1 -> 2").setAttribute("Weight", 1.0);
+		_graph5.addEdge("2 -> 3", "2", "3", true);
+		_graph5.getEdge("2 -> 3").setAttribute("Weight", 1.0);
+		_graph5.addEdge("3 -> 4", "3", "4", true);
+		_graph5.getEdge("3 -> 4").setAttribute("Weight", 1.0);
 	}
 
 }
