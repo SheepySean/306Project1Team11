@@ -2,6 +2,11 @@ package com.para11el.scheduler.algorithm;
 
 import org.graphstream.graph.Node;
 
+/**
+ * State class to represent an object state.
+ * 
+ * @author Jessica Alcantara
+ */
 public class State {
 	
 	private Node _node;
@@ -10,6 +15,15 @@ public class State {
 	
 	public State() {}
 	
+	/**
+	 * Task constructor
+	 * 
+	 * @param node a node in input graph
+	 * @param cost cost calculated by cost function
+	 * @param scheduleLength the length of the partial schedule solution
+	 * 
+	 * @author Jessica Alcantara
+	 */
 	public State(Node node, int cost, int scheduleLength) {
 		_node = node;
 		_cost = cost;
