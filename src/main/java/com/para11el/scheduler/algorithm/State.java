@@ -8,6 +8,8 @@ public class State {
 	private int _cost;
 	private int _scheduleLength;
 	
+	public State() {}
+	
 	public State(Node node, int cost, int scheduleLength) {
 		_node = node;
 		_cost = cost;
@@ -24,6 +26,20 @@ public class State {
 	
 	public int getScheduleLength() {
 		return _scheduleLength;
+	}
+	
+	public void setCost(int cost) {
+		_cost = cost;
+	}
+	
+	/**
+	 * Compares state based on the cost
+	 * @param compareState
+	 * @return int representing ascending order
+	 */
+	public int compareTo(State compareState) {
+		int compareCost = ((State) compareState).getCost(); 
+		return this._cost - compareCost;
 	}
 	
 }

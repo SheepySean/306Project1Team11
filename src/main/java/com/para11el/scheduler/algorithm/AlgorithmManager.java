@@ -11,19 +11,20 @@ import org.graphstream.graph.Node;
 
 public class AlgorithmManager {
 	
-	Comparator<State> costComparator = new Comparator<State>() {
+	/**
+	 * Comparator to sort states according to the results of the cost
+	 * function.
+	 * @author Jessica Alcantara
+	 */
+	private Comparator<State> _stateComparator = new Comparator<State>() {
 		@Override
         public int compare(State o1, State o2) {
-			//TODO:
-			/*
-			 * Create comparator based on cost function
-			 */
-			return 0;
+			return o1.compareTo(o2);
         }
 	};
 	
 	private ArrayList<Task> _solution = new ArrayList<Task>();
-	private Queue<State> _states = new PriorityQueue<State>(costComparator);
+	private Queue<State> _states = new PriorityQueue<State>(_stateComparator);
 	
 	
 	/**
@@ -93,6 +94,9 @@ public class AlgorithmManager {
 		return 0;
 	}
 	
+	public Comparator<State> getStateComparator() {
+		return _stateComparator;
+	}
 	
 
 }
