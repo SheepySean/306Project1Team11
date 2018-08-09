@@ -2,16 +2,16 @@ package com.para11el.scheduler.main;
 
 
 import com.para11el.scheduler.algorithm.SolutionSpaceManager;
-import com.para11el.scheduler.algorithm.Task;
 
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
-import org.graphstream.graph.Edge;
+import com.para11el.scheduler.ui.ViewerPaneController;
+import com.para11el.scheduler.ui.Viewer;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.nio.file.Paths;
 
 
@@ -33,8 +33,7 @@ public class Scheduler {
 	 * @param args Command line arguments
 	 */
 	public static void main(String[] args) {
-        // Set the Graph to be viewed with JavaFx
-        System.setProperty("org.graphstream.ui", "javafx");
+		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		// Read the parameters provided on the command line
 		try {
             readParameters(args);
@@ -78,7 +77,8 @@ public class Scheduler {
 /*		viewManager.labelGraph();
 		viewManager.unlabelGraph();*/
 		if(_visualise) {
-            _inGraph.display();
+			ViewerPaneController.setViewer(new org.graphstream.ui.view.Viewer(_inGraph, org.graphstream.ui.view.Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD));
+			Viewer.main(null);
         }
 		// Name the file if no specific output name was provided
 		if(_outputFilename == null) {

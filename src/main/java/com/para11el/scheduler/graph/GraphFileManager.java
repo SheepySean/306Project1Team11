@@ -3,6 +3,7 @@ package com.para11el.scheduler.graph;
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
 import org.graphstream.stream.file.*;
+import org.graphstream.ui.graphicGraph.GraphicGraph;
 
 import java.io.IOException;
 
