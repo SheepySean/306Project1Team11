@@ -58,6 +58,7 @@ public class SolutionSpaceManager {
 	public void initialise() {
 		
 		setMinimumTime();
+		System.out.println("minimum time at set up: " + _minimumTime);
 
 		for (Node node : _graph.getNodeSet()) {
 			if (node.getInDegree() == 0) {
@@ -79,10 +80,6 @@ public class SolutionSpaceManager {
 		_minimumTime=0;
 		for (Node node : _graph.getNodeSet()) {
 			_minimumTime+= ((Number)node.getAttribute("Weight")).intValue();
-		}
-		
-		for (Edge edge : _graph.getEdgeSet()) {
-			_minimumTime+= ((Number)edge.getAttribute("Weight")).intValue();
 		}
 	}
 
@@ -269,7 +266,7 @@ public class SolutionSpaceManager {
 			ArrayList<Task> newSolution = (ArrayList<Task>) solution.clone();
 			
 			int solutionTime = 0; 
-			for (int processor=0; processor <= _processors; processor++) {
+			for (int processor=1; processor <= _processors; processor++) {
 				int possibleSolutionTime = getProcessorFinishTime(newSolution, processor);
 				
 				if (possibleSolutionTime > _minimumTime) {
@@ -282,7 +279,7 @@ public class SolutionSpaceManager {
 			}
 
 			// If the solution time is less than or equal to the minimal time, update the _solution
-			if (_minimumTime >= solutionTime ) {
+			if (_minimumTime >= solutionTime) {
 				_minimumTime = solutionTime;
 				_optimalSolution = newSolution;
 			}
@@ -297,6 +294,7 @@ public class SolutionSpaceManager {
 	 * @author Rebekah Berriman
 	 */
 	public ArrayList<Task> getOptimal() {
+		System.out.println("At get optimal: " + _minimumTime);
 		return _optimalSolution;
 	}
 

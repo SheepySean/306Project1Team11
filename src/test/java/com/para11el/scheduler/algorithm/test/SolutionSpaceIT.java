@@ -13,7 +13,7 @@ import com.para11el.scheduler.algorithm.SolutionSpaceManager;
 import com.para11el.scheduler.algorithm.Task;
 
 /**
- * Junit test to test the behaviour of the SolutionSpaceManager.
+ * JUnit test to test the behaviour of the SolutionSpaceManager.
  * 
  * @author Holly Hagenson
  *
@@ -39,32 +39,33 @@ public class SolutionSpaceIT {
 	 * Test output is correct for multiple processors being utilised.
 	 */
 	@Test
-	public void testMultipleProcessors(){		
+	public void testMultipleProcessors(){
+		System.out.println("testMultipleProcessors");
 		_processors = 2; 
 		
 		_ssManager = new SolutionSpaceManager(_graph1, _processors);
 		_ssManager.initialise();
 		
-		//_tasks = _ssManager.getOptimal();
+		_tasks = _ssManager.getOptimal();
 		
 		Graph output = _ssManager.getGraph();
 
 		for (Task t : _tasks){
 			if (t.getNode().getId().equals("1")){
-				assertEquals(t.getStartTime(), 0);
-				assertEquals(t.getProcessor(), 1);
+				assertEquals(0, t.getStartTime());
+				assertEquals(1, t.getProcessor());
 			}
 			if (t.getNode().getId().equals("2")){
-				assertEquals(t.getStartTime(), 4);
-				assertEquals(t.getProcessor(), 2);
+				assertEquals(4, t.getStartTime());
+				assertEquals(2, t.getProcessor());
 			}
 			if (t.getNode().getId().equals("3")){
-				assertEquals(t.getStartTime(), 3);
-				assertEquals(t.getProcessor(), 1);
+				assertEquals(3, t.getStartTime());
+				assertEquals(1, t.getProcessor());
 			}
 			if (t.getNode().getId().equals("4")){
-				assertEquals(t.getStartTime(), 8);
-				assertEquals(t.getProcessor(), 2);
+				assertEquals(8, t.getStartTime());
+				assertEquals(2, t.getProcessor());
 			}
 		}
 		
@@ -77,22 +78,28 @@ public class SolutionSpaceIT {
 	public void testMultipleEntryNodes(){
 		_processors = 1;
 		
+		System.out.println("testMultipleEntryNodes");
+		
 		_ssManager = new SolutionSpaceManager(_graph2, _processors);
 		_ssManager.initialise();
 		
-		//_tasks = _ssManager.getOptimal();
+		_tasks = _ssManager.getOptimal();
 		for (Task t : _tasks){
 			if (t.getNode().getId().equals("1")){
-				assertEquals(t.getStartTime(), 0);
+				System.out.println("is 1: " + t);
+				assertEquals(0, t.getStartTime());
 			}
 			if (t.getNode().getId().equals("2")){
-				assertEquals(t.getStartTime(), 5);
+				assertEquals(5, t.getStartTime());
+				System.out.println("is 2: " + t);
 			}
 			if (t.getNode().getId().equals("3")){
-				assertEquals(t.getStartTime(), 11);
+				assertEquals(11, t.getStartTime());
+				System.out.println("is 3: " + t);
 			}
 			if (t.getNode().getId().equals("4")){
-				assertEquals(t.getStartTime(), 15);
+				assertEquals(15, t.getStartTime());
+				System.out.println("is 4: " + t);
 			}
 		}
 	}
@@ -102,7 +109,7 @@ public class SolutionSpaceIT {
 	 */
 	@Test
 	public void testMultipleExitNodes(){
-		
+		System.out.println("testmultipleexitnodes");
 		_processors = 1; 
 		
 		_ssManager = new SolutionSpaceManager(_graph3, _processors);
@@ -111,16 +118,16 @@ public class SolutionSpaceIT {
 		_tasks = _ssManager.getOptimal();
 		for (Task t : _tasks){
 			if (t.getNode().getId().equals("1")){
-				assertEquals(t.getStartTime(), 0);
+				assertEquals(0, t.getStartTime());
 			}
 			if (t.getNode().getId().equals("2")){
-				assertEquals(t.getStartTime(), 4);
+				assertEquals(4, t.getStartTime());
 			}
 			if (t.getNode().getId().equals("3")){
-				assertEquals(t.getStartTime(), 3);
+				assertEquals(3, t.getStartTime());
 			}
 			if (t.getNode().getId().equals("4")){
-				assertEquals(t.getStartTime(), 8);
+				assertEquals(8, t.getStartTime());
 			}
 		}
 	}
@@ -128,6 +135,7 @@ public class SolutionSpaceIT {
 	@Test 
 	public void testOutputGraph(){
 		
+		System.out.println("testOutputGraph");
 		_processors = 1;
 		
 		_ssManager = new SolutionSpaceManager(_graph4, _processors);
@@ -136,8 +144,11 @@ public class SolutionSpaceIT {
 		_tasks = _ssManager.getOptimal();
 		Graph outputGraph = _ssManager.getGraph();
 		
+		System.out.println(outputGraph);
+		
 		for(Node n : outputGraph.getNodeSet()){
-			assertEquals(n.getAttributeCount(), 1);
+			System.out.println(n + " what the heck " + n.getAttributeCount());
+			assertEquals(1, n.getAttributeCount());
 		}
 		 
 	}

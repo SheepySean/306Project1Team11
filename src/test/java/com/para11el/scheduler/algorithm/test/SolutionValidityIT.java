@@ -17,7 +17,7 @@ import com.para11el.scheduler.algorithm.Task;
  * @author Jessica Alcantara
  *
  */
-public class SolutionValidityTest {
+public class SolutionValidityIT {
 	
 	private SolutionSpaceManager _ssManager;
 	
@@ -28,6 +28,7 @@ public class SolutionValidityTest {
 	 */
 	@Test
 	public void testSingleEntryProcessorOrder() {
+		System.out.println("testSingleEntryProcessorOrder()");
 		_ssManager = new SolutionSpaceManager(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
 		_ssManager.initialise();
@@ -35,6 +36,7 @@ public class SolutionValidityTest {
 		
 		for (Task t : _ssManager.getOptimal()) {
 			solution.put(t.getNode().getId(), t.getStartTime());
+			System.out.println(t);
 		}
 		
 		assertTrue(isBefore(solution.get("a"), solution.get("b")));
@@ -51,6 +53,7 @@ public class SolutionValidityTest {
 	 */
 	@Test
 	public void testSingleEntryProcessorOptimality() {
+		System.out.println("testSingleEntryProcessorOptimality()");
 		_ssManager = new SolutionSpaceManager(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
 		_ssManager.initialise();
@@ -58,6 +61,7 @@ public class SolutionValidityTest {
 		int latestFinish = 0;
 		
 		for (Task task : schedule) {
+			System.out.println(task);
 			int startTime = task.getStartTime();
 			int finishTime = (int) task.getNode().getAttribute("Weight")
 					+ startTime;
@@ -76,10 +80,13 @@ public class SolutionValidityTest {
 	 */
 	@Test
 	public void testSingleExitProcessorOverlap() {
+		System.out.println("testSingleExitProcessorOverlap()");
 		_ssManager = new SolutionSpaceManager(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
 		_ssManager.initialise();
 		ArrayList<Task> solution = _ssManager.getOptimal();
+		
+		System.out.println(solution);
 		
 		assertTrue(noSingleProcessorOverlap(solution));
 	}
@@ -91,6 +98,7 @@ public class SolutionValidityTest {
 	 */
 	@Test
 	public void testSingleExitProcessorOrder() {
+		System.out.println("testSingleExitProcessorOrder()");
 		_ssManager = new SolutionSpaceManager(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
 		_ssManager.initialise();
@@ -98,6 +106,7 @@ public class SolutionValidityTest {
 		
 		for (Task t : _ssManager.getOptimal()) {
 			solution.put(t.getNode().getId(), t.getStartTime());
+			System.out.println(t);
 		}
 		
 		assertTrue(isBefore(solution.get("a"), solution.get("c")));
@@ -112,6 +121,7 @@ public class SolutionValidityTest {
 	 */
 	@Test
 	public void testSingleExitProcessorOptimality() {
+		System.out.println("testSingleExitProcessorOptimality()");
 		_ssManager = new SolutionSpaceManager(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
 		_ssManager.initialise();
@@ -119,6 +129,7 @@ public class SolutionValidityTest {
 		int latestFinish = 0;
 		
 		for (Task task : solution) {
+			System.out.println(task);
 			int startTime = task.getStartTime();
 			int finishTime = (int) task.getNode().getAttribute("Weight")
 					+ startTime;
