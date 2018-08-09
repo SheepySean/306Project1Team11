@@ -65,12 +65,12 @@ public class Scheduler {
 			return;
 		}
 		
-		//Create the SolutionSpace
+/*		//Create the SolutionSpace
 		SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
 		solutionSpaceManager.initialise();
 		
 		//Get the graph labeled with the optimal solution
-		Graph newGraph = solutionSpaceManager.getGraph();
+		Graph newGraph = solutionSpaceManager.getGraph();*/
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
@@ -88,7 +88,7 @@ public class Scheduler {
 		// Write the output file
 		try {
 			fileManager.writeGraphFile(_outputFilename,
-					newGraph, true);
+					_inGraph, true);
             System.out.println("Graph file successfully written to '" + _outputFilename+ "'");
 		} catch(IOException e) {
 			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");

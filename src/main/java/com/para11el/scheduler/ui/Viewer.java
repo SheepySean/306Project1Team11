@@ -25,7 +25,7 @@ public class Viewer extends Application {
             // Add logo to the GUI
             stage.getIcons().add(new Image(Viewer.class.getResourceAsStream("/images/logo-icon.png")));
             stage.setScene(scene);
-            stage.setResizable(false);
+            //stage.setResizable(false);
             stage.setTitle("Para11el - Task Scheduler");
             stage.show();
         } catch(Exception e) {

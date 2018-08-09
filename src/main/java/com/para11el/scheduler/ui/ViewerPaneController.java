@@ -32,7 +32,7 @@ public class ViewerPaneController {
     public void initialize() {
         ViewPanel graphViewPanel = _viewer.addDefaultView(false);
         _viewer.enableAutoLayout();
-        graphViewPanel.setPreferredSize(new Dimension(1200, 720));
+        graphViewPanel.setPreferredSize(new Dimension(1200, 550));
         JPanel graphPanel = new JPanel();
         graphPanel.setLayout(new BorderLayout());
         graphPanel.add(graphViewPanel, BorderLayout.SOUTH);
