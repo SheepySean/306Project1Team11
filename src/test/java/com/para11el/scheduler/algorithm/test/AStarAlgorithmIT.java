@@ -7,10 +7,10 @@ import java.util.Queue;
 
 import org.junit.Test;
 
-import com.para11el.scheduler.algorithm.AlgorithmManager;
+import com.para11el.scheduler.algorithm.AStarAlgorithm;
 import com.para11el.scheduler.algorithm.State;
 
-public class AlgorithmManagerIT {
+public class AStarAlgorithmIT {
 	
 	/**
 	 * Unit test for the ascending ordering of the state comparator.
@@ -25,7 +25,7 @@ public class AlgorithmManagerIT {
 		State stateThree = new State();
 		stateThree.setCost(9);
 		
-		AlgorithmManager am = new AlgorithmManager();
+		AStarAlgorithm am = new AStarAlgorithm();
 		Queue<State> states = new PriorityQueue<State>(am.getStateComparator());
 		states.add(stateOne);
 		states.add(stateTwo);

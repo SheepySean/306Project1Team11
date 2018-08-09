@@ -9,8 +9,8 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
-public class AlgorithmManager {
-	
+public class AStarAlgorithm extends Algorithm{
+
 	/**
 	 * Comparator to sort states according to the results of the cost
 	 * function.
@@ -23,39 +23,16 @@ public class AlgorithmManager {
         }
 	};
 	
-	private ArrayList<Task> _solution = new ArrayList<Task>();
 	private Queue<State> _states = new PriorityQueue<State>(_stateComparator);
-	private Graph _graph;
-	private int _processors;
-	private int _cores;
 	
-	public AlgorithmManager() {}
+	public AStarAlgorithm() {}
 	
-	/**
-	 * Constructor for AlgorithmManager for sequential solution
-	 * @param graph input graph
-	 * @param processor number of processors
-	 * 
-	 * @author Jessica Alcantara
-	 */
-	public AlgorithmManager(Graph graph, int processor) {
-		_graph = graph;
-		_processors = processor;
-		_cores = 1;
+	public AStarAlgorithm(Graph graph, int processor) {
+		super(graph, processor);
 	}
-
-	/**
-	 * Constructor for AlgorithmManager for parallel solution
-	 * @param graph input graph
-	 * @param processor number of processors
-	 * @param cores number of cores
-	 * 
-	 * @author Jessica Alcantara
-	 */
-	public AlgorithmManager(Graph graph, int processor, int cores) {
-		_graph = graph;
-		_processors = processor;
-		_cores = cores;
+	
+	public AStarAlgorithm(Graph graph, int processor, int cost) {
+		super(graph, processor, cost);
 	}
 	
 	/**
@@ -63,7 +40,7 @@ public class AlgorithmManager {
 	 * 
 	 * @author Jessica Alcantara, Holly Hagenson
 	 */
-	public ArrayList<Task> getSolution() {
+	public ArrayList<Task> buildSolution() {
 		while (_states.size() > 0) {
 			// Add the most promising state to the solution
 			State state = getFirstFreeTask();
