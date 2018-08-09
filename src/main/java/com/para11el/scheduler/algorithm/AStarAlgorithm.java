@@ -44,6 +44,15 @@ public class AStarAlgorithm extends Algorithm{
 	 * @author Jessica Alcantara, Holly Hagenson
 	 */
 	public ArrayList<Task> buildSolution() {
+		// Initialize priority queue with entry node initial states
+		for (Node node : _graph.getNodeSet()) {
+			if (node.getInDegree() == 0) {
+				_states.add(new State(node, 
+						calculateCostFunction(null, node), 
+						((Number) node.getAttribute("Weight")).intValue()));
+			}
+		}
+		
 		while (_states.size() > 0) {
 			// Add the most promising state to the solution
 			State state = getFirstFreeTask();
@@ -61,6 +70,11 @@ public class AStarAlgorithm extends Algorithm{
 	}
 	
 	//TODO: schedule task from state
+	/**
+	 * Schedules the task on the processor that gives the optimal solution
+	 * @param state
+	 * @return
+	 */
 	public Task scheduleTask(State state) {
 		int startTime = 0;
 		int processor = 1;
@@ -165,9 +179,16 @@ public class AStarAlgorithm extends Algorithm{
      * @author Jessica Alcantara
      */
 	public int calculateCostFunction(State parentState, Node newNode) {
-		int parentCost = parentState.getCost();
+		int parentCost;
 		int boundedTime = calculateBoundedTime();
 		int criticalPathEstimate = calculateCriticalPathEstimate();
+		
+		// Check if parent node exists
+		if (parentState == null) {
+			parentCost = 0;
+		} else {
+			parentCost = parentState.getCost();
+		}
 		
 		int maxCost = Math.max(parentCost, boundedTime);
 		maxCost = Math.max(maxCost, criticalPathEstimate);
