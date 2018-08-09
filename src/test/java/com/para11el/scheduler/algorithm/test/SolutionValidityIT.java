@@ -23,18 +23,36 @@ public class SolutionValidityIT {
 	private SolutionSpaceManager _ssManager;
 	
 	/**
+	 * Unit test for no overlap in the schedule of a single entry multiple exit graph
+	 * with one processor.
+	 * @author Jessica Alcantara
+	 */
+	@Test
+	public void testSingleEntryProcessorOverlap() {
+		System.out.println("Single Entry Overlap Test:");
+		_ssManager = new SolutionSpaceManager(
+				new TestGraphManager().createSingleEntryMultipleExit(),1);
+		_ssManager.initialise();
+		ArrayList<Task> solution = _ssManager.getOptimal();
+		
+		assertTrue(noSingleProcessorOverlap(solution));
+	}
+	
+	/**
 	 * Unit test for the correct schedule order of a single entry multiple exit graph
 	 * with one processor.
 	 * @author Jessica Alcantara
 	 */
 	@Test
 	public void testSingleEntryProcessorOrder() {
+		System.out.println("Single Entry Order Test:");
 		_ssManager = new SolutionSpaceManager(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
 		_ssManager.initialise();
 		TreeMap<String,Integer> solution = new TreeMap<String,Integer>();
 		
 		for (Task t : _ssManager.getOptimal()) {
+			System.out.println(t.getNode().getId());
 			solution.put(t.getNode().getId(), t.getStartTime());
 		}
 		
@@ -77,8 +95,9 @@ public class SolutionValidityIT {
 	 */
 	@Test
 	public void testSingleExitProcessorOverlap() {
+		System.out.println("Single Exit Overlap Test:");
 		_ssManager = new SolutionSpaceManager(
-				new TestGraphManager().createSingleEntryMultipleExit(),1);
+				new TestGraphManager().createSingleExitMultipleEntry(),1);
 		_ssManager.initialise();
 		ArrayList<Task> solution = _ssManager.getOptimal();
 		
@@ -92,12 +111,14 @@ public class SolutionValidityIT {
 	 */
 	@Test
 	public void testSingleExitProcessorOrder() {
+		System.out.println("Single Exit Order Test:");
 		_ssManager = new SolutionSpaceManager(
-				new TestGraphManager().createSingleEntryMultipleExit(),1);
+				new TestGraphManager().createSingleExitMultipleEntry(),1);
 		_ssManager.initialise();
 		TreeMap<String,Integer> solution = new TreeMap<String,Integer>();
 		
 		for (Task t : _ssManager.getOptimal()) {
+			System.out.println(t.getNode().getId());
 			solution.put(t.getNode().getId(), t.getStartTime());
 		}
 		
@@ -114,7 +135,7 @@ public class SolutionValidityIT {
 	@Test
 	public void testSingleExitProcessorOptimality() {
 		_ssManager = new SolutionSpaceManager(
-				new TestGraphManager().createSingleEntryMultipleExit(),1);
+				new TestGraphManager().createSingleExitMultipleEntry(),1);
 		_ssManager.initialise();
 		ArrayList<Task> solution = _ssManager.getOptimal();
 		int latestFinish = 0;
@@ -166,6 +187,7 @@ public class SolutionValidityIT {
 		int finish = 0;
 		
 		for (Entry<Integer, Integer> e : taskTimes.entrySet()) {
+			System.out.println(e.getKey() + " " + e.getValue());
 			if (e.getKey() < finish && e.getKey() > start) {
 				return false;
 			}
