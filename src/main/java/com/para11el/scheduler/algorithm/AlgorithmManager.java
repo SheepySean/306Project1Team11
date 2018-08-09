@@ -1,12 +1,12 @@
 package com.para11el.scheduler.algorithm;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
 import org.graphstream.graph.Edge;
+import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
 public class AlgorithmManager {
@@ -25,8 +25,36 @@ public class AlgorithmManager {
 	
 	private ArrayList<Task> _solution = new ArrayList<Task>();
 	private Queue<State> _states = new PriorityQueue<State>(_stateComparator);
+	private Graph _graph;
+	private int _processors;
+	private int _cores;
 	
-	
+	/**
+	 * Constructor for AlgorithmManager for sequential solution
+	 * @param graph input graph
+	 * @param processor number of processors
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public AlgorithmManager(Graph graph, int processor) {
+		_graph = graph;
+		_processors = processor;
+		_cores = 1;
+	}
+
+	/**
+	 * Constructor for AlgorithmManager for parallel solution
+	 * @param graph input graph
+	 * @param processor number of processors
+	 * @param cores number of cores
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public AlgorithmManager(Graph graph, int processor, int cores) {
+		_graph = graph;
+		_processors = processor;
+		_cores = cores;
+	}
 	/**
 	 * PSEUDOCODE:
 	 * 
