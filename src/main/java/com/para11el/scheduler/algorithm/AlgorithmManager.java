@@ -67,7 +67,7 @@ public class AlgorithmManager {
 		while (_states.size() > 0) {
 			// Add the most promising state to the solution
 			State state = getFirstFreeTask();
-			_solution.add(state.toTask());
+			_solution.add(scheduleTask(state));
 			
 			// Check if solution is complete
 			if (isCompleteSolution(_solution)) {
@@ -78,6 +78,16 @@ public class AlgorithmManager {
 			pushChildren(state);
 		}
 		return _solution;
+	}
+	
+	//TODO: schedule task from state
+	public Task scheduleTask(State state) {
+		int startTime = 0;
+		int processor = 1;
+		
+		// TODO: schedule task on processor so it is optimal and valid
+		
+		return new Task(state.getNode(), startTime, processor);
 	}
 	
 	//TODO: find first task in _states that is free to be scheduled
