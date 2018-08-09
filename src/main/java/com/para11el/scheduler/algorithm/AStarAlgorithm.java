@@ -73,7 +73,7 @@ public class AStarAlgorithm extends Algorithm{
 	/**
 	 * Finds the state with the lowest cost whose parent nodes have
 	 * already been scheduled.
-	 * @return state with the lowest cost that is available
+	 * @return state available state with the lowest cost
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -86,7 +86,7 @@ public class AStarAlgorithm extends Algorithm{
 		while (!foundFreeTask) {
 			// Check if parent nodes have been scheduled
 			for (Edge e : state.getNode().getEachEnteringEdge()) {
-				if (!solutionContainsTask(e.getSourceNode())) {
+				if (!solutionContainsNode(e.getSourceNode())) {
 					isFreeTask = false;
 					break;
 				}
@@ -108,15 +108,24 @@ public class AStarAlgorithm extends Algorithm{
 		return state;
 	}
 	
-	//TODO: check if solution contains task
-	public boolean solutionContainsTask(Node node) {
+	/**
+	 * Checks whether the node has been scheduled in the solution
+	 * @param node Node representing a task
+	 * @return boolean true if solution contains the node
+	 */
+	public boolean solutionContainsNode(Node node) {
+		for (Task task : _solution) {
+			if (task.getNode().equals(node)) {
+				return true;
+			}
+		}
 		return false;
 	}
 	
 	/**
 	 * Checks that if the partial solution is a complete solution where all input
 	 * tasks are scheduled.
-	 * @return Boolean true if solution is complete
+	 * @return boolean true if solution is complete
 	 * 
 	 * @author Jessica Alcantara
 	 */
