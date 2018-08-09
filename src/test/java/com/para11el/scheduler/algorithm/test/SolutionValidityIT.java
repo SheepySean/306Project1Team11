@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import org.junit.Test;
 
 import com.para11el.scheduler.algorithm.SolutionSpaceManager;
+import com.para11el.scheduler.algorithm.test.TestGraphManager;
 import com.para11el.scheduler.algorithm.Task;
 
 /**
@@ -59,7 +60,7 @@ public class SolutionValidityIT {
 		
 		for (Task task : schedule) {
 			int startTime = task.getStartTime();
-			int finishTime = (int) task.getNode().getAttribute("Weight")
+			int finishTime = ((Number) task.getNode().getAttribute("Weight")).intValue()
 					+ startTime;
 			if (finishTime > latestFinish) {
 				latestFinish = finishTime;
@@ -120,7 +121,7 @@ public class SolutionValidityIT {
 		
 		for (Task task : solution) {
 			int startTime = task.getStartTime();
-			int finishTime = (int) task.getNode().getAttribute("Weight")
+			int finishTime = ((Number) task.getNode().getAttribute("Weight")).intValue()
 					+ startTime;
 			if (finishTime > latestFinish) {
 				latestFinish = finishTime;
@@ -156,7 +157,7 @@ public class SolutionValidityIT {
 		
 		for (Task task : schedule) {
 			int startTime = task.getStartTime();
-			int finishTime = (int) task.getNode().getAttribute("Weight")
+			int finishTime = ((Number) task.getNode().getAttribute("Weight")).intValue()
 					+ startTime;
 			taskTimes.put(startTime, finishTime);
 		}

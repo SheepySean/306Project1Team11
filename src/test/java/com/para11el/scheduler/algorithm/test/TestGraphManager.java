@@ -10,6 +10,8 @@ import org.graphstream.graph.implementations.SingleGraph;
  */
 public class TestGraphManager {
 	
+	public TestGraphManager() {}
+	
 	/**
 	 * Create example graph with a single exit and exit.
 	 * @author Jessica Alcantara
