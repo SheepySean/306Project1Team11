@@ -16,9 +16,9 @@ public class SolutionSpaceManager {
 	private Graph _graph;
 	private int _processors;
 	private int _cores;
+	private int _minimumTime;
 
-	private ArrayList<Task> _solution = new ArrayList<Task>();
-	private static ArrayList<ArrayList<Task>> _allSolutions = new ArrayList<ArrayList<Task>>();
+	private ArrayList<Task> _optimalSolution = new ArrayList<Task>();
 
 	/**
 	 * Constructor for SolutionSpaceManager if user does not specify number
@@ -56,6 +56,8 @@ public class SolutionSpaceManager {
 	 * @author Rebekah Berriman, Tina Chen
 	 */
 	public void initialise() {
+		
+		setMinimumTime();
 
 		for (Node node : _graph.getNodeSet()) {
 			if (node.getInDegree() == 0) {
@@ -64,6 +66,23 @@ public class SolutionSpaceManager {
 				solutionPart.add(t);
 				buildRecursiveSolution(solutionPart);
 			}
+		}
+	}
+	
+	/**
+	 * Sets the absolute minimum time to complete all tasks (sequentially on a single processor), which
+	 * can then be used for bounding. Sets a private int _minimumTime
+	 * 
+	 * @author Rebekah Berriman
+	 */
+	private void setMinimumTime() {
+		_minimumTime=0;
+		for (Node node : _graph.getNodeSet()) {
+			_minimumTime+= ((Number)node.getAttribute("Weight")).intValue();
+		}
+		
+		for (Edge edge : _graph.getEdgeSet()) {
+			_minimumTime+= ((Number)edge.getAttribute("Weight")).intValue();
 		}
 	}
 
@@ -87,6 +106,9 @@ public class SolutionSpaceManager {
 				for (int i = 1; i <= _processors; i++) {
 					privateSolutionArrayList = (ArrayList<Task>) solutionArrayList.clone();		
 					int startTime = getStartTime(privateSolutionArrayList, node, i);
+					if (startTime > _minimumTime) {
+						break;
+					}
 					Task task = new Task(node, startTime, i);
 					privateSolutionArrayList.add(task);			
 					buildRecursiveSolution(privateSolutionArrayList);	
@@ -95,7 +117,7 @@ public class SolutionSpaceManager {
 		} else {
 			// If no more available nodes, add the possible solution schedule to full solution space
 			if (privateSolutionArrayList.size() == _graph.getNodeCount()) {
-				addSolution(privateSolutionArrayList);
+				findOptimal(privateSolutionArrayList);
 			}
 		}
 	}
@@ -236,51 +258,35 @@ public class SolutionSpaceManager {
 	}
 
 	/**
-	 * Adds a solution to the solution list
-	 * @param solution a full task schedule solution
-	 * 
-	 * @author Rebekah Berriman, Tina Chen
-	 */
-	private void addSolution(ArrayList<Task> solution) {
-		if (solution != null) {
-			ArrayList<Task> newSolution = (ArrayList<Task>) solution.clone();
-			_allSolutions.add(newSolution);
-
-			findOptimal();
-		}
-	}
-
-	/**
-	 * Searches the possible solutions for the optimal solution (earliest finish time)
+	 * Checks if the new solution is a better solution that currently stored.
 	 * Returns a full task schedule solution with the shortest completion time.
 	 * @return an ArrayList<Task> of the optimal solution
 	 * 
 	 * @author Rebekah Berriman
 	 */
-	private void findOptimal() {
-		int minimumTime=0;
-
-		for (int possibleSolution=0; possibleSolution<_allSolutions.size(); possibleSolution++) {
-			// Set the finish time of this solution
+	private void findOptimal(ArrayList<Task> solution) {
+		if (solution != null) {
+			ArrayList<Task> newSolution = (ArrayList<Task>) solution.clone();
+			
 			int solutionTime = 0; 
 			for (int processor=0; processor <= _processors; processor++) {
-				int possibleSolutionTime = getProcessorFinishTime(_allSolutions.get(possibleSolution), processor);
+				int possibleSolutionTime = getProcessorFinishTime(newSolution, processor);
+				
+				if (possibleSolutionTime > _minimumTime) {
+					return;
+				}
 				// If the finishTime of one processor is later than another, update the finish time of the task
 				if (solutionTime < possibleSolutionTime) {
 					solutionTime = possibleSolutionTime;
 				}
 			}
 
-			// If the minimum run time is still zero, or the solution time is less than the minimal time, update it
-			if (minimumTime == 0 || minimumTime > solutionTime ) {
-				minimumTime = solutionTime;
-				_solution = _allSolutions.get(possibleSolution);
+			// If the solution time is less than or equal to the minimal time, update the _solution
+			if (_minimumTime >= solutionTime ) {
+				_minimumTime = solutionTime;
+				_optimalSolution = newSolution;
 			}
 		}
-
-		//Clear all solutions array list and only add the current optimal back. 
-		_allSolutions.clear();
-		_allSolutions.add(_solution);
 	}
 
 	/**
@@ -291,7 +297,7 @@ public class SolutionSpaceManager {
 	 * @author Rebekah Berriman
 	 */
 	public ArrayList<Task> getOptimal() {
-		return _solution;
+		return _optimalSolution;
 	}
 
 	/**
@@ -300,7 +306,7 @@ public class SolutionSpaceManager {
 	 * @author Rebekah Berriman
 	 */
 	private void labelGraph() {
-		for (Task task : _solution) {
+		for (Task task : _optimalSolution) {
 			Node node = task.getNode();
 			node.addAttribute("Start", task.getStartTime());
 			node.addAttribute("Processor", task.getProcessor());
