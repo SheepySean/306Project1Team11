@@ -29,6 +29,8 @@ public class AlgorithmManager {
 	private int _processors;
 	private int _cores;
 	
+	public AlgorithmManager() {}
+	
 	/**
 	 * Constructor for AlgorithmManager for sequential solution
 	 * @param graph input graph
@@ -55,28 +57,39 @@ public class AlgorithmManager {
 		_processors = processor;
 		_cores = cores;
 	}
+	
 	/**
-	 * PSEUDOCODE:
+	 * Initializes the algorithm and build solution
 	 * 
-	 * while _tasks.size() > 0 {
-	 * 		State s = _tasks.pop();
-	 *     _solution.add(s); // must check if task is free to be scheduled
-	 *     if (_solution.isCompleteValidSolution) {
-	 *     		return _solution;
-	 *     }
-	 *     
-	 *     _tasks.add(children_of_s); // find the children of s and their cost functions
-	 *     
-	 *     
-	 *  TO DO:
-	 *  
-	 * * Code the cost function
-	 * * Code a check for free tasks
-	 * * Code a check for a complete solution = checking that the size is the same as size of graph
-	 * * Code BFS - finding the adjacent nodes
-	 * 
-	 * 
+	 * @author Jessica Alcantara, Holly Hagenson
 	 */
+	public ArrayList<Task> getSolution() {
+		while (_states.size() > 0) {
+			// Add the most promising state to the solution
+			State state = getFirstFreeTask();
+			_solution.add(state.toTask());
+			
+			// Check if solution is complete
+			if (isCompleteSolution(_solution)) {
+				return _solution;
+			}
+			
+			// Expand state into children
+			pushChildren(state);
+		}
+		return _solution;
+	}
+	
+	//TODO: find first task in _states that is free to be scheduled
+	public State getFirstFreeTask() {
+		return null;
+	}
+	
+	//TODO: check if solution is complete
+	public Boolean isCompleteSolution(ArrayList<Task> solution) {
+		return true;
+	}
+
 	
     /**
      * Retrieves the children of a node and adds the state to the priority queue.

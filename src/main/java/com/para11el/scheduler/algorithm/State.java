@@ -46,6 +46,11 @@ public class State {
 		_cost = cost;
 	}
 	
+	//TODO: conversion of state to task
+	public Task toTask() {
+		return null;
+	}
+	
 	/**
 	 * Compares state based on the cost
 	 * @param compareState
