@@ -16,7 +16,7 @@ import java.awt.*;
 public class ViewerPaneController {
     private static Viewer _viewer;
     @FXML
-    private AnchorPane pane;
+    private AnchorPane anchor;
 
     @FXML
     private Text label;
@@ -24,20 +24,20 @@ public class ViewerPaneController {
 
 
     @FXML
-    private SwingNode swing;
+    private SwingNode inGraph;
     /**
      * Initialize some of the GUI's components to initial states
      */
     @FXML
     public void initialize() {
-        ViewPanel view = _viewer.addDefaultView(false);
+        ViewPanel graphViewPanel = _viewer.addDefaultView(false);
         _viewer.enableAutoLayout();
-        view.setPreferredSize(new Dimension(1200, 720));
-        JPanel frame = new JPanel();
-        frame.setLayout(new BorderLayout());
-        frame.add(view, BorderLayout.SOUTH);
+        graphViewPanel.setPreferredSize(new Dimension(1200, 720));
+        JPanel graphPanel = new JPanel();
+        graphPanel.setLayout(new BorderLayout());
+        graphPanel.add(graphViewPanel, BorderLayout.SOUTH);
         //view.display((GraphicGraph)_inGraph, true);
-        swing.setContent(frame);
+        inGraph.setContent(graphPanel);
     }
 
     public static void setViewer(Viewer viewer) {
