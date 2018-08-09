@@ -14,6 +14,7 @@ public class AStarAlgorithm extends Algorithm{
 	/**
 	 * Comparator to sort states according to the results of the cost
 	 * function.
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	private Comparator<State> _stateComparator = new Comparator<State>() {
@@ -25,7 +26,9 @@ public class AStarAlgorithm extends Algorithm{
 	
 	private Queue<State> _states = new PriorityQueue<State>(_stateComparator);
 	
-	public AStarAlgorithm() {}
+	public AStarAlgorithm() {
+		super();
+	}
 	
 	public AStarAlgorithm(Graph graph, int processor) {
 		super(graph, processor);
@@ -47,7 +50,7 @@ public class AStarAlgorithm extends Algorithm{
 			_solution.add(scheduleTask(state));
 			
 			// Check if solution is complete
-			if (isCompleteSolution(_solution)) {
+			if (isCompleteSolution()) {
 				return _solution;
 			}
 			
@@ -67,20 +70,69 @@ public class AStarAlgorithm extends Algorithm{
 		return new Task(state.getNode(), startTime, processor);
 	}
 	
-	//TODO: find first task in _states that is free to be scheduled
+	/**
+	 * Finds the state with the lowest cost whose parent nodes have
+	 * already been scheduled.
+	 * @return state with the lowest cost that is available
+	 * 
+	 * @author Jessica Alcantara
+	 */
 	public State getFirstFreeTask() {
-		return null;
+		ArrayList<State> notAvailable = new ArrayList<State>();
+		Boolean foundFreeTask = false;
+		Boolean isFreeTask = true;
+		State state = _states.poll();
+		
+		while (!foundFreeTask) {
+			// Check if parent nodes have been scheduled
+			for (Edge e : state.getNode().getEachEnteringEdge()) {
+				if (!solutionContainsTask(e.getSourceNode())) {
+					isFreeTask = false;
+					break;
+				}
+			}
+			
+			if (isFreeTask) {
+				foundFreeTask = true;
+			} else {
+				notAvailable.add(state);
+				state = _states.poll();
+			}
+		}
+		
+		// Add the not available tasks back to the priority queue
+		for (State s : notAvailable) {
+			_states.add(s);
+		}
+		
+		return state;
 	}
 	
-	//TODO: check if solution is complete
-	public Boolean isCompleteSolution(ArrayList<Task> solution) {
-		return true;
+	//TODO: check if solution contains task
+	public boolean solutionContainsTask(Node node) {
+		return false;
+	}
+	
+	/**
+	 * Checks that if the partial solution is a complete solution where all input
+	 * tasks are scheduled.
+	 * @return Boolean true if solution is complete
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public Boolean isCompleteSolution() {
+		if (_solution.size() == _graph.getNodeCount()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	
     /**
      * Retrieves the children of a node and adds the state to the priority queue.
      * @param node Parent node
+     * 
      * @author Jessica Alcantara
      */
 	public void pushChildren(State state) {
@@ -100,6 +152,7 @@ public class AStarAlgorithm extends Algorithm{
      * @param parentState Parent state of the new node
      * @param newNode New node to calculate the cost function of 
      * @return int representing the cost
+     * 
      * @author Jessica Alcantara
      */
 	public int calculateCostFunction(State parentState, Node newNode) {
