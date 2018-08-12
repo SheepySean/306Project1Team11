@@ -69,7 +69,6 @@ public class AStarAlgorithm extends Algorithm{
 		return _solution;
 	}
 	
-	//TODO: schedule task from state
 	/**
 	 * Schedules the task on the processor that gives the optimal solution
 	 * @param state
@@ -79,7 +78,7 @@ public class AStarAlgorithm extends Algorithm{
 		int startTime = 0;
 		int processor = 1;
 		
-		// TODO: schedule task on processor so it is optimal and valid
+		// TODO: schedule task on processor so it is optimal and valid from state
 		
 		return new Task(state.getNode(), startTime, processor);
 	}
@@ -126,6 +125,8 @@ public class AStarAlgorithm extends Algorithm{
 	 * Checks whether the node has been scheduled in the solution
 	 * @param node Node representing a task
 	 * @return boolean true if solution contains the node
+	 * 
+	 * @author Jessica Alcantara
 	 */
 	public boolean solutionContainsNode(Node node) {
 		for (Task task : _solution) {
@@ -196,8 +197,28 @@ public class AStarAlgorithm extends Algorithm{
 		return maxCost;
 	}
 	
-	// TODO:
+	/**
+	 * Calculates the bounded time based on:
+	 * 		Bt(S) = idle(S) + sum(weights(all nodes))
+	 * 
+	 * @return int of the bounded time
+	 * 
+	 * @author Jessica Alcantara
+	 */
 	public int calculateBoundedTime() {
+		int idleTime = calculateIdleTime();
+		int weightTotal = 0;
+		
+		for (Node node : _graph.getNodeSet()) {
+			weightTotal += ((Number)node.getAttribute("Weight")).intValue();
+		}
+		
+		int boundedTime = (idleTime + weightTotal)/_processors;
+		return boundedTime;
+	}
+	
+	//TODO: 
+	public int calculateIdleTime() {
 		return 0;
 	}
 	
@@ -220,9 +241,13 @@ public class AStarAlgorithm extends Algorithm{
 		return startTime + bottomLevel;
 	}
 	
+	/**
+	 * Returns the comparator used to order the states in the priority queue
+	 * @return comparator of states
+	 * 
+	 * @author Jessica Alcantara
+	 */
 	public Comparator<State> getStateComparator() {
 		return _stateComparator;
 	}
-	
-
 }
