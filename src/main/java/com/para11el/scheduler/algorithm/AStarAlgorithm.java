@@ -26,6 +26,8 @@ public class AStarAlgorithm extends Algorithm{
 	
 	private Queue<State> _states = new PriorityQueue<State>(_stateComparator);
 	
+	private Task _lastTask; 
+	
 	public AStarAlgorithm() {
 		super();
 	}
@@ -181,8 +183,7 @@ public class AStarAlgorithm extends Algorithm{
 	public int calculateCostFunction(State parentState, Node newNode) {
 		int parentCost;
 		int boundedTime = calculateBoundedTime();
-		//TODO: change to input node from partial solution
-		int criticalPathEstimate = calculateCriticalPathEstimate(newNode);
+		int criticalPathEstimate = calculateCriticalPathEstimate(_lastTask);
 		
 		// Check if parent node exists
 		if (parentState == null) {
@@ -201,7 +202,6 @@ public class AStarAlgorithm extends Algorithm{
 		return 0;
 	}
 	
-	// TODO:
 	/**
 	 * Calculates the critical path estimate based on:
 	 * 		Cpe(S) = startTime(nlast) + bottomLevel(nlast)
@@ -211,11 +211,10 @@ public class AStarAlgorithm extends Algorithm{
 	 * 
 	 * @author Holly Hagenson
 	 */
-	public int calculateCriticalPathEstimate(Node node) {
+	public int calculateCriticalPathEstimate(Task task) {
 		CostFunctionManager cfm = new CostFunctionManager();
-		int bottomLevel = cfm.bottomLevel(node, _graph);
-		//TODO: change startTime to be latest start time of node in partial schedule
-		int startTime = 0; 
+		int bottomLevel = cfm.bottomLevel(task.getNode(), _graph);
+		int startTime = task.getStartTime(); 
 		
 		return startTime + bottomLevel;
 	}
