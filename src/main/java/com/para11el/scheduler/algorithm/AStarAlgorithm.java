@@ -181,7 +181,8 @@ public class AStarAlgorithm extends Algorithm{
 	public int calculateCostFunction(State parentState, Node newNode) {
 		int parentCost;
 		int boundedTime = calculateBoundedTime();
-		int criticalPathEstimate = calculateCriticalPathEstimate();
+		//TODO: change to input node from partial solution
+		int criticalPathEstimate = calculateCriticalPathEstimate(newNode);
 		
 		// Check if parent node exists
 		if (parentState == null) {
@@ -201,8 +202,13 @@ public class AStarAlgorithm extends Algorithm{
 	}
 	
 	// TODO:
-	public int calculateCriticalPathEstimate() {
-		return 0;
+	public int calculateCriticalPathEstimate(Node node) {
+		CostFunctionManager cfm = new CostFunctionManager();
+		int bottomLevel = cfm.bottomLevel(node, _graph);
+		//TODO: change startTime to be latest start time of node in partial solution
+		int startTime = 0; 
+		
+		return startTime + bottomLevel;
 	}
 	
 	public Comparator<State> getStateComparator() {

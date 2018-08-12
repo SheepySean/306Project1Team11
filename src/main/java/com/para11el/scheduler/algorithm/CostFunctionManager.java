@@ -1,8 +1,6 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import org.graphstream.graph.Edge;
@@ -11,43 +9,45 @@ import org.graphstream.graph.Node;
 
 public class CostFunctionManager {
 	
-	private ArrayList<Node> _exitNodes = new ArrayList<Node>(); 
-	private HashSet<Node> _settledNodes; 
-	private HashSet<Node> _unsettledNodes; 
+	private List<Node> _longestPath = new ArrayList<Node>(); 
+	private int _max; 
+	private int _dist; 
 	
-	public void bottomLevel(Node node, Graph g){
+	public CostFunctionManager() {
+		_max = 0; 
+		_dist = 0; 
+	}
+	
+	public int bottomLevel(Node node, Graph graph){
+		List<Node> path = new ArrayList<Node>(); 
+		path.add(node); 
 		
-		getExitNodes(g); 
+		_max = 0; 
+
+		findLongestPath(path, node);
 		
-		_settledNodes = new HashSet<Node>();
-		_unsettledNodes = new HashSet<Node>();
-		
-		//node.setVisited(true); 
-		
-		for (Node n : _exitNodes){
-			findLongestPath(node, n);
-		}
-		
+		return _max; 
 		
 	}
 	
-	public void getExitNodes (Graph g){
-		Collection<Node> nodes = g.getNodeSet();
-		for (Node n : nodes){
-			if (n.getOutDegree() == 0){
-				_exitNodes.add(n); 
+	private void findLongestPath(List<Node> path, Node source){
+		if (source.getOutDegree() == 0){
+			for (Node n : path){
+				_dist += (double)n.getAttribute("Weight");
+			}
+			if (_dist > _max){
+				_max = _dist;
+				_longestPath = path; 
+			}
+			_dist = 0; 
+		} else {
+			for (Edge e : source.getLeavingEdgeSet()) {
+				List<Node> newPath = new ArrayList<Node>(path); 
+				newPath.add(e.getNode1());
+				findLongestPath(newPath, e.getNode1()); 
 			}
 		}
-	}
-	
-	private void findLongestPath(Node source, Node target){
-		int max, dist = 0; 
 		
-		for (Edge e : source.getLeavingEdgeSet()){
-			//if (e.getNode0().visited() == false){
-				dist = e.getAttribute("Weight"); 
-			//}
-		}
 	}
 
 }
