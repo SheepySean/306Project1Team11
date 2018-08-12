@@ -209,6 +209,7 @@ public class AStarAlgorithm extends Algorithm{
 		int idleTime = calculateIdleTime();
 		int weightTotal = 0;
 		
+		// Calculate the sum of all node weights
 		for (Node node : _graph.getNodeSet()) {
 			weightTotal += ((Number)node.getAttribute("Weight")).intValue();
 		}
@@ -217,9 +218,31 @@ public class AStarAlgorithm extends Algorithm{
 		return boundedTime;
 	}
 	
-	//TODO: 
+	/**
+	 * Calculates the sum of all idle times on each processor.
+	 * @return int of the idle time
+	 * 
+	 * @author Jessica Alcantara
+	 */
 	public int calculateIdleTime() {
-		return 0;
+		int idleTime = 0;
+		int finishTime = 0;
+		int time;
+		for (int i=1; i<= _processors; i++) {
+			for (Task task : _solution) {
+				// Sum the idle time on each processor
+				if (i == task.getProcessor()) {
+					time = task.getStartTime() - finishTime;
+					// Check if the processor is idle
+					if (time > 0) {
+						idleTime += time;
+					}
+					finishTime = task.getStartTime() + 
+							((Number)task.getNode().getAttribute("Weight")).intValue();
+				}
+			}
+		}
+		return idleTime;
 	}
 	
 	// TODO:
