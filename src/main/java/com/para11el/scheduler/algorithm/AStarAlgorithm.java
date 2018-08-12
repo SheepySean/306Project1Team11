@@ -202,10 +202,19 @@ public class AStarAlgorithm extends Algorithm{
 	}
 	
 	// TODO:
+	/**
+	 * Calculates the critical path estimate based on:
+	 * 		Cpe(S) = startTime(nlast) + bottomLevel(nlast)
+	 * 
+	 * @param node Nlast, node with latest finish time in partial schedule
+	 * @return int of critical path estimate
+	 * 
+	 * @author Holly Hagenson
+	 */
 	public int calculateCriticalPathEstimate(Node node) {
 		CostFunctionManager cfm = new CostFunctionManager();
 		int bottomLevel = cfm.bottomLevel(node, _graph);
-		//TODO: change startTime to be latest start time of node in partial solution
+		//TODO: change startTime to be latest start time of node in partial schedule
 		int startTime = 0; 
 		
 		return startTime + bottomLevel;

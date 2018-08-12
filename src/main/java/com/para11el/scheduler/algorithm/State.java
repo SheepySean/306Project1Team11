@@ -16,7 +16,7 @@ public class State {
 	public State() {}
 	
 	/**
-	 * Task constructor
+	 * State constructor
 	 * 
 	 * @param node a node in input graph
 	 * @param cost cost calculated by cost function
