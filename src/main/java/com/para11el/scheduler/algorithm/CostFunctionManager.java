@@ -4,36 +4,81 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.graphstream.graph.Edge;
-import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
 /**
- * Class to help calculate the cost function of the A* algorithm.
+ * Class to calculate the cost function of the A* algorithm.
  * 
  * @author Holly Hagenson
  *
  */
 public class CostFunctionManager {
 	
-	private List<Node> _longestPath = new ArrayList<Node>(); 
-	private int _max; 
-	private int _dist; 
+	private int _max = 0; 
+	private int _dist = 0; 
 	
-	public CostFunctionManager() {
-		_max = 0; 
-		_dist = 0; 
+	private int _totalWeight;
+	private int _processors;
+	
+	public CostFunctionManager(int totalWeight, int processor) {
+		_totalWeight = totalWeight;
+		_processors = processor;	
+	}
+	
+    /**
+     * Calculates the cost function f(s) by the following equation:
+     * 		f(s) = max{f(s-1), Cpe(S), Bt(s)}
+     * @param parentState Parent state of the new node
+     * @param newNode New node to calculate the cost function of 
+     * @return int representing the cost
+     * 
+     * @author Jessica Alcantara
+     */
+	public int calculateCostFunction(State parentState, Node newNode, 
+			ArrayList<Task> partialSolution) {
+		int parentCost;
+		int boundedTime = calculateBoundedTime(partialSolution);
+		int criticalPathEstimate = calculateCriticalPathEstimate(parentState, partialSolution);
+		
+		// Check if parent node exists
+		if (parentState == null) {
+			parentCost = 0;
+		} else {
+			parentCost = parentState.getCost();
+		}
+		
+		int maxCost = Math.max(parentCost, boundedTime);
+		maxCost = Math.max(maxCost, criticalPathEstimate);
+		return maxCost;
+	}
+	
+	/**
+	 * Calculates the critical path estimate based on:
+	 * 		Cpe(S) = startTime(nlast) + bottomLevel(nlast)
+	 * 
+	 * @param state Nlast, node with latest finish time in partial schedule
+	 * @param solution, task schedule for current solution
+	 * @return int of critical path estimate
+	 * 
+	 * @author Holly Hagenson
+	 */
+	public int calculateCriticalPathEstimate(State state, ArrayList<Task> solution) {
+		Task parentTask = state.findNode(state.getNode(), solution);
+		int bottomLevel = bottomLevel(state.getNode());
+		int startTime = parentTask.getStartTime(); 
+		
+		return startTime + bottomLevel;
 	}
 	
 	/**
 	 * Calculates the bottom level of a node. 
 	 * 
 	 * @param node Node to calculate bottom level of
-	 * @param graph Input graph that node is a part of
 	 * @return int of bottom level value
 	 * 
 	 * @author Holly Hagenson
 	 */
-	public int bottomLevel(Node node, Graph graph){
+	public int bottomLevel(Node node){
 		// Create path with source node
 		List<Node> path = new ArrayList<Node>(); 
 		path.add(node); 
@@ -62,7 +107,6 @@ public class CostFunctionManager {
 			// Update maximum path length
 			if (_dist > _max){
 				_max = _dist;
-				_longestPath = path; 
 			}
 			_dist = 0; 
 		} else {
@@ -72,8 +116,49 @@ public class CostFunctionManager {
 				newPath.add(e.getNode1());
 				findLongestPath(newPath, e.getNode1()); 
 			}
+		}	
+	}
+	
+	/**
+	 * Calculates the bounded time based on:
+	 * 		Bt(S) = idle(S) + sum(weights(all nodes))
+	 * @param solution Task schedule for current solution
+	 * @return int of the bounded time
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public int calculateBoundedTime(ArrayList<Task> solution) {
+		int idleTime = calculateIdleTime(solution);
+		int boundedTime = (idleTime + _totalWeight)/_processors;
+		return boundedTime;
+	}
+	
+	/**
+	 * Calculates the sum of all idle times on each processor.
+	 * @param solution Task schedule for current solution
+	 * @return int of the idle time
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public int calculateIdleTime(ArrayList<Task> solution) {
+		int idleTime = 0;
+		int finishTime = 0;
+		int time;
+		for (int i=1; i<= _processors; i++) {
+			for (Task task : solution) {
+				// Sum the idle time on each processor
+				if (i == task.getProcessor()) {
+					time = task.getStartTime() - finishTime;
+					// Check if the processor is idle
+					if (time > 0) {
+						idleTime += time;
+					}
+					finishTime = task.getStartTime() + 
+							((Number)task.getNode().getAttribute("Weight")).intValue();
+				}
+			}
 		}
-		
+		return idleTime;
 	}
 
 }

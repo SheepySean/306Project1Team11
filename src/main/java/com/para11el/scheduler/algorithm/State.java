@@ -1,5 +1,7 @@
 package com.para11el.scheduler.algorithm;
 
+import java.util.ArrayList;
+
 import org.graphstream.graph.Node;
 
 /**
@@ -62,4 +64,20 @@ public class State {
 		return this._cost - compareCost;
 	}
 	
+	/**
+	 * Finds the task corresponding to the last node in the state
+	 * @param node in the inputGraph
+	 * @param tasks in the partial solution
+	 * @return Task object node
+	 * 
+	 * @author Sean Oldfield, Rebekah Berriman
+	 */
+	public Task findNode(Node node, ArrayList<Task> tasks) {
+		for (Task task : tasks) {
+			if (task.getNode().equals(node)) {
+				return task;
+			}
+		}
+		return null;
+	}
 }
