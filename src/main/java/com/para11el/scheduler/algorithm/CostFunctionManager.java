@@ -156,7 +156,6 @@ public class CostFunctionManager {
 					}
 					finishTime = task.getStartTime() + 
 							((Number)task.getNode().getAttribute("Weight")).intValue();
-					System.out.println("Finish Time: " + finishTime);
 				}
 			}
 		}
