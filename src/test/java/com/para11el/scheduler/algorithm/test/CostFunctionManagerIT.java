@@ -8,6 +8,10 @@ import org.junit.Test;
 import com.para11el.scheduler.algorithm.CostFunctionManager;
 import com.para11el.scheduler.algorithm.Task;
 
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.SingleGraph;
+
 /**
  * Junit test to test the correctness of the Cost Function Manager.
  * 
@@ -15,6 +19,7 @@ import com.para11el.scheduler.algorithm.Task;
  *
  */
 public class CostFunctionManagerIT {
+	private static Graph _graph1;
 
 	/**
 	 * Unit test for calculating the total idle time in a schedule
@@ -37,7 +42,7 @@ public class CostFunctionManagerIT {
 	}
 	
 	/**
-	 * Unit test for calculating the total idle time in a schedule
+	 * Unit test for calculating the total bounded time in a schedule
 	 * @author Jessica Alcantara
 	 */
 	@Test
@@ -56,13 +61,60 @@ public class CostFunctionManagerIT {
 		assertEquals(4,boundedTime);
 	}
 	
-	//TODO:
-	/*
-	 * * Test cost function calculation
-	 * * Test idle time calculation
-	 * * Test bottom level calculation
-	 * * Test critical path estimate calculation
-	 */
+	@Test
+	public void testCalculateCriticalPathEstimate(){
+		Node nlast = _graph1.getNode("2");
+		nlast.setAttribute("Start", "3");
+		Task lastTask = new Task(nlast, 3, 1);
+		
+		CostFunctionManager cfm = new CostFunctionManager(15, 2);
+		
+		ArrayList<Task> testSolution = new ArrayList<Task>();
+		testSolution.add(new Task(_graph1.getNode("0"),0,1));
+		testSolution.add(new Task(_graph1.getNode("1"),3,1));
+		
+		int criticalPathEstimate = cfm.calculateCriticalPathEstimate(lastTask, testSolution);
+		
+		assertEquals(criticalPathEstimate, 12);
+	}
+	
+	@Test
+	public void testCalculateBottomLevel(){
+		createGraph(); 
+		int processors = 2; 
+		CostFunctionManager cfm = new CostFunctionManager(15, processors);
+		
+		int bottomLevel = cfm.bottomLevel(_graph1.getNode("2"));
+		assertEquals(9, bottomLevel); 
+	}
+	
+	@Test
+	public void testCostFunction(){
+		createGraph(); 
+	}
+	
+	public static void createGraph(){
+		_graph1 = new SingleGraph("graphWithMultipleProcessors");
+		_graph1.addNode("1");
+		_graph1.addNode("2");
+		_graph1.addNode("3");
+		_graph1.addNode("4");
+		_graph1.addNode("5");
+		_graph1.getNode("1").addAttribute("Weight", 3.0);
+		_graph1.getNode("2").addAttribute("Weight", 4.0);
+		_graph1.getNode("3").addAttribute("Weight", 2.0);
+		_graph1.getNode("4").addAttribute("Weight", 1.0);
+		_graph1.getNode("5").addAttribute("Weight", 5.0);
+		_graph1.addEdge("1 -> 2", "1", "2", true);
+		_graph1.addEdge("1 -> 3", "1", "3", true);
+		_graph1.addEdge("2 -> 4", "2", "4", true);
+		_graph1.addEdge("2 -> 5", "2", "5", true);
+		_graph1.getEdge("1 -> 2").setAttribute("Weight", 1.0);
+		_graph1.getEdge("1 -> 3").setAttribute("Weight", 2.0);
+		_graph1.getEdge("2 -> 4").setAttribute("Weight", 3.0);
+		_graph1.getEdge("2 -> 5").setAttribute("Weight", 5.0);
+		
+	}
 	
 	
 }

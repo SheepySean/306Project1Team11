@@ -84,7 +84,7 @@ public class AStarAlgorithm extends Algorithm{
 	 */
 	public Task scheduleTask(State state) {
 		int earliestStartTime = getEarliestStartTime(state, 0);
-		int processor = 0;
+		int processor = 1;
 		int cost = 0; 
 		
 		int nodeCost = ((Number)state.getNode().getAttribute("Weight")).intValue();

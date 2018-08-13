@@ -18,7 +18,7 @@ import com.para11el.scheduler.algorithm.Task;
  * @author Holly Hagenson
  *
  */
-public class SolutionSpaceIT {
+public class SolutionSpace {
 	private SolutionSpaceManager _ssManager; 
 	private static Graph _graph1;
 	private static Graph _graph2;
