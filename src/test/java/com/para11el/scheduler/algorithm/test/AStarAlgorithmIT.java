@@ -10,6 +10,12 @@ import org.junit.Test;
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
 import com.para11el.scheduler.algorithm.State;
 
+/**
+ * Junit test to test the validity and optimality of the A* Algorithm.
+ * 
+ * @author Jessica Alcantara
+ *
+ */
 public class AStarAlgorithmIT {
 	
 	/**
