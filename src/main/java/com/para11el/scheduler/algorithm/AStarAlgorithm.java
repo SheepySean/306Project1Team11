@@ -91,30 +91,36 @@ public class AStarAlgorithm extends Algorithm{
 		
 		Map<Integer, Integer> processorCosts = new HashMap<Integer, Integer>(); 
 		
-		// For each processor, find the lowest cost to schedule the next task
-		for (int i = 0; i < _processors; i++){
-			int startTime = getEarliestStartTime(state, i);
-			Task parentTask = findNode(state.getParent(), _solution);
-			if (parentTask.getProcessor() == i){
-				cost = startTime + nodeCost;
-			} else {
-				int edgeCost = ((Number)parentTask.getNode().getEdgeToward(state.getNode())
-						.getAttribute("Weight")).intValue();
-				cost = startTime + edgeCost + nodeCost; 
+		if (_solution.size() != 0){
+			// For each processor, find the lowest cost to schedule the next task
+			for (int i = 0; i < _processors; i++){
+				int startTime = getEarliestStartTime(state, i);
+				Task parentTask = findNode(state.getParent(), _solution);
+				if (parentTask.getProcessor() == i){
+					cost = startTime + nodeCost;
+				} else {
+					int edgeCost = ((Number)parentTask.getNode().getEdgeToward(state.getNode())
+							.getAttribute("Weight")).intValue();
+					cost = startTime + edgeCost + nodeCost; 
+				}
+				processorCosts.put(i, cost); 
 			}
-			processorCosts.put(i, cost); 
+			
+			// For all processors, select the optimal scheduling of the task
+			for (Map.Entry<Integer, Integer> entry : processorCosts.entrySet()){
+				if (entry.getValue() <= cost){
+					processor = entry.getKey();
+				}
+			}
+			
+			earliestStartTime = getEarliestStartTime(state, processor); 
+			return new Task(state.getNode(), earliestStartTime, processor);
+		} else{
+			return new Task(state.getNode(), 0, processor); 
 		}
 		
-		// For all processors, select the optimal scheduling of the task
-		for (Map.Entry<Integer, Integer> entry : processorCosts.entrySet()){
-			if (entry.getValue() <= cost){
-				processor = entry.getKey();
-			}
-		}
 		
-		earliestStartTime = getEarliestStartTime(state, processor); 
 		
-		return new Task(state.getNode(), earliestStartTime, processor);
 	}
 	
 	/**
