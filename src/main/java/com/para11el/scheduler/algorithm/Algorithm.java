@@ -1,7 +1,9 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
@@ -74,6 +76,41 @@ public abstract class Algorithm {
 	public Graph getGraph() {
 		labelGraph();
 		return _graph;
+	}
+	
+	/**
+	 * Returns an ArrayList<Node> of the parents nodes a node has
+	 * @param node the node to find parents of
+	 * 
+	 * @author Tina Chen 
+	 */
+	public ArrayList<Node> getParents(Node node) {
+
+		ArrayList<Node> parents = new ArrayList<Node>();
+		Iterator<Edge> edge = node.getEnteringEdgeIterator();
+
+		while (edge.hasNext()) {
+			parents.add(edge.next().getSourceNode());
+		}
+		return parents;
+	}
+	
+	/**
+	 * Find the node
+	 * @param node in the inputGraph
+	 * @param currentTasks 
+	 * @return Task object node
+	 * 
+	 * @author Sean Oldfield, Rebekah Berriman
+	 */
+	public Task findNode(Node node, ArrayList<Task> currentTasks) {
+
+		for (Task task : currentTasks) {
+			if (task.getNode().equals(node)) {
+				return task;
+			}
+		}
+		return null;
 	}
 
 }

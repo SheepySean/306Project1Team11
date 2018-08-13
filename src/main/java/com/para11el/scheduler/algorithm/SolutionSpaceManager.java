@@ -124,8 +124,7 @@ public class SolutionSpaceManager {
 				if (task.getProcessor() == processor) {
 					possibleTime = task.getStartTime() + nodeWeightInt;
 				} else {
-					int edgeWeightDouble = ((Number) task.getNode().getEdgeToward(node).getAttribute("Weight")).intValue();
-					int edgeWeightInt = (int)edgeWeightDouble;
+					int edgeWeightInt = ((Number) task.getNode().getEdgeToward(node).getAttribute("Weight")).intValue();
 					possibleTime = task.getStartTime() + nodeWeightInt + edgeWeightInt;
 				}
 

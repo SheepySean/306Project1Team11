@@ -92,17 +92,37 @@ public class AStarAlgorithm extends Algorithm{
 	 * @return int of the earliest start time
 	 */
 	public int getEarliestStartTime(State state, int processor) {
-		
+		int startTime = 0, parentLatestFinish = 0, processorFinish = 0; 
+
 		// Get the latest finish time of the parents
-		//TODO: 
-		
-		for (Task task : _solution) {
-			if (task.getProcessor() == processor) {
+		if (getParents(state.getNode()).size() != 0){
+			for (Node parent : getParents(state.getNode())){
+				Task task = findNode(parent, _solution); 
+				int nodeWeight = ((Number)task.getNode().getAttribute("Weight")).intValue();
 				
+				if (task.getProcessor() == processor) {
+					parentLatestFinish = task.getStartTime() + nodeWeight; 
+				} else{
+					int edgeWeight = ((Number)task.getNode().getEdgeToward(state.getNode()).getAttribute("Weight")).intValue();
+					parentLatestFinish = task.getStartTime() + nodeWeight + edgeWeight;  
+				}
+				if (parentLatestFinish > startTime){
+					startTime = parentLatestFinish; 
+				}
 			}
 		}
 		
-		return 0;
+		for (Task task : _solution) {
+			if (task.getProcessor() == processor) {
+				int nodeWeight = ((Number) task.getNode().getAttribute("Weight")).intValue();
+				processorFinish = task.getStartTime() + nodeWeight;
+				if (processorFinish > startTime) {
+					startTime = processorFinish; 
+				}
+			}	
+		}
+		
+		return startTime;
 	}
 	
 	/**
