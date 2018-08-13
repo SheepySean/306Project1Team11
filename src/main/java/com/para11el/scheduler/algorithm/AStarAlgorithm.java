@@ -49,7 +49,7 @@ public class AStarAlgorithm extends Algorithm{
 		// Initialize priority queue with entry node initial states
 		for (Node node : _graph.getNodeSet()) {
 			if (node.getInDegree() == 0) {
-				_states.add(new State(node, 
+				_states.add(new State(node, null,
 						calculateCostFunction(null, node), 
 						((Number) node.getAttribute("Weight")).intValue()));
 			}
@@ -83,6 +83,26 @@ public class AStarAlgorithm extends Algorithm{
 		// TODO: schedule task on processor so it is optimal and valid from state
 		
 		return new Task(state.getNode(), startTime, processor);
+	}
+	
+	/**
+	 * Finds the earliest start time of a task on a processor with given dependencies
+	 * 
+	 * @param processor to find the earliest start time of
+	 * @return int of the earliest start time
+	 */
+	public int getEarliestStartTime(State state, int processor) {
+		
+		// Get the latest finish time of the parents
+		//TODO: 
+		
+		for (Task task : _solution) {
+			if (task.getProcessor() == processor) {
+				
+			}
+		}
+		
+		return 0;
 	}
 	
 	/**
@@ -166,7 +186,7 @@ public class AStarAlgorithm extends Algorithm{
 			Node child = edge.getTargetNode();
 			int currentScheduleLength = state.getScheduleLength() + 
 					((Number) child.getAttribute("Weight")).intValue();
-			_states.add(new State(child, 
+			_states.add(new State(child, state.getNode(),
 					calculateCostFunction(state, child),
 					currentScheduleLength));
 		}

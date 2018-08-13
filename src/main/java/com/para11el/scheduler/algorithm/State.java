@@ -10,6 +10,7 @@ import org.graphstream.graph.Node;
 public class State {
 	
 	private Node _node;
+	private Node _parent;
 	private int _cost;
 	private int _scheduleLength;
 	
@@ -24,14 +25,19 @@ public class State {
 	 * 
 	 * @author Jessica Alcantara
 	 */
-	public State(Node node, int cost, int scheduleLength) {
+	public State(Node node, Node parent, int cost, int scheduleLength) {
 		_node = node;
+		_parent = parent;
 		_cost = cost;
 		_scheduleLength = scheduleLength;
 	}
 	
 	public Node getNode() {
 		return _node;
+	}
+	
+	public Node getParent() {
+		return _parent;
 	}
 	
 	public int getCost() {
