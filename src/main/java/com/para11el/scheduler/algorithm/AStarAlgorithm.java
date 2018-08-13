@@ -76,20 +76,22 @@ public class AStarAlgorithm extends Algorithm{
 	
 	/**
 	 * Schedules the task on the processor that gives the optimal solution
-	 * @param state
-	 * @return
+	 * 
+	 * @param state to be scheduled
+	 * @return Task being scheduled
+	 * 
+	 * @author Holly Hagenson
 	 */
 	public Task scheduleTask(State state) {
 		int earliestStartTime = getEarliestStartTime(state, 0);
-		int processor = 1;
+		int processor = 0;
 		int cost = 0; 
 		
-		// TODO: schedule task on processor so it is optimal and valid from state
-		// check all processors, find earliest start time on processors that will result in least cost/optimal solution
 		int nodeCost = ((Number)state.getNode().getAttribute("Weight")).intValue();
 		
 		Map<Integer, Integer> processorCosts = new HashMap<Integer, Integer>(); 
 		
+		// For each processor, find the lowest cost to schedule the next task
 		for (int i = 0; i < _processors; i++){
 			int startTime = getEarliestStartTime(state, i);
 			Task parentTask = findNode(state.getParent(), _solution);
@@ -103,6 +105,7 @@ public class AStarAlgorithm extends Algorithm{
 			processorCosts.put(i, cost); 
 		}
 		
+		// For all processors, select the optimal scheduling of the task
 		for (Map.Entry<Integer, Integer> entry : processorCosts.entrySet()){
 			if (entry.getValue() <= cost){
 				processor = entry.getKey();
@@ -226,7 +229,6 @@ public class AStarAlgorithm extends Algorithm{
 			return false;
 		}
 	}
-
 	
     /**
      * Retrieves the children of a node and adds the state to the priority queue.
