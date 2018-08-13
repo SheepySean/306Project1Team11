@@ -2,6 +2,8 @@ package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -78,19 +80,48 @@ public class AStarAlgorithm extends Algorithm{
 	 * @return
 	 */
 	public Task scheduleTask(State state) {
-		int startTime = 0;
+		int earliestStartTime = getEarliestStartTime(state, 0);
 		int processor = 1;
+		int cost = 0; 
 		
 		// TODO: schedule task on processor so it is optimal and valid from state
+		// check all processors, find earliest start time on processors that will result in least cost/optimal solution
+		int nodeCost = ((Number)state.getNode().getAttribute("Weight")).intValue();
 		
-		return new Task(state.getNode(), startTime, processor);
+		Map<Integer, Integer> processorCosts = new HashMap<Integer, Integer>(); 
+		
+		for (int i = 0; i < _processors; i++){
+			int startTime = getEarliestStartTime(state, i);
+			Task parentTask = findNode(state.getParent(), _solution);
+			if (parentTask.getProcessor() == i){
+				cost = startTime + nodeCost;
+			} else {
+				int edgeCost = ((Number)parentTask.getNode().getEdgeToward(state.getNode())
+						.getAttribute("Weight")).intValue();
+				cost = startTime + edgeCost + nodeCost; 
+			}
+			processorCosts.put(i, cost); 
+		}
+		
+		for (Map.Entry<Integer, Integer> entry : processorCosts.entrySet()){
+			if (entry.getValue() <= cost){
+				processor = entry.getKey();
+			}
+		}
+		
+		earliestStartTime = getEarliestStartTime(state, processor); 
+		
+		return new Task(state.getNode(), earliestStartTime, processor);
 	}
 	
 	/**
 	 * Finds the earliest start time of a task on a processor with given dependencies
 	 * 
+	 * @param state to put onto processor
 	 * @param processor to find the earliest start time of
 	 * @return int of the earliest start time
+	 * 
+	 * @author Holly Hagenson
 	 */
 	public int getEarliestStartTime(State state, int processor) {
 		int startTime = 0, parentLatestFinish = 0, processorFinish = 0; 
@@ -113,6 +144,7 @@ public class AStarAlgorithm extends Algorithm{
 			}
 		}
 		
+		// Get latest finish time of current processor
 		for (Task task : _solution) {
 			if (task.getProcessor() == processor) {
 				int nodeWeight = ((Number) task.getNode().getAttribute("Weight")).intValue();
