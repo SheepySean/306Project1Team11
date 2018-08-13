@@ -150,8 +150,8 @@ public class CostFunctionManager {
 				if (i == task.getProcessor()) {
 					time = task.getStartTime() - finishTime;
 					// Check if the processor is idle
-					if (time > 0) {
-						idleTime += time;
+					if (time != 0) {
+						idleTime += Math.abs(time);
 					}
 					finishTime = task.getStartTime() + 
 							((Number)task.getNode().getAttribute("Weight")).intValue();
