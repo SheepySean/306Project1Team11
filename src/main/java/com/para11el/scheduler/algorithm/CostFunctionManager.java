@@ -36,9 +36,26 @@ public class CostFunctionManager {
      */
 	public int calculateCostFunction(State parentState, Node newNode, 
 			ArrayList<Task> partialSolution) {
+		
 		int parentCost;
 		int boundedTime = calculateBoundedTime(partialSolution);
-		int criticalPathEstimate = calculateCriticalPathEstimate(parentState, partialSolution);
+		int criticalPathEstimate;
+		
+		if (partialSolution.size() > 0){
+			int latestFinish = 0;
+			Task lastTask = new Task(null, 0, 0);
+			
+			for(Task task : partialSolution){
+				int taskFinish = task.getStartTime() + ((Number)task.getNode().getAttribute("Weight")).intValue();
+				if (taskFinish > latestFinish){
+					latestFinish = taskFinish; 
+					lastTask = task; 
+				}
+			}
+			criticalPathEstimate = calculateCriticalPathEstimate(lastTask, partialSolution);
+		} else{
+			criticalPathEstimate = 0; 
+		}
 		
 		// Check if parent node exists
 		if (parentState == null) {
@@ -62,10 +79,9 @@ public class CostFunctionManager {
 	 * 
 	 * @author Holly Hagenson
 	 */
-	public int calculateCriticalPathEstimate(State state, ArrayList<Task> solution) {
-		Task parentTask = state.findNode(state.getNode(), solution);
-		int bottomLevel = bottomLevel(state.getNode());
-		int startTime = parentTask.getStartTime(); 
+	public int calculateCriticalPathEstimate(Task lastTask, ArrayList<Task> solution) {
+		int bottomLevel = bottomLevel(lastTask.getNode());
+		int startTime = lastTask.getStartTime(); 
 		
 		return startTime + bottomLevel;
 	}
