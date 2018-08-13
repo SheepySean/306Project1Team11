@@ -1,6 +1,7 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.graphstream.graph.Node;
 
@@ -12,7 +13,8 @@ import org.graphstream.graph.Node;
 public class State {
 	
 	private Node _node;
-	private Node _parent;
+	private State _parent;
+	private ArrayList<Task> _schedule;
 	private int _cost;
 	
 	public State() {}
@@ -25,9 +27,10 @@ public class State {
 	 * 
 	 * @author Jessica Alcantara
 	 */
-	public State(Node node, Node parent, int cost) {
+	public State(Node node, State parent, ArrayList<Task> schedule, int cost) {
 		_node = node;
 		_parent = parent;
+		_schedule = schedule;
 		_cost = cost;
 	}
 	
@@ -35,8 +38,12 @@ public class State {
 		return _node;
 	}
 	
-	public Node getParent() {
+	public State getParent() {
 		return _parent;
+	}
+	
+	public ArrayList<Task> getSchedule() {
+		return _schedule;
 	}
 	
 	public int getCost() {
@@ -55,6 +62,22 @@ public class State {
 	public int compareTo(State compareState) {
 		int compareCost = ((State) compareState).getCost(); 
 		return this._cost - compareCost;
+	}
+	
+	/**
+	 * Checks that if the state is a complete solution where all input
+	 * tasks are scheduled.
+	 * @param nodes All nodes of the input graph
+	 * @return boolean true if solution is complete
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public Boolean isComplete(Collection<Node> nodes) {
+		if (_schedule.size() == nodes.size()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**

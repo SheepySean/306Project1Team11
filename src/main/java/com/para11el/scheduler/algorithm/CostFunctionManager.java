@@ -30,6 +30,7 @@ public class CostFunctionManager {
      * 		f(s) = max{f(s-1), Cpe(S), Bt(s)}
      * @param parentState Parent state of the new node
      * @param newNode New node to calculate the cost function of 
+     * @param partialSolution Schedule representing the state
      * @return int representing the cost
      * 
      * @author Jessica Alcantara
@@ -82,7 +83,7 @@ public class CostFunctionManager {
 	public int calculateCriticalPathEstimate(Task lastTask, ArrayList<Task> solution) {
 		int bottomLevel = bottomLevel(lastTask.getNode());
 		int startTime = lastTask.getStartTime(); 
-		
+		// TODO: find task with latest finish time
 		return startTime + bottomLevel;
 	}
 	
