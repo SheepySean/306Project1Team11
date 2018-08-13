@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import com.para11el.scheduler.algorithm.CostFunctionManager;
+import com.para11el.scheduler.algorithm.State;
 import com.para11el.scheduler.algorithm.Task;
 
 import org.graphstream.graph.Graph;
@@ -61,6 +62,10 @@ public class CostFunctionManagerIT {
 		assertEquals(4,boundedTime);
 	}
 	
+	/**
+	 * Unit test to calculate the critical path estimate of a graph.
+	 * @author Holly Hagenson
+	 */
 	@Test
 	public void testCalculateCriticalPathEstimate(){
 		Node nlast = _graph1.getNode("2");
@@ -70,14 +75,18 @@ public class CostFunctionManagerIT {
 		CostFunctionManager cfm = new CostFunctionManager(15, 2);
 		
 		ArrayList<Task> testSolution = new ArrayList<Task>();
-		testSolution.add(new Task(_graph1.getNode("0"),0,1));
-		testSolution.add(new Task(_graph1.getNode("1"),3,1));
+		testSolution.add(new Task(_graph1.getNode("1"),0,1));
+		testSolution.add(new Task(_graph1.getNode("2"),3,1));
 		
 		int criticalPathEstimate = cfm.calculateCriticalPathEstimate(lastTask, testSolution);
 		
 		assertEquals(criticalPathEstimate, 12);
 	}
 	
+	/**
+	 * Unit test to calculate bottom level path of given node.
+	 * @author Holly Hagenson
+	 */
 	@Test
 	public void testCalculateBottomLevel(){
 		createGraph(); 
@@ -88,11 +97,33 @@ public class CostFunctionManagerIT {
 		assertEquals(9, bottomLevel); 
 	}
 	
+	/**
+	 * Unit test to calculate cost function of a state.
+	 * @author Holly Hagenson 
+	 */
 	@Test
 	public void testCostFunction(){
 		createGraph(); 
+		
+		State parentState = new State();
+		parentState.setCost(12);
+		
+		ArrayList<Task> testSolution = new ArrayList<Task>();
+		testSolution.add(new Task(_graph1.getNode("1"),0,1));
+		testSolution.add(new Task(_graph1.getNode("2"),3,1));
+		
+		CostFunctionManager cfm = new CostFunctionManager(15, 2);
+		
+		int cost = cfm.calculateCostFunction(parentState, _graph1.getNode("2"), testSolution); 
+		
+		assertEquals(cost, 12); 
+		
 	}
 	
+	/**
+	 * Create graphstream graph to use for testing.
+	 * @author Holly Hagenson
+	 */
 	public static void createGraph(){
 		_graph1 = new SingleGraph("graphWithMultipleProcessors");
 		_graph1.addNode("1");
