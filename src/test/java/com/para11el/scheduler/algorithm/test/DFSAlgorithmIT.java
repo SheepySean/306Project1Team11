@@ -19,7 +19,7 @@ import com.para11el.scheduler.algorithm.Task;
  * @author Holly Hagenson, Rebekah Berriman
  *
  */
-public class SolutionSpaceIT {
+public class DFSAlgorithmIT {
 	private SolutionSpaceManager _ssManager; 
 	private static Graph _graph1;
 	private static Graph _graph2;
