@@ -102,7 +102,7 @@ public class CostFunctionManager {
 		// Calculate cost of current path at leaf node
 		if (source.getOutDegree() == 0){
 			for (Node n : path){
-				_dist += (double)n.getAttribute("Weight");
+				_dist += ((Number)n.getAttribute("Weight")).intValue();
 			}
 			// Update maximum path length
 			if (_dist > _max){
