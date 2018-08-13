@@ -41,5 +41,14 @@ public class AStarAlgorithmIT {
 		assertTrue(states.poll().getCost() == 9);
 		assertTrue(states.poll().getCost() == 12);
 	}
+	
+	/**
+	 * Unit test for calculating the total weights of nodes in a graph.
+	 * @author 
+	 */
+	@Test
+	public void testCalculateTotalWeight() {
+		
+	}
 
 }

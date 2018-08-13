@@ -1,6 +1,7 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,12 +36,12 @@ public class AStarAlgorithm extends Algorithm{
 	
 	public AStarAlgorithm(Graph graph, int processor) {
 		super(graph, processor);
-		_cfm = new CostFunctionManager(calculateTotalWeight(), processor);
+		_cfm = new CostFunctionManager(calculateTotalWeight(graph.getNodeSet()), processor);
 	}
 	
 	public AStarAlgorithm(Graph graph, int processor, int cores) {
 		super(graph, processor, cores);
-		_cfm = new CostFunctionManager(calculateTotalWeight(), processor);
+		_cfm = new CostFunctionManager(calculateTotalWeight(graph.getNodeSet()), processor);
 	}
 	
 	/**
@@ -53,8 +54,7 @@ public class AStarAlgorithm extends Algorithm{
 		for (Node node : _graph.getNodeSet()) {
 			if (node.getInDegree() == 0) {
 				_states.add(new State(node, null,
-						_cfm.calculateCostFunction(null, node, _solution), 
-						((Number) node.getAttribute("Weight")).intValue()));
+						_cfm.calculateCostFunction(null, node, _solution)));
 			}
 		}
 		
@@ -92,8 +92,18 @@ public class AStarAlgorithm extends Algorithm{
 		Map<Integer, Integer> processorCosts = new HashMap<Integer, Integer>(); 
 		
 		if (_solution.size() != 0){
+			
+			/*// Find the processor which the current task can start the earliest
+			for (int i=1; i<=_processors; i++) {
+				int startTime = getEarliestStartTime(state,i);
+				if (startTime < earliestStartTime) {
+					earliestStartTime = startTime;
+					processor = i;
+				}
+			}*/
+			
 			// For each processor, find the lowest cost to schedule the next task
-			for (int i = 0; i < _processors; i++){
+			for (int i = 1; i <= _processors; i++){
 				int startTime = getEarliestStartTime(state, i);
 				Task parentTask = findNode(state.getParent(), _solution);
 				if (parentTask.getProcessor() == i){
@@ -116,11 +126,9 @@ public class AStarAlgorithm extends Algorithm{
 			earliestStartTime = getEarliestStartTime(state, processor); 
 			return new Task(state.getNode(), earliestStartTime, processor);
 		} else{
+			// Initialize solution
 			return new Task(state.getNode(), 0, processor); 
 		}
-		
-		
-		
 	}
 	
 	/**
@@ -245,23 +253,21 @@ public class AStarAlgorithm extends Algorithm{
 	public void pushChildren(State state) {
 		for (Edge edge : state.getNode().getLeavingEdgeSet()) {
 			Node child = edge.getTargetNode();
-			int currentScheduleLength = state.getScheduleLength() + 
-					((Number) child.getAttribute("Weight")).intValue();
 			_states.add(new State(child, state.getNode(),
-					_cfm.calculateCostFunction(state, child, _solution),
-					currentScheduleLength));
+					_cfm.calculateCostFunction(state, child, _solution)));
 		}
 	}
 	
 	/**
 	 * Calculates the sum of weights of all nodes in the graph
+	 * @param nodes Collection of nodes in the graph
 	 * @return int total of node weights
 	 * 
 	 * @author Jessica Alcantara
 	 */
-	public int calculateTotalWeight() {
+	public int calculateTotalWeight(Collection<Node> nodes) {
 		int weightTotal = 0;
-		for (Node node : _graph.getNodeSet()) {
+		for (Node node : nodes) {
 			weightTotal += ((Number)node.getAttribute("Weight")).intValue();
 		}
 		return weightTotal;
