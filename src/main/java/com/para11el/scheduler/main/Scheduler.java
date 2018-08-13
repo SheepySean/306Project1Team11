@@ -72,11 +72,11 @@ public class Scheduler {
 		//solutionSpaceManager.initialise();
 		
 		AStarAlgorithm astar = new AStarAlgorithm(_inGraph, _scheduleProcessors);
-		astar.buildSolution(); 
+		ArrayList<Task> solution = astar.buildSolution(); 
 		
 		//Get the graph labeled with the optimal solution
 		//Graph newGraph = solutionSpaceManager.getGraph();
-		Graph newGraph = astar.getGraph(); 
+		Graph newGraph = astar.getGraph(solution); 
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);

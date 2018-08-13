@@ -21,7 +21,6 @@ public abstract class Algorithm {
 	protected Graph _graph;
 	protected int _processors;
 	protected int _cores;
-	protected ArrayList<Task> _solution = new ArrayList<Task>();
 	
 	public Algorithm() {}
 	
@@ -56,11 +55,12 @@ public abstract class Algorithm {
 	
 	/**
 	 * Labels the graph with the startTime and processor numbers of each of the nodes for the optimal solution
+	 * @param solution Final solution
 	 * 
 	 * @author Rebekah Berriman
 	 */
-	private void labelGraph() {
-		for (Task task : _solution) {
+	private void labelGraph(ArrayList<Task> solution) {
+		for (Task task : solution) {
 			Node node = task.getNode();
 			node.addAttribute("Start", task.getStartTime());
 			node.addAttribute("Processor", task.getProcessor());
@@ -69,12 +69,13 @@ public abstract class Algorithm {
 
 	/**
 	 * Returns the labeled graph.
+	 * @param solution Final solution
 	 * @return Graph of the nodes with labels
 	 * 
 	 * @author Rebekah Berriman
 	 */
-	public Graph getGraph() {
-		labelGraph();
+	public Graph getGraph(ArrayList<Task> solution) {
+		labelGraph(solution);
 		return _graph;
 	}
 	
@@ -104,13 +105,48 @@ public abstract class Algorithm {
 	 * @author Sean Oldfield, Rebekah Berriman
 	 */
 	public Task findNode(Node node, ArrayList<Task> currentTasks) {
-
 		for (Task task : currentTasks) {
 			if (task.getNode().equals(node)) {
 				return task;
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Find the available nodes that can be scheduled given what nodes have already been scheduled.
+	 * @param scheduledTasks
+	 * @return ArrayList of available nodes
+	 * 
+	 * @author Rebekah Berriman, Tina Chen
+	 */
+	public ArrayList<Node>  availableNode(ArrayList<Task> scheduledTasks) {
+		ArrayList<Node> scheduledNodes =  new ArrayList<Node>();
+		ArrayList<Node> available = new ArrayList<Node>();
+
+		for (Task task : scheduledTasks) {
+			scheduledNodes.add(task.getNode());
+		}
+
+		for (Node node : _graph.getNodeSet()) {
+			if (!scheduledNodes.contains(node)) { // If Node is not already scheduled
+				ArrayList<Node> parents = getParents(node);
+				if (parents.size() == 0) { // Node has no parents so can be scheduled
+					available.add(node);
+				} else {
+					boolean availableNode = true;
+					for (Node parentNode : parents) {
+						if (!scheduledNodes.contains(parentNode)) { // If the schedule does not contain a parent node of the node, set availableNode to false
+							availableNode = false;
+						}
+					}
+					if (availableNode) {
+						available.add(node);
+					}
+				}
+			}
+		}
+		return available;
 	}
 
 }

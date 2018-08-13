@@ -3,13 +3,9 @@ package com.para11el.scheduler.algorithm;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
@@ -23,28 +19,28 @@ public class AStarAlgorithm extends Algorithm{
 	 */
 	private Comparator<State> _stateComparator = new Comparator<State>() {
 		@Override
-        public int compare(State o1, State o2) {
+		public int compare(State o1, State o2) {
 			return o1.compareTo(o2);
-        }
+		}
 	};
-	
+
 	private Queue<State> _states = new PriorityQueue<State>(_stateComparator);
 	private CostFunctionManager _cfm;
-	
+
 	public AStarAlgorithm() {
 		super();
 	}
-	
+
 	public AStarAlgorithm(Graph graph, int processor) {
 		super(graph, processor);
 		_cfm = new CostFunctionManager(calculateTotalWeight(graph.getNodeSet()), processor);
 	}
-	
+
 	public AStarAlgorithm(Graph graph, int processor, int cores) {
 		super(graph, processor, cores);
 		_cfm = new CostFunctionManager(calculateTotalWeight(graph.getNodeSet()), processor);
 	}
-	
+
 	/**
 	 * Initializes the algorithm and build solution
 	 * 
@@ -54,116 +50,58 @@ public class AStarAlgorithm extends Algorithm{
 		// Initialize priority queue with entry node initial states
 		for (Node node : _graph.getNodeSet()) {
 			if (node.getInDegree() == 0) {
-				_states.add(new State(node, null,
-						_cfm.calculateCostFunction(null, node, _solution)));
+				ArrayList<Task> schedule = new ArrayList<Task>();
+				schedule.add(new Task(node,0,1));
+				_states.add(new State(node, null, schedule,
+						_cfm.calculateCostFunction(null, node, schedule)));
 			}
 		}
-		
 		while (_states.size() > 0) {
-			// Add the most promising state to the solution
-			State state = getFirstFreeTask();
-			_solution.add(scheduleTask(state));
-			
+			// Pop the most promising state
+			State state = _states.poll();
+
 			// Check if solution is complete
-			if (isCompleteSolution()) {
-				return _solution;
+			if (state.isComplete(_graph.getNodeSet())) {
+				return state.getSchedule();
 			}
-			
+
 			// Expand state into children
-			pushChildren(state);
+			expandState(state);
 		}
-		return _solution;
+		return null;
 	}
-	
-	/**
-	 * Schedules the task on the processor that gives the optimal solution
-	 * 
-	 * @param state to be scheduled
-	 * @return Task being scheduled
-	 * 
-	 * @author Holly Hagenson
-	 */
-	public Task scheduleTask(State state) {
-		int earliestStartTime = getEarliestStartTime(state, 0);
-		int processor = 1;
-		int cost = 0; 
-		
-		int nodeCost = ((Number)state.getNode().getAttribute("Weight")).intValue();
-		
-		Map<Integer, Integer> processorCosts = new HashMap<Integer, Integer>(); 
-		
-		if (_solution.size() != 0){
-			
-			/*// Find the processor which the current task can start the earliest
-			for (int i=1; i<=_processors; i++) {
-				int startTime = getEarliestStartTime(state,i);
-				if (startTime < earliestStartTime) {
-					earliestStartTime = startTime;
-					processor = i;
-				}
-			}*/
-			
-			// For each processor, find the lowest cost to schedule the next task
-			for (int i = 1; i <= _processors; i++){
-				int startTime = getEarliestStartTime(state, i);
-				Task parentTask = findNode(state.getParent(), _solution);
-				if (parentTask.getProcessor() == i){
-					cost = startTime + nodeCost;
-				} else {
-					int edgeCost = ((Number)parentTask.getNode().getEdgeToward(state.getNode())
-							.getAttribute("Weight")).intValue();
-					cost = startTime + edgeCost + nodeCost; 
-				}
-				processorCosts.put(i, cost); 
-			}
-			
-			// For all processors, select the optimal scheduling of the task
-			for (Map.Entry<Integer, Integer> entry : processorCosts.entrySet()){
-				if (entry.getValue() <= cost){
-					processor = entry.getKey();
-				}
-			}
-			
-			earliestStartTime = getEarliestStartTime(state, processor); 
-			return new Task(state.getNode(), earliestStartTime, processor);
-		} else{
-			// Initialize solution
-			return new Task(state.getNode(), 0, processor); 
-		}
-	}
-	
+
 	/**
 	 * Finds the earliest start time of a task on a processor with given dependencies
 	 * 
-	 * @param state to put onto processor
+	 * @param node to put onto processor
+	 * @param schedule to find the earliest start time of
 	 * @param processor to find the earliest start time of
 	 * @return int of the earliest start time
 	 * 
 	 * @author Holly Hagenson
 	 */
-	public int getEarliestStartTime(State state, int processor) {
+	public int getEarliestStartTime(Node node, ArrayList<Task> schedule, int processor) {
 		int startTime = 0, parentLatestFinish = 0, processorFinish = 0; 
 
 		// Get the latest finish time of the parents
-		if (getParents(state.getNode()).size() != 0){
-			for (Node parent : getParents(state.getNode())){
-				Task task = findNode(parent, _solution); 
-				int nodeWeight = ((Number)task.getNode().getAttribute("Weight")).intValue();
-				
-				if (task.getProcessor() == processor) {
-					parentLatestFinish = task.getStartTime() + nodeWeight; 
-				} else{
-					int edgeWeight = ((Number)task.getNode().getEdgeToward(state.getNode()).getAttribute("Weight")).intValue();
-					parentLatestFinish = task.getStartTime() + nodeWeight + edgeWeight;  
-				}
-				if (parentLatestFinish > startTime){
-					startTime = parentLatestFinish; 
-				}
+		for (Node parent : getParents(node)){
+			Task task = findNode(parent, schedule); 
+			int nodeWeight = ((Number)task.getNode().getAttribute("Weight")).intValue();
+
+			if (task.getProcessor() == processor) {
+				parentLatestFinish = task.getStartTime() + nodeWeight; 
+			} else{
+				int edgeWeight = ((Number)task.getNode().getEdgeToward(node).getAttribute("Weight")).intValue();
+				parentLatestFinish = task.getStartTime() + nodeWeight + edgeWeight;  
+			}
+			if (parentLatestFinish > startTime){
+				startTime = parentLatestFinish; 
 			}
 		}
-		
+
 		// Get latest finish time of current processor
-		for (Task task : _solution) {
+		for (Task task : schedule) {
 			if (task.getProcessor() == processor) {
 				int nodeWeight = ((Number) task.getNode().getAttribute("Weight")).intValue();
 				processorFinish = task.getStartTime() + nodeWeight;
@@ -172,93 +110,50 @@ public class AStarAlgorithm extends Algorithm{
 				}
 			}	
 		}
-		
+
 		return startTime;
 	}
-	
+
 	/**
-	 * Finds the state with the lowest cost whose parent nodes have
-	 * already been scheduled.
-	 * @return state available state with the lowest cost
+	 * Expands the state by finding all possible states from the free nodes.
+	 * @param state Parent state
 	 * 
 	 * @author Jessica Alcantara
 	 */
-	public State getFirstFreeTask() {
-		ArrayList<State> notAvailable = new ArrayList<State>();
-		Boolean foundFreeTask = false;
-		Boolean isFreeTask = true;
-		State state = _states.poll();
+	public void expandState(State state) {
+		ArrayList<Task> schedule = state.getSchedule();
+		ArrayList<Node> freeNodes = availableNode(schedule);
 		
-		while (!foundFreeTask) {
-			// Check if parent nodes have been scheduled
-			for (Edge e : state.getNode().getEachEnteringEdge()) {
-				if (!solutionContainsNode(e.getSourceNode())) {
-					isFreeTask = false;
-					break;
-				}
-			}
-			
-			if (isFreeTask) {
-				foundFreeTask = true;
-			} else {
-				notAvailable.add(state);
-				state = _states.poll();
+		for (Node node : freeNodes) {
+			// Create states from each possible allocation of the task
+			for (int i=1; i<=_processors; i++) {
+				// Schedule the node
+				int startTime = getEarliestStartTime(node,schedule,i);
+				schedule.add(new Task(node,startTime,i));
+
+				// Create state from new schedule
+				_states.add(new State(node,state,schedule,
+						_cfm.calculateCostFunction(state,node,schedule)));
 			}
 		}
-		
-		// Add the not available tasks back to the priority queue
-		for (State s : notAvailable) {
-			_states.add(s);
-		}
-		
-		return state;
 	}
 	
 	/**
-	 * Checks whether the node has been scheduled in the solution
+	 * Checks whether the node has been scheduled in the solution state
 	 * @param node Node representing a task
 	 * @return boolean true if solution contains the node
 	 * 
 	 * @author Jessica Alcantara
 	 */
-	public boolean solutionContainsNode(Node node) {
-		for (Task task : _solution) {
+	public boolean scheduleContainsNode(Node node, ArrayList<Task> schedule) {
+		for (Task task : schedule) {
 			if (task.getNode().equals(node)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	/**
-	 * Checks that if the partial solution is a complete solution where all input
-	 * tasks are scheduled.
-	 * @return boolean true if solution is complete
-	 * 
-	 * @author Jessica Alcantara
-	 */
-	public Boolean isCompleteSolution() {
-		if (_solution.size() == _graph.getNodeCount()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-    /**
-     * Retrieves the children of a node and adds the state to the priority queue.
-     * @param node Parent node
-     * 
-     * @author Jessica Alcantara
-     */
-	public void pushChildren(State state) {
-		for (Edge edge : state.getNode().getLeavingEdgeSet()) {
-			Node child = edge.getTargetNode();
-			_states.add(new State(child, state.getNode(),
-					_cfm.calculateCostFunction(state, child, _solution)));
-		}
-	}
-	
+
 	/**
 	 * Calculates the sum of weights of all nodes in the graph
 	 * @param nodes Collection of nodes in the graph
@@ -273,7 +168,7 @@ public class AStarAlgorithm extends Algorithm{
 		}
 		return weightTotal;
 	}
-	
+
 	/**
 	 * Returns the comparator used to order the states in the priority queue
 	 * @return comparator of states
