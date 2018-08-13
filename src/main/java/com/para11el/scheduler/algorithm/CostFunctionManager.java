@@ -142,9 +142,10 @@ public class CostFunctionManager {
 	 */
 	public int calculateIdleTime(ArrayList<Task> solution) {
 		int idleTime = 0;
-		int finishTime = 0;
+		int finishTime;
 		int time;
 		for (int i=1; i<= _processors; i++) {
+			finishTime = 0;
 			for (Task task : solution) {
 				// Sum the idle time on each processor
 				if (i == task.getProcessor()) {
@@ -155,6 +156,7 @@ public class CostFunctionManager {
 					}
 					finishTime = task.getStartTime() + 
 							((Number)task.getNode().getAttribute("Weight")).intValue();
+					System.out.println("Finish Time: " + finishTime);
 				}
 			}
 		}
