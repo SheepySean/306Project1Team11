@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -282,4 +283,30 @@ public class AStarAlgorithm extends Algorithm{
 	public Comparator<State> getStateComparator() {
 		return _stateComparator;
 	}
+	
+	/**
+	public Boolean checkDuplicates(State newState, Queue<State> states){
+		for (State state : states){
+			Boolean duplicate = compareStates(state, newState);
+			if (duplicate){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Boolean compareStates(State newState, State stateInQueue){
+		ArrayList<Task> newSchedule = newState.getSchedule();
+		ArrayList<Task> scheduleInQueue = stateInQueue.getSchedule(); 
+		
+		for (Task newTask : newSchedule){
+			for (Task queuedTask : scheduleInQueue){
+				if (newTask.getNode().getId().equals(queuedTask.getNode().getId())
+						&& newTask.getProcessor() != queuedTask.getProcessor()){
+					return false; 
+				}
+			}
+		}
+		return true; 
+	}**/
 }
