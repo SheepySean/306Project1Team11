@@ -1,14 +1,18 @@
 package com.para11el.scheduler.algorithm.test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import org.graphstream.graph.Node;
 import org.junit.Test;
 
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
 import com.para11el.scheduler.algorithm.State;
+import com.para11el.scheduler.algorithm.Task;
 
 /**
  * Junit test to test the validity and optimality of the A* Algorithm.
@@ -43,11 +47,27 @@ public class AStarAlgorithmIT {
 	}
 	
 	/**
-	 * Unit test for calculating the total weights of nodes in a graph.
-	 * @author 
+	 * Unit test for calculating the total weight of nodes in a graph.
+	 * @author Holly Hagenson
 	 */
 	@Test
 	public void testCalculateTotalWeight() {
+		Collection<Node> nodes = new ArrayList<Node>(); 
+		nodes.add(new MockNode(null, "A", 2)); 
+		nodes.add(new MockNode(null, "B", 4)); 
+		nodes.add(new MockNode(null, "C", 3)); 
+		nodes.add(new MockNode(null, "D", 5)); 
+		nodes.add(new MockNode(null, "E", 3)); 
+		
+		AStarAlgorithm am = new AStarAlgorithm(); 
+		int totalWeight = am.calculateTotalWeight(nodes); 
+		
+		assertEquals(totalWeight, 17); 	
+	}
+	
+	@Test
+	public void testGetEarliestStartTime() {
+		AStarAlgorithm am = new AStarAlgorithm(); 
 		
 	}
 
