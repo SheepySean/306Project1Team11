@@ -121,12 +121,12 @@ public class AStarAlgorithm extends Algorithm{
 	 * @author Jessica Alcantara
 	 */
 	public void expandState(State state) {
-		ArrayList<Task> schedule = state.getSchedule();
-		ArrayList<Node> freeNodes = availableNode(schedule);
+		ArrayList<Node> freeNodes = availableNode(state.getSchedule());
 		
 		for (Node node : freeNodes) {
 			// Create states from each possible allocation of the task
 			for (int i=1; i<=_processors; i++) {
+				ArrayList<Task> schedule = new ArrayList<Task>(state.getSchedule());
 				// Schedule the node
 				int startTime = getEarliestStartTime(node,schedule,i);
 				schedule.add(new Task(node,startTime,i));
