@@ -25,8 +25,7 @@ public class AStarAlgorithm extends Algorithm{
 	};
 	
 	private Queue<State> _states = new PriorityQueue<State>(_stateComparator);
-	
-	private Task _lastTask; 
+	private CostFunctionManager _cfm;
 	
 	public AStarAlgorithm() {
 		super();
@@ -34,10 +33,12 @@ public class AStarAlgorithm extends Algorithm{
 	
 	public AStarAlgorithm(Graph graph, int processor) {
 		super(graph, processor);
+		_cfm = new CostFunctionManager(calculateTotalWeight(), processor);
 	}
 	
-	public AStarAlgorithm(Graph graph, int processor, int cost) {
-		super(graph, processor, cost);
+	public AStarAlgorithm(Graph graph, int processor, int cores) {
+		super(graph, processor, cores);
+		_cfm = new CostFunctionManager(calculateTotalWeight(), processor);
 	}
 	
 	/**
@@ -50,7 +51,7 @@ public class AStarAlgorithm extends Algorithm{
 		for (Node node : _graph.getNodeSet()) {
 			if (node.getInDegree() == 0) {
 				_states.add(new State(node, null,
-						calculateCostFunction(null, node), 
+						_cfm.calculateCostFunction(null, node, _solution), 
 						((Number) node.getAttribute("Weight")).intValue()));
 			}
 		}
@@ -207,100 +208,23 @@ public class AStarAlgorithm extends Algorithm{
 			int currentScheduleLength = state.getScheduleLength() + 
 					((Number) child.getAttribute("Weight")).intValue();
 			_states.add(new State(child, state.getNode(),
-					calculateCostFunction(state, child),
+					_cfm.calculateCostFunction(state, child, _solution),
 					currentScheduleLength));
 		}
 	}
 	
-    /**
-     * Calculates the cost function f(s) by the following equation:
-     * 		f(s) = max{f(s-1), Cpe(S), Bt(s)}
-     * @param parentState Parent state of the new node
-     * @param newNode New node to calculate the cost function of 
-     * @return int representing the cost
-     * 
-     * @author Jessica Alcantara
-     */
-	public int calculateCostFunction(State parentState, Node newNode) {
-		int parentCost;
-		int boundedTime = calculateBoundedTime();
-		int criticalPathEstimate = calculateCriticalPathEstimate(_lastTask);
-		
-		// Check if parent node exists
-		if (parentState == null) {
-			parentCost = 0;
-		} else {
-			parentCost = parentState.getCost();
-		}
-		
-		int maxCost = Math.max(parentCost, boundedTime);
-		maxCost = Math.max(maxCost, criticalPathEstimate);
-		return maxCost;
-	}
-	
 	/**
-	 * Calculates the bounded time based on:
-	 * 		Bt(S) = idle(S) + sum(weights(all nodes))
-	 * 
-	 * @return int of the bounded time
+	 * Calculates the sum of weights of all nodes in the graph
+	 * @return int total of node weights
 	 * 
 	 * @author Jessica Alcantara
 	 */
-	public int calculateBoundedTime() {
-		int idleTime = calculateIdleTime();
+	public int calculateTotalWeight() {
 		int weightTotal = 0;
-		
-		// Calculate the sum of all node weights
 		for (Node node : _graph.getNodeSet()) {
 			weightTotal += ((Number)node.getAttribute("Weight")).intValue();
 		}
-		
-		int boundedTime = (idleTime + weightTotal)/_processors;
-		return boundedTime;
-	}
-	
-	/**
-	 * Calculates the sum of all idle times on each processor.
-	 * @return int of the idle time
-	 * 
-	 * @author Jessica Alcantara
-	 */
-	public int calculateIdleTime() {
-		int idleTime = 0;
-		int finishTime = 0;
-		int time;
-		for (int i=1; i<= _processors; i++) {
-			for (Task task : _solution) {
-				// Sum the idle time on each processor
-				if (i == task.getProcessor()) {
-					time = task.getStartTime() - finishTime;
-					// Check if the processor is idle
-					if (time > 0) {
-						idleTime += time;
-					}
-					finishTime = task.getStartTime() + 
-							((Number)task.getNode().getAttribute("Weight")).intValue();
-				}
-			}
-		}
-		return idleTime;
-	}
-	
-	/**
-	 * Calculates the critical path estimate based on:
-	 * 		Cpe(S) = startTime(nlast) + bottomLevel(nlast)
-	 * 
-	 * @param node Nlast, node with latest finish time in partial schedule
-	 * @return int of critical path estimate
-	 * 
-	 * @author Holly Hagenson
-	 */
-	public int calculateCriticalPathEstimate(Task task) {
-		CostFunctionManager cfm = new CostFunctionManager();
-		int bottomLevel = cfm.bottomLevel(task.getNode(), _graph);
-		int startTime = task.getStartTime(); 
-		
-		return startTime + bottomLevel;
+		return weightTotal;
 	}
 	
 	/**
