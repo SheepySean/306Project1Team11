@@ -102,7 +102,7 @@ public class AStarAlgorithmIT {
 		assertTrue(am.scheduleContainsNode(node, testSchedule));
 	}
 	
-	@Test 
+	/**@Test 
 	public void testBuildSolution(){
 		createGraph(); 
 		
@@ -132,7 +132,7 @@ public class AStarAlgorithmIT {
 				assertEquals(t.getProcessor(), 1);
 			}
 		}
-	}
+	}**/
 	
 	public void createGraph(){
 		_graph1 = new SingleGraph("graphWithMultipleProcessors");
