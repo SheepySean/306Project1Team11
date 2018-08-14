@@ -132,8 +132,11 @@ public class AStarAlgorithm extends Algorithm{
 				schedule.add(new Task(node,startTime,i));
 
 				// Create state from new schedule
-				_states.add(new State(node,state,schedule,
-						_cfm.calculateCostFunction(state,node,schedule)));
+				State newState = new State(node,state,schedule,
+						_cfm.calculateCostFunction(state,node,schedule));
+				if (!checkDuplicates(newState, _states)){
+					_states.add(newState);
+				}
 			}
 		}
 	}
@@ -180,20 +183,38 @@ public class AStarAlgorithm extends Algorithm{
 	}
 	
 	/**
+	 * Check for duplicates in states. 
+	 * @param newState to be added to states
+	 * @param states already queued
+	 * @return Boolean whether there are duplicates or not
+	 * 
+	 * @author Holly Hagenson
+	 */
 	public Boolean checkDuplicates(State newState, Queue<State> states){
+		// For all queued states, check them against the state to be queued
 		for (State state : states){
 			Boolean duplicate = compareStates(state, newState);
-			if (duplicate){
+			Boolean makespan = compareMakespan(state, newState); 
+			if (duplicate && makespan){
 				return true;
 			}
 		}
 		return false;
 	}
 	
+	/**
+	 * Compare states to see if all tasks have been put on same processors.
+	 * @param newState to be added to states
+	 * @param stateInQueue already queued state
+	 * @return Boolean whether the states are the same or not
+	 * 
+	 * @author Holly Hagenson
+	 */
 	public Boolean compareStates(State newState, State stateInQueue){
 		ArrayList<Task> newSchedule = newState.getSchedule();
 		ArrayList<Task> scheduleInQueue = stateInQueue.getSchedule(); 
 		
+		// For all tasks in both schedule, compare task allocation
 		for (Task newTask : newSchedule){
 			for (Task queuedTask : scheduleInQueue){
 				if (newTask.getNode().getId().equals(queuedTask.getNode().getId())
@@ -203,5 +224,46 @@ public class AStarAlgorithm extends Algorithm{
 			}
 		}
 		return true; 
-	}**/
+	}
+	
+	/**
+	 * Compare the makespans of states to see if they are equal.
+	 * @param newState to be added to states
+	 * @param stateInQueue already queued state
+	 * @return Boolean whether the makespans are equal or not
+	 * 
+	 * @author Holly Hagenson
+	 */
+	public Boolean compareMakespan(State newState, State stateInQueue){
+		ArrayList<Task> newSchedule = newState.getSchedule();
+		ArrayList<Task> scheduleInQueue = stateInQueue.getSchedule(); 
+		
+		int newMakespan = getLatestFinish(newSchedule);
+		int queuedMakespan = getLatestFinish(scheduleInQueue); 
+		
+		if (newMakespan == queuedMakespan){
+			return true;
+		}
+		return false;		
+	}
+	
+	/**
+	 * Get latest finish time of a partial schedule. 
+	 * @param solution to find latest finish time of
+	 * @return int latest finish time of schedule.
+	 * 
+	 * @author Holly Hagenson
+	 */
+	public int getLatestFinish(ArrayList<Task> solution){
+		int maxFinish  = 0; 
+		// For all tasks in solution, find latest finish time of tasks
+		for (Task task : solution){
+			int nodeWeight = ((Number)task.getNode().getAttribute("Weight")).intValue();
+			int finish = task.getStartTime() + nodeWeight; 
+			if (finish > maxFinish){
+				maxFinish = finish; 
+			}
+		}
+		return maxFinish; 
+	}
 }
