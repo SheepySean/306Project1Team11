@@ -5,7 +5,7 @@ import org.graphstream.graph.implementations.SingleNode;
 
 /**
  * 
- * Mock class for graphstream SingleNode that implements Node. 
+ * Mock class for graphstream AbstractElement. 
  * 
  * @author Jessica_Alcantara
  *
@@ -22,12 +22,11 @@ public class MockNode extends SingleNode{
 		super(graph, id);
 		_weight = weight;
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
-	public <T> T getAttribute(String key) {
-		if (key.equals("Weight")) {
-			return (T) _weight;
+	public Object getAttribute(String arg0) {
+		if (arg0.equals("Weight")) {
+			return _weight;
 		}
 		return null;
 	}
