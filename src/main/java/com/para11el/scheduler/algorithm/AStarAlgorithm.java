@@ -9,6 +9,11 @@ import java.util.Queue;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
+/**
+ * A* Algorithm to find the optimal solution 
+ * 
+ * @author Jessica Alcantara, Holly Hagenson
+ */
 public class AStarAlgorithm extends Algorithm{
 
 	/**
@@ -44,7 +49,7 @@ public class AStarAlgorithm extends Algorithm{
 	/**
 	 * Initializes the algorithm and build solution
 	 * 
-	 * @author Jessica Alcantara, Holly Hagenson
+	 * @author Jessica Alcantara
 	 */
 	public ArrayList<Task> buildSolution() {
 		// Initialize priority queue with entry node initial states
@@ -139,22 +144,6 @@ public class AStarAlgorithm extends Algorithm{
 				}
 			}
 		}
-	}
-	
-	/**
-	 * Checks whether the node has been scheduled in the solution state
-	 * @param node Node representing a task
-	 * @return boolean true if solution contains the node
-	 * 
-	 * @author Jessica Alcantara
-	 */
-	public boolean scheduleContainsNode(Node node, ArrayList<Task> schedule) {
-		for (Task task : schedule) {
-			if (task.getNode().equals(node)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
