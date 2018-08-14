@@ -55,6 +55,7 @@ public class AStarAlgorithmIT {
 	 */
 	@Test
 	public void testCalculateTotalWeight() {
+		// Create collection of nodes to find total weight of
 		Collection<Node> nodes = new ArrayList<Node>(); 
 		nodes.add(new MockNode(null, "A", 2)); 
 		nodes.add(new MockNode(null, "B", 4)); 
@@ -76,6 +77,7 @@ public class AStarAlgorithmIT {
 	public void testGetEarliestStartTime() {		
 		createGraph(); 
 		
+		// Create test schedule to get earliest start time of
 		ArrayList<Task> testSchedule = new ArrayList<Task>(); 
 		testSchedule.add(new Task(_graph1.getNode("1"),0,1));
 		testSchedule.add(new Task(_graph1.getNode("2"),3,1));
@@ -87,8 +89,13 @@ public class AStarAlgorithmIT {
 		assertEquals(start, 7); 
 	}
 	
+	/**
+	 * Unit test for seeing whether a given schedule contains a certain node.
+	 * @author Holly Hagenson
+	 */
 	@Test
 	public void testScheduleContainsNode() {
+		// Create test schedule to see if it contains a certain node
 		ArrayList<Task> testSchedule = new ArrayList<Task>();
 		Node node = new MockNode(null,"C",3);  
 		testSchedule.add(new Task(new MockNode(null,"A",2),0,1));
@@ -108,6 +115,7 @@ public class AStarAlgorithmIT {
 	 */
 	@Test
 	public void testCheckDuplicates(){
+		// Create test schedules and states to compare against each other
 		ArrayList<Task> testSchedule = new ArrayList<Task>();  
 		Node nodeB  = new MockNode(null,"B",2);
 		testSchedule.add(new Task(new MockNode(null,"A",2),0,1));
@@ -133,38 +141,57 @@ public class AStarAlgorithmIT {
 		assertTrue(am.checkDuplicates(newState, states)); 
 	}
 	
-	/**@Test 
-	public void testBuildSolution(){
+	/**
+	 * Unit test to check finish time of valid solution.
+	 * @author Holly Hagenson
+	 */
+	@Test 
+	public void testBuildSolutionFinish(){
 		createGraph(); 
 		
 		AStarAlgorithm as = new AStarAlgorithm(_graph1, 2); 
 		
 		ArrayList<Task> solution = as.buildSolution(); 
 		
+		int maxFinish = 0;
+		
+		// For all tasks in the solution, find latest finish time
 		for (Task t : solution){
-			if (t.getNode().getId().equals("1")){
-				assertEquals(t.getStartTime(), 0);
-				assertEquals(t.getProcessor(), 1);
-			}
-			if (t.getNode().getId().equals("2")){
-				assertEquals(t.getStartTime(), 4);
-				assertEquals(t.getProcessor(), 1);
-			}
-			if (t.getNode().getId().equals("3")){
-				assertEquals(t.getStartTime(), 7);
-				assertEquals(t.getProcessor(), 2);
-			}
-			if (t.getNode().getId().equals("4")){
-				assertEquals(t.getStartTime(), 10);
-				assertEquals(t.getProcessor(), 2);
-			}
-			if (t.getNode().getId().equals("5")){
-				assertEquals(t.getStartTime(), 7);
-				assertEquals(t.getProcessor(), 1);
+			int nodeWeight = ((Number)t.getNode().getAttribute("Weight")).intValue();
+			int finishTime = t.getStartTime() + nodeWeight;
+			if (finishTime > maxFinish){
+				maxFinish = finishTime; 
 			}
 		}
-	}**/
+		
+		assertEquals(maxFinish, 12); 
+	}
 	
+	@Test
+	public void testOutputGraph(){
+		createGraph(); 
+
+		AStarAlgorithm as = new AStarAlgorithm(_graph1, 2); 
+
+		ArrayList<Task> solution = as.buildSolution();
+		
+		Graph outputGraph = as.getGraph(solution);
+		
+		//Iterate through the node set of the output graph
+		for(Node node : outputGraph.getNodeSet()){
+			//Each node should have three attributes
+			assertEquals(3, node.getAttributeCount());
+			
+			//Check that each node has the attributes we expect
+			assertTrue(node.getAttribute("Weight")!=null);
+			assertTrue(node.getAttribute("Start")!=null);
+			assertTrue(node.getAttribute("Processor")!=null);
+		}
+	}
+	
+	/*
+	 * Method to create a GraphStream graph to use for testing purposes
+	 */
 	public void createGraph(){
 		_graph1 = new SingleGraph("graphWithMultipleProcessors");
 		_graph1.addNode("1");

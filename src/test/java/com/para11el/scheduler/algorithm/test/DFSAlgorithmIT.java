@@ -219,7 +219,8 @@ public class DFSAlgorithmIT {
 	}
 	
 	/**
-	 * Test that the finish time of a sequential graph on a single processor is the actual finish time of the optimal solution
+	 * Test that the finish time of a sequential graph on a single processor is the 
+	 * actual finish time of the optimal solution.
 	 *  @author Rebekah Berriman
 	 */
 	@Test 
@@ -242,7 +243,8 @@ public class DFSAlgorithmIT {
 	}
 	
 	/**
-	 * Test that the finish time of a sequential graph on multiple processors is the actual finish time of the optimal solution
+	 * Test that the finish time of a sequential graph on multiple processors is the 
+	 * actual finish time of the optimal solution.
 	 *  @author Rebekah Berriman
 	 */
 	@Test 
