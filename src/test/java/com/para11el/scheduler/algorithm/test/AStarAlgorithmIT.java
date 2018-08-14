@@ -144,11 +144,12 @@ public class AStarAlgorithmIT {
 	}
 	
 	/**
-	 * Unit test to check finish time of valid, optimal solution.
+	 * Unit test to check finish time of valid, optimal solution when multiple 
+	 * processors are used.
 	 * @author Holly Hagenson
 	 */
 	@Test 
-	public void testBuildSolutionFinish(){
+	public void testMultiBuildSolutionFinish(){
 		createGraph(); 
 		
 		AStarAlgorithm as = new AStarAlgorithm(_graph1, 2); 
@@ -167,6 +168,33 @@ public class AStarAlgorithmIT {
 		}
 		
 		assertEquals(maxFinish, 12); 
+	}
+	
+	/**
+	 * Unit test to check finish time of valid, optimal solution when a single 
+	 * processor is used.
+	 * @author Holly Hagenson
+	 */
+	@Test 
+	public void testSingleBuildSolutionFinish(){
+		createGraph(); 
+		
+		AStarAlgorithm as = new AStarAlgorithm(_graph1, 1); 
+		
+		ArrayList<Task> solution = as.buildSolution(); 
+		
+		int maxFinish = 0;
+		
+		// For all tasks in the solution, find latest finish time
+		for (Task t : solution){
+			int nodeWeight = ((Number)t.getNode().getAttribute("Weight")).intValue();
+			int finishTime = t.getStartTime() + nodeWeight;
+			if (finishTime > maxFinish){
+				maxFinish = finishTime; 
+			}
+		}
+		
+		assertEquals(maxFinish, 14); 
 	}
 	
 	/**
