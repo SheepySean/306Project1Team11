@@ -3,16 +3,20 @@ package com.para11el.scheduler.main;
 
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
 import com.para11el.scheduler.algorithm.SolutionSpaceManager;
-import com.para11el.scheduler.algorithm.Task;
 
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
-import org.graphstream.graph.Edge;
+import com.para11el.scheduler.ui.Viewer;
+import com.para11el.scheduler.ui.ViewerPaneController;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
+import org.graphstream.stream.ProxyPipe;
+import org.graphstream.ui.fx_viewer.FxViewer;
+import org.graphstream.ui.graphicGraph.GraphicGraph;
+import org.graphstream.ui.view.View;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.nio.file.Paths;
 
 
@@ -34,8 +38,8 @@ public class Scheduler {
 	 * @param args Command line arguments
 	 */
 	public static void main(String[] args) {
-        // Set the Graph to be viewed with JavaFx
         System.setProperty("org.graphstream.ui", "javafx");
+		//System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.javafx.FxGraphRenderer");
 		// Read the parameters provided on the command line
 		try {
             readParameters(args);
@@ -67,7 +71,7 @@ public class Scheduler {
 			return;
 		}
 		
-		//Create the SolutionSpace
+/*		//Create the SolutionSpace
 		SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
 		solutionSpaceManager.initialise();
 		
@@ -75,15 +79,19 @@ public class Scheduler {
 		//ArrayList<Task> solution = astar.buildSolution(); 
 		
 		//Get the graph labeled with the optimal solution
+
 		Graph newGraph = solutionSpaceManager.getGraph();
-		//Graph newGraph = astar.getGraph(solution); 
+		//Graph newGraph = astar.getGraph(solution);*/
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
 /*		viewManager.labelGraph();
 		viewManager.unlabelGraph();*/
 		if(_visualise) {
-            _inGraph.display();
+		    ViewerPaneController.setViewer(new FxViewer(_inGraph, org.graphstream.ui.view.Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD));
+			Viewer.main(null);
+			//view.getCamera().setViewCenter(0, 0,0);
+
         }
 		// Name the file if no specific output name was provided
 		if(_outputFilename == null) {
@@ -93,7 +101,7 @@ public class Scheduler {
 		// Write the output file
 		try {
 			fileManager.writeGraphFile(_outputFilename,
-					newGraph, true);
+					_inGraph, true);
             System.out.println("Graph file successfully written to '" + _outputFilename+ "'");
 		} catch(IOException e) {
 			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
