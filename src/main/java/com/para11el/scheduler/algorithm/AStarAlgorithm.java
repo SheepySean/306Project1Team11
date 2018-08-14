@@ -145,6 +145,22 @@ public class AStarAlgorithm extends Algorithm{
 			}
 		}
 	}
+	
+	/**
+	 * Checks whether the node has been scheduled in the solution state
+	 * @param node Node representing a task
+	 * @return boolean true if solution contains the node
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public boolean scheduleContainsNode(Node node, ArrayList<Task> schedule) {
+		for (Task task : schedule) {
+			if (task.getNode().equals(node)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Calculates the sum of weights of all nodes in the graph
