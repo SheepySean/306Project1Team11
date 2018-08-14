@@ -3,6 +3,7 @@ package com.para11el.scheduler.graph;
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
 import org.graphstream.stream.file.*;
+import org.graphstream.ui.graphicGraph.GraphicGraph;
 
 import java.io.IOException;
 
@@ -28,7 +29,7 @@ public class GraphFileManager {
      * @author Sean Oldfield
      */
     public Graph readGraphFile(String filename, String graphID) throws IOException {
-        Graph g = new SingleGraph(graphID);
+        Graph g = new SingleGraph(graphID, false,false);
         FileSource fs = new FileSourceDOT();
 
         fs.addSink(g);

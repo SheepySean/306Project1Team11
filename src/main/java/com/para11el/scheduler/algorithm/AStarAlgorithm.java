@@ -9,6 +9,11 @@ import java.util.Queue;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
+/**
+ * A* Algorithm to find the optimal solution 
+ * 
+ * @author Jessica Alcantara, Holly Hagenson
+ */
 public class AStarAlgorithm extends Algorithm{
 
 	/**
@@ -44,7 +49,7 @@ public class AStarAlgorithm extends Algorithm{
 	/**
 	 * Initializes the algorithm and build solution
 	 * 
-	 * @author Jessica Alcantara, Holly Hagenson
+	 * @author Jessica Alcantara
 	 */
 	public ArrayList<Task> buildSolution() {
 		// Initialize priority queue with entry node initial states

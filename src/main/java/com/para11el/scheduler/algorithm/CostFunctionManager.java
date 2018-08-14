@@ -9,7 +9,7 @@ import org.graphstream.graph.Node;
 /**
  * Class to calculate the cost function of the A* algorithm.
  * 
- * @author Holly Hagenson
+ * @author Holly Hagenson, Jessica Alcantara
  *
  */
 public class CostFunctionManager {

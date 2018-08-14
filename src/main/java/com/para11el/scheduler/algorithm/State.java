@@ -22,8 +22,10 @@ public class State {
 	/**
 	 * State constructor
 	 * 
-	 * @param node a node in input graph
-	 * @param cost cost calculated by cost function
+	 * @param node Node in input graph
+	 * @param parent Parent state
+	 * @param schedule Schedule representing partial solution
+	 * @param cost Cost calculated by cost function
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -58,6 +60,8 @@ public class State {
 	 * Compares state based on the cost
 	 * @param compareState
 	 * @return int representing ascending order
+	 * 
+	 * @author Jessica Alcantara
 	 */
 	public int compareTo(State compareState) {
 		int compareCost = ((State) compareState).getCost(); 
