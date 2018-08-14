@@ -136,10 +136,9 @@ public class SolutionSpace {
 		_tasks = _ssManager.getOptimal();
 		Graph outputGraph = _ssManager.getGraph();
 		
-		for(Node n : outputGraph.getNodeSet()){
+		outputGraph.nodes().forEach((n) -> {
 			assertEquals(n.getAttributeCount(), 1);
-		}
-		 
+		});		 
 	}
 	
 	
@@ -149,10 +148,10 @@ public class SolutionSpace {
 		_graph1.addNode("2");
 		_graph1.addNode("3");
 		_graph1.addNode("4");
-		_graph1.getNode("1").addAttribute("Weight", 3.0);
-		_graph1.getNode("2").addAttribute("Weight", 4.0);
-		_graph1.getNode("3").addAttribute("Weight", 2.0);
-		_graph1.getNode("4").addAttribute("Weight", 1.0);
+		_graph1.getNode("1").setAttribute("Weight", 3.0);
+		_graph1.getNode("2").setAttribute("Weight", 4.0);
+		_graph1.getNode("3").setAttribute("Weight", 2.0);
+		_graph1.getNode("4").setAttribute("Weight", 1.0);
 		_graph1.addEdge("1 -> 2", "1", "2", true);
 		_graph1.addEdge("1 -> 3", "1", "3", true);
 		_graph1.addEdge("2 -> 4", "2", "4", true);
@@ -167,10 +166,10 @@ public class SolutionSpace {
 		_graph2.addNode("2");
 		_graph2.addNode("3");
 		_graph2.addNode("4");
-		_graph2.getNode("1").addAttribute("Weight", 5.0);
-		_graph2.getNode("2").addAttribute("Weight", 6.0);
-		_graph2.getNode("3").addAttribute("Weight", 4.0);
-		_graph2.getNode("4").addAttribute("Weight", 3.0);
+		_graph2.getNode("1").setAttribute("Weight", 5.0);
+		_graph2.getNode("2").setAttribute("Weight", 6.0);
+		_graph2.getNode("3").setAttribute("Weight", 4.0);
+		_graph2.getNode("4").setAttribute("Weight", 3.0);
 		_graph2.addEdge("1 -> 4", "1", "4", true);
 		_graph2.addEdge("2 -> 4", "2", "4", true);
 		_graph2.addEdge("3 -> 4", "3", "4", true);
@@ -183,10 +182,10 @@ public class SolutionSpace {
 		_graph3.addNode("2");
 		_graph3.addNode("3");
 		_graph3.addNode("4");
-		_graph3.getNode("1").addAttribute("Weight", 4.0);
-		_graph3.getNode("2").addAttribute("Weight", 3.0);
-		_graph3.getNode("3").addAttribute("Weight", 2.0);
-		_graph3.getNode("4").addAttribute("Weight", 5.0);
+		_graph3.getNode("1").setAttribute("Weight", 4.0);
+		_graph3.getNode("2").setAttribute("Weight", 3.0);
+		_graph3.getNode("3").setAttribute("Weight", 2.0);
+		_graph3.getNode("4").setAttribute("Weight", 5.0);
 		_graph3.addEdge("1 -> 2", "1", "2", true);
 		_graph3.addEdge("1 -> 3", "1", "3", true);
 		_graph3.addEdge("1 -> 4", "1", "4", true);
@@ -197,8 +196,8 @@ public class SolutionSpace {
 		_graph4 = new SingleGraph("inputGraph");
 		_graph4.addNode("1");
 		_graph4.addNode("2"); 
-		_graph4.getNode("1").addAttribute("Weight", 4.0);
-		_graph4.getNode("2").addAttribute("Weight", 3.0);
+		_graph4.getNode("1").setAttribute("Weight", 4.0);
+		_graph4.getNode("2").setAttribute("Weight", 3.0);
 		_graph4.addEdge("1 -> 2", "1", "2", true);
 		_graph4.getEdge("1 -> 2").setAttribute("Weight", 1.0);
 	}

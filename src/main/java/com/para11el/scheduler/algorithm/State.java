@@ -2,6 +2,7 @@ package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 import org.graphstream.graph.Node;
 
@@ -76,8 +77,8 @@ public class State {
 	 * 
 	 * @author Jessica Alcantara
 	 */
-	public Boolean isComplete(Collection<Node> nodes) {
-		if (_schedule.size() == nodes.size()) {
+	public Boolean isComplete(Stream<Node> nodes) {
+		if (_schedule.size() == nodes.count()) {
 			return true;
 		} else {
 			return false;

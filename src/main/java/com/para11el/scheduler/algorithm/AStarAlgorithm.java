@@ -3,8 +3,10 @@ package com.para11el.scheduler.algorithm;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.stream.Stream;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -38,12 +40,12 @@ public class AStarAlgorithm extends Algorithm{
 
 	public AStarAlgorithm(Graph graph, int processor) {
 		super(graph, processor);
-		_cfm = new CostFunctionManager(calculateTotalWeight(graph.getNodeSet()), processor);
+		_cfm = new CostFunctionManager(calculateTotalWeight(graph.nodes()), processor);
 	}
 
 	public AStarAlgorithm(Graph graph, int processor, int cores) {
 		super(graph, processor, cores);
-		_cfm = new CostFunctionManager(calculateTotalWeight(graph.getNodeSet()), processor);
+		_cfm = new CostFunctionManager(calculateTotalWeight(graph.nodes()), processor);
 	}
 
 	/**
@@ -53,20 +55,21 @@ public class AStarAlgorithm extends Algorithm{
 	 */
 	public ArrayList<Task> buildSolution() {
 		// Initialize priority queue with entry node initial states
-		for (Node node : _graph.getNodeSet()) {
+		_graph.nodes().forEach((node) -> {
 			if (node.getInDegree() == 0) {
 				ArrayList<Task> schedule = new ArrayList<Task>();
 				schedule.add(new Task(node,0,1));
 				_states.add(new State(node, null, schedule,
 						_cfm.calculateCostFunction(null, node, schedule)));
 			}
-		}
+		});
+		
 		while (_states.size() > 0) {
 			// Pop the most promising state
 			State state = _states.poll();
 
 			// Check if solution is complete
-			if (state.isComplete(_graph.getNodeSet())) {
+			if (state.isComplete(_graph.nodes())) {
 				return state.getSchedule();
 			}
 
@@ -169,11 +172,13 @@ public class AStarAlgorithm extends Algorithm{
 	 * 
 	 * @author Jessica Alcantara
 	 */
-	public int calculateTotalWeight(Collection<Node> nodes) {
+	public int calculateTotalWeight(Stream<Node> nodes) {
 		int weightTotal = 0;
-		for (Node node : nodes) {
-			weightTotal += ((Number)node.getAttribute("Weight")).intValue();
+		Iterator<Node> i = nodes.iterator();
+		while (i.hasNext()){
+			weightTotal += ((Number)i.next().getAttribute("Weight")).intValue();
 		}
+		
 		return weightTotal;
 	}
 

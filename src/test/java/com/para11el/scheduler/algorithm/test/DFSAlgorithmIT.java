@@ -284,7 +284,7 @@ public class DFSAlgorithmIT {
 		_tasks = _ssManager.getOptimal();
 		Graph outputGraph = _ssManager.getGraph();
 
-		for(Node node : outputGraph.getNodeSet()){
+		outputGraph.nodes().forEach((node) -> {
 			//Each node should have three attributes
 			assertEquals(3, node.getAttributeCount());
 			
@@ -292,9 +292,9 @@ public class DFSAlgorithmIT {
 			assertTrue(node.getAttribute("Weight")!=null);
 			assertTrue(node.getAttribute("Start")!=null);
 			assertTrue(node.getAttribute("Processor")!=null);
-		}
+		});
 		
-		for (Edge edge : outputGraph.getEdgeSet()) {
+		outputGraph.edges().forEach((edge) -> {
 			//Each edge should have one attribute
 			assertEquals(1, edge.getAttributeCount());
 			
@@ -302,9 +302,7 @@ public class DFSAlgorithmIT {
 			assertTrue(edge.getAttribute("Weight")!=null);
 			assertTrue(edge.getAttribute("Start")==null);
 			assertTrue(edge.getAttribute("Processor")==null);
-			
-		}
-		 
+		});		 
 	}
 	
 	/**
@@ -329,7 +327,7 @@ public class DFSAlgorithmIT {
 		Graph outputGraph = _ssManager.getGraph();
 
 		//Iterate through the node set of the output graph
-		for(Node node : outputGraph.getNodeSet()){
+		outputGraph.nodes().forEach((node) -> {
 			//Each node should have three attributes
 			assertEquals(3, node.getAttributeCount());
 			
@@ -337,10 +335,10 @@ public class DFSAlgorithmIT {
 			assertTrue(node.getAttribute("Weight")!=null);
 			assertTrue(node.getAttribute("Start")!=null);
 			assertTrue(node.getAttribute("Processor")!=null);
-		}
+		});
 		
 		//Iterate through the edge set of the output graph 
-		for (Edge edge : outputGraph.getEdgeSet()) {
+		outputGraph.edges().forEach((edge) -> {
 			//Each edge should have one attribute
 			assertEquals(1, edge.getAttributeCount());
 			
@@ -348,9 +346,7 @@ public class DFSAlgorithmIT {
 			assertTrue(edge.getAttribute("Weight")!=null);
 			assertTrue(edge.getAttribute("Start")==null);
 			assertTrue(edge.getAttribute("Processor")==null);
-			
-		}
-		 
+		});		 
 	}
 	
 	/**
@@ -363,10 +359,10 @@ public class DFSAlgorithmIT {
 		_graph1.addNode("2");
 		_graph1.addNode("3");
 		_graph1.addNode("4");
-		_graph1.getNode("1").addAttribute("Weight", 3.0);
-		_graph1.getNode("2").addAttribute("Weight", 4.0);
-		_graph1.getNode("3").addAttribute("Weight", 2.0);
-		_graph1.getNode("4").addAttribute("Weight", 1.0);
+		_graph1.getNode("1").setAttribute("Weight", 3.0);
+		_graph1.getNode("2").setAttribute("Weight", 4.0);
+		_graph1.getNode("3").setAttribute("Weight", 2.0);
+		_graph1.getNode("4").setAttribute("Weight", 1.0);
 		_graph1.addEdge("1 -> 2", "1", "2", true);
 		_graph1.addEdge("1 -> 3", "1", "3", true);
 		_graph1.addEdge("2 -> 4", "2", "4", true);
@@ -381,10 +377,10 @@ public class DFSAlgorithmIT {
 		_graph2.addNode("2");
 		_graph2.addNode("3");
 		_graph2.addNode("4");
-		_graph2.getNode("1").addAttribute("Weight", 5.0);
-		_graph2.getNode("2").addAttribute("Weight", 6.0);
-		_graph2.getNode("3").addAttribute("Weight", 4.0);
-		_graph2.getNode("4").addAttribute("Weight", 3.0);
+		_graph2.getNode("1").setAttribute("Weight", 5.0);
+		_graph2.getNode("2").setAttribute("Weight", 6.0);
+		_graph2.getNode("3").setAttribute("Weight", 4.0);
+		_graph2.getNode("4").setAttribute("Weight", 3.0);
 		_graph2.addEdge("1 -> 4", "1", "4", true);
 		_graph2.addEdge("2 -> 4", "2", "4", true);
 		_graph2.addEdge("3 -> 4", "3", "4", true);
@@ -397,10 +393,10 @@ public class DFSAlgorithmIT {
 		_graph3.addNode("2");
 		_graph3.addNode("3");
 		_graph3.addNode("4");
-		_graph3.getNode("1").addAttribute("Weight", 4.0);
-		_graph3.getNode("2").addAttribute("Weight", 3.0);
-		_graph3.getNode("3").addAttribute("Weight", 2.0);
-		_graph3.getNode("4").addAttribute("Weight", 5.0);
+		_graph3.getNode("1").setAttribute("Weight", 4.0);
+		_graph3.getNode("2").setAttribute("Weight", 3.0);
+		_graph3.getNode("3").setAttribute("Weight", 2.0);
+		_graph3.getNode("4").setAttribute("Weight", 5.0);
 		_graph3.addEdge("1 -> 2", "1", "2", true);
 		_graph3.addEdge("1 -> 3", "1", "3", true);
 		_graph3.addEdge("1 -> 4", "1", "4", true);
@@ -411,8 +407,8 @@ public class DFSAlgorithmIT {
 		_graph4 = new SingleGraph("inputGraph");
 		_graph4.addNode("1");
 		_graph4.addNode("2"); 
-		_graph4.getNode("1").addAttribute("Weight", 4.0);
-		_graph4.getNode("2").addAttribute("Weight", 3.0);
+		_graph4.getNode("1").setAttribute("Weight", 4.0);
+		_graph4.getNode("2").setAttribute("Weight", 3.0);
 		_graph4.addEdge("1 -> 2", "1", "2", true);
 		_graph4.getEdge("1 -> 2").setAttribute("Weight", 1.0);
 		
@@ -421,10 +417,10 @@ public class DFSAlgorithmIT {
 		_graph5.addNode("2");
 		_graph5.addNode("3");
 		_graph5.addNode("4");
-		_graph5.getNode("1").addAttribute("Weight", 4.0);
-		_graph5.getNode("2").addAttribute("Weight", 3.0);
-		_graph5.getNode("3").addAttribute("Weight", 4.0);
-		_graph5.getNode("4").addAttribute("Weight", 3.0);
+		_graph5.getNode("1").setAttribute("Weight", 4.0);
+		_graph5.getNode("2").setAttribute("Weight", 3.0);
+		_graph5.getNode("3").setAttribute("Weight", 4.0);
+		_graph5.getNode("4").setAttribute("Weight", 3.0);
 		_graph5.addEdge("1 -> 2", "1", "2", true);
 		_graph5.getEdge("1 -> 2").setAttribute("Weight", 1.0);
 		_graph5.addEdge("2 -> 3", "2", "3", true);

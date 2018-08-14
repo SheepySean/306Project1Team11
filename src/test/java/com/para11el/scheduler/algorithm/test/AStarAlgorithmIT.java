@@ -31,6 +31,7 @@ public class AStarAlgorithmIT {
 	 */
 	@Test
 	public void testStateComparator() {
+		// Create states and set their costs
 		State stateOne = new State();
 		stateOne.setCost(4);
 		State stateTwo = new State();
@@ -38,6 +39,7 @@ public class AStarAlgorithmIT {
 		State stateThree = new State();
 		stateThree.setCost(9);
 		
+		// 
 		AStarAlgorithm am = new AStarAlgorithm();
 		Queue<State> states = new PriorityQueue<State>(am.getStateComparator());
 		states.add(stateOne);
@@ -64,7 +66,7 @@ public class AStarAlgorithmIT {
 		nodes.add(new MockNode(null, "E", 3)); 
 		
 		AStarAlgorithm am = new AStarAlgorithm(); 
-		int totalWeight = am.calculateTotalWeight(nodes); 
+		int totalWeight = am.calculateTotalWeight(nodes.stream()); 
 		
 		assertEquals(totalWeight, 17); 	
 	}
@@ -142,7 +144,7 @@ public class AStarAlgorithmIT {
 	}
 	
 	/**
-	 * Unit test to check finish time of valid solution.
+	 * Unit test to check finish time of valid, optimal solution.
 	 * @author Holly Hagenson
 	 */
 	@Test 
@@ -167,6 +169,10 @@ public class AStarAlgorithmIT {
 		assertEquals(maxFinish, 12); 
 	}
 	
+	/**
+	 * Unit test for checking attributes of nodes on output graph.
+	 * @author Holly Hagenson
+	 */
 	@Test
 	public void testOutputGraph(){
 		createGraph(); 
@@ -178,15 +184,16 @@ public class AStarAlgorithmIT {
 		Graph outputGraph = as.getGraph(solution);
 		
 		//Iterate through the node set of the output graph
-		for(Node node : outputGraph.getNodeSet()){
+		outputGraph.nodes().forEach((node) -> {
 			//Each node should have three attributes
 			assertEquals(3, node.getAttributeCount());
-			
+
 			//Check that each node has the attributes we expect
 			assertTrue(node.getAttribute("Weight")!=null);
 			assertTrue(node.getAttribute("Start")!=null);
 			assertTrue(node.getAttribute("Processor")!=null);
-		}
+		});			
+			
 	}
 	
 	/*
@@ -199,11 +206,11 @@ public class AStarAlgorithmIT {
 		_graph1.addNode("3");
 		_graph1.addNode("4");
 		_graph1.addNode("5");
-		_graph1.getNode("1").addAttribute("Weight", 3.0);
-		_graph1.getNode("2").addAttribute("Weight", 4.0);
-		_graph1.getNode("3").addAttribute("Weight", 2.0);
-		_graph1.getNode("4").addAttribute("Weight", 1.0);
-		_graph1.getNode("5").addAttribute("Weight", 5.0);
+		_graph1.getNode("1").setAttribute("Weight", 3.0);
+		_graph1.getNode("2").setAttribute("Weight", 4.0);
+		_graph1.getNode("3").setAttribute("Weight", 2.0);
+		_graph1.getNode("4").setAttribute("Weight", 1.0);
+		_graph1.getNode("5").setAttribute("Weight", 5.0);
 		_graph1.addEdge("1 -> 2", "1", "2", true);
 		_graph1.addEdge("1 -> 3", "1", "3", true);
 		_graph1.addEdge("2 -> 4", "2", "4", true);

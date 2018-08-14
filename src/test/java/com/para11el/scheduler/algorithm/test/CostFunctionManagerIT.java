@@ -131,11 +131,11 @@ public class CostFunctionManagerIT {
 		_graph1.addNode("3");
 		_graph1.addNode("4");
 		_graph1.addNode("5");
-		_graph1.getNode("1").addAttribute("Weight", 3.0);
-		_graph1.getNode("2").addAttribute("Weight", 4.0);
-		_graph1.getNode("3").addAttribute("Weight", 2.0);
-		_graph1.getNode("4").addAttribute("Weight", 1.0);
-		_graph1.getNode("5").addAttribute("Weight", 5.0);
+		_graph1.getNode("1").setAttribute("Weight", 3.0);
+		_graph1.getNode("2").setAttribute("Weight", 4.0);
+		_graph1.getNode("3").setAttribute("Weight", 2.0);
+		_graph1.getNode("4").setAttribute("Weight", 1.0);
+		_graph1.getNode("5").setAttribute("Weight", 5.0);
 		_graph1.addEdge("1 -> 2", "1", "2", true);
 		_graph1.addEdge("1 -> 3", "1", "3", true);
 		_graph1.addEdge("2 -> 4", "2", "4", true);

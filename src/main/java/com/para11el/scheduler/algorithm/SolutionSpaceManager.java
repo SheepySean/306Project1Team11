@@ -59,14 +59,14 @@ public class SolutionSpaceManager {
 		
 		setMinimumTime();
 
-		for (Node node : _graph.getNodeSet()) {
+		_graph.nodes().forEach((node) -> {
 			if (node.getInDegree() == 0) {
 				Task t = new Task(node, 0, 1);
 				ArrayList<Task> solutionPart = new ArrayList<Task>();
 				solutionPart.add(t);
 				buildRecursiveSolution(solutionPart);
 			}
-		}
+		});
 	}
 	
 	/**
@@ -77,9 +77,9 @@ public class SolutionSpaceManager {
 	 */
 	private void setMinimumTime() {
 		_minimumTime=0;
-		for (Node node : _graph.getNodeSet()) {
+		_graph.nodes().forEach((node) -> {
 			_minimumTime+= ((Number)node.getAttribute("Weight")).intValue();
-		}
+		});
 	}
 
 	/**
@@ -208,11 +208,10 @@ public class SolutionSpaceManager {
 	private ArrayList<Node> getParents(Node node) {
 
 		ArrayList<Node> parents = new ArrayList<Node>();
-		Iterator<Edge> edge = node.getEnteringEdgeIterator();
-
-		while (edge.hasNext()) {
-			parents.add(edge.next().getSourceNode());
-		}
+		node.enteringEdges().forEach((edge) -> {
+			parents.add(edge.getSourceNode());
+		});
+		
 		return parents;
 	}
 
@@ -231,7 +230,7 @@ public class SolutionSpaceManager {
 			scheduledNodes.add(task.getNode());
 		}
 
-		for (Node node : _graph.getNodeSet()) {
+		_graph.nodes().forEach((node) -> {
 			if (!scheduledNodes.contains(node)) { // If Node is not already scheduled
 				ArrayList<Node> parents = getParents(node);
 				if (parents.size() == 0) { // Node has no parents so can be scheduled
@@ -248,7 +247,8 @@ public class SolutionSpaceManager {
 					}
 				}
 			}
-		}
+		});
+		
 		return available;
 	}
 
@@ -303,8 +303,8 @@ public class SolutionSpaceManager {
 	private void labelGraph() {
 		for (Task task : _optimalSolution) {
 			Node node = task.getNode();
-			node.addAttribute("Start", task.getStartTime());
-			node.addAttribute("Processor", task.getProcessor());
+			node.setAttribute("Start", task.getStartTime());
+			node.setAttribute("Processor", task.getProcessor());
 		}
 	}
 

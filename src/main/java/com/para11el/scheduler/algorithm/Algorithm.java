@@ -62,8 +62,8 @@ public abstract class Algorithm {
 	private void labelGraph(ArrayList<Task> solution) {
 		for (Task task : solution) {
 			Node node = task.getNode();
-			node.addAttribute("Start", task.getStartTime());
-			node.addAttribute("Processor", task.getProcessor());
+			node.setAttribute("Start", task.getStartTime());
+			node.setAttribute("Processor", task.getProcessor());
 		}
 	}
 
@@ -86,13 +86,11 @@ public abstract class Algorithm {
 	 * @author Tina Chen 
 	 */
 	public ArrayList<Node> getParents(Node node) {
-
 		ArrayList<Node> parents = new ArrayList<Node>();
-		Iterator<Edge> edge = node.getEnteringEdgeIterator();
-
-		while (edge.hasNext()) {
-			parents.add(edge.next().getSourceNode());
-		}
+		node.enteringEdges().forEach((edge) -> {
+			parents.add(edge.getSourceNode());
+		});
+		
 		return parents;
 	}
 	
@@ -128,7 +126,7 @@ public abstract class Algorithm {
 			scheduledNodes.add(task.getNode());
 		}
 
-		for (Node node : _graph.getNodeSet()) {
+		_graph.nodes().forEach((node) -> {
 			if (!scheduledNodes.contains(node)) { // If Node is not already scheduled
 				ArrayList<Node> parents = getParents(node);
 				if (parents.size() == 0) { // Node has no parents so can be scheduled
@@ -145,7 +143,8 @@ public abstract class Algorithm {
 					}
 				}
 			}
-		}
+		});
+		
 		return available;
 	}
 
