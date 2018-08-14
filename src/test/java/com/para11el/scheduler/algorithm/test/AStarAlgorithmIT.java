@@ -102,6 +102,37 @@ public class AStarAlgorithmIT {
 		assertTrue(am.scheduleContainsNode(node, testSchedule));
 	}
 	
+	/**
+	 * Unit test to check for duplicate states within priority queue.
+	 * @author Holly Hagenson
+	 */
+	@Test
+	public void testCheckDuplicates(){
+		ArrayList<Task> testSchedule = new ArrayList<Task>();  
+		Node nodeB  = new MockNode(null,"B",2);
+		testSchedule.add(new Task(new MockNode(null,"A",2),0,1));
+		testSchedule.add(new Task(nodeB,1,2));
+		testSchedule.add(new Task(new MockNode(null,"C",3),0,2));
+		testSchedule.add(new Task(new MockNode(null,"D",1),3,1));
+		
+		State newState = new State(nodeB, null, testSchedule, 12); 
+		
+		ArrayList<Task> testSchedule1 = new ArrayList<Task>();  
+		Node node2  = new MockNode(null,"B",2);
+		testSchedule1.add(new Task(new MockNode(null,"A",2),0,1));
+		testSchedule1.add(new Task(node2,1,2));
+		testSchedule1.add(new Task(new MockNode(null,"C",3),0,2));
+		testSchedule1.add(new Task(new MockNode(null,"D",1),3,1));
+		
+		State queuedState = new State(node2, null, testSchedule1, 12);
+		
+		AStarAlgorithm am = new AStarAlgorithm();
+		Queue<State> states = new PriorityQueue<State>(am.getStateComparator());
+		states.add(queuedState);
+		
+		assertTrue(am.checkDuplicates(newState, states)); 
+	}
+	
 	/**@Test 
 	public void testBuildSolution(){
 		createGraph(); 
