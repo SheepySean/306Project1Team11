@@ -53,6 +53,29 @@ public class Task {
 	}
 	
 	/**
+	 * Returns the weight of a task.
+	 * @return weight of task
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public int getWeight() {
+		int weight = ((Number)_node.getAttribute("Weight")).intValue();
+		return weight;
+	}
+	
+	/**
+	 * Returns the finish time of a task.
+	 * @return finishTime of task
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public int getFinishTime() {
+		int weight = ((Number)_node.getAttribute("Weight")).intValue();
+		int finishTime = weight + _startTime;
+		return finishTime;
+	}
+	
+	/**
 	 * Returns a string representation of a Task object
 	 * 
 	 * @author Tina Chen

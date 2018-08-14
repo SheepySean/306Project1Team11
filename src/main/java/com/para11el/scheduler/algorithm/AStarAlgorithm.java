@@ -94,7 +94,7 @@ public class AStarAlgorithm extends Algorithm{
 		// Get the latest finish time of the parents
 		for (Node parent : getParents(node)){
 			Task task = findNode(parent, schedule); 
-			int nodeWeight = ((Number)task.getNode().getAttribute("Weight")).intValue();
+			int nodeWeight = task.getWeight();
 
 			if (task.getProcessor() == processor) {
 				parentLatestFinish = task.getStartTime() + nodeWeight; 
@@ -110,7 +110,7 @@ public class AStarAlgorithm extends Algorithm{
 		// Get latest finish time of current processor
 		for (Task task : schedule) {
 			if (task.getProcessor() == processor) {
-				int nodeWeight = ((Number) task.getNode().getAttribute("Weight")).intValue();
+				int nodeWeight = task.getWeight();
 				processorFinish = task.getStartTime() + nodeWeight;
 				if (processorFinish > startTime) {
 					startTime = processorFinish; 
@@ -146,22 +146,6 @@ public class AStarAlgorithm extends Algorithm{
 				}
 			}
 		}
-	}
-	
-	/**
-	 * Checks whether the node has been scheduled in the solution state
-	 * @param node Node representing a task
-	 * @return boolean true if solution contains the node
-	 * 
-	 * @author Jessica Alcantara
-	 */
-	public boolean scheduleContainsNode(Node node, ArrayList<Task> schedule) {
-		for (Task task : schedule) {
-			if (task.getNode().equals(node)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -267,7 +251,7 @@ public class AStarAlgorithm extends Algorithm{
 		int maxFinish  = 0; 
 		// For all tasks in solution, find latest finish time of tasks
 		for (Task task : solution){
-			int nodeWeight = ((Number)task.getNode().getAttribute("Weight")).intValue();
+			int nodeWeight = task.getWeight();
 			int finish = task.getStartTime() + nodeWeight; 
 			if (finish > maxFinish){
 				maxFinish = finish; 

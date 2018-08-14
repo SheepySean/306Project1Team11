@@ -92,26 +92,6 @@ public class AStarAlgorithmIT {
 	}
 	
 	/**
-	 * Unit test for seeing whether a given schedule contains a certain node.
-	 * @author Holly Hagenson
-	 */
-	@Test
-	public void testScheduleContainsNode() {
-		// Create test schedule to see if it contains a certain node
-		ArrayList<Task> testSchedule = new ArrayList<Task>();
-		Node node = new MockNode(null,"C",3);  
-		testSchedule.add(new Task(new MockNode(null,"A",2),0,1));
-		testSchedule.add(new Task(new MockNode(null,"B",2),1,2));
-		testSchedule.add(new Task(node,0,3));
-		testSchedule.add(new Task(new MockNode(null,"D",1),3,1));
-		testSchedule.add(new Task(new MockNode(null,"E",1),4,2));
-		testSchedule.add(new Task(new MockNode(null,"F",2),3,3));
-		
-		AStarAlgorithm am = new AStarAlgorithm();
-		assertTrue(am.scheduleContainsNode(node, testSchedule));
-	}
-	
-	/**
 	 * Unit test to check for duplicate states within priority queue.
 	 * @author Holly Hagenson
 	 */

@@ -1,7 +1,6 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.stream.Stream;
 
 import org.graphstream.graph.Node;
@@ -86,19 +85,18 @@ public class State {
 	}
 	
 	/**
-	 * Finds the task corresponding to the last node in the state
-	 * @param node in the inputGraph
-	 * @param tasks in the partial solution
-	 * @return Task object node
+	 * Checks whether the node has been scheduled in the solution state
+	 * @param node Node representing a task
+	 * @return boolean true if solution contains the node
 	 * 
-	 * @author Sean Oldfield, Rebekah Berriman
+	 * @author Jessica Alcantara
 	 */
-	public Task findNode(Node node, ArrayList<Task> tasks) {
-		for (Task task : tasks) {
+	public boolean stateContainsNode(Node node, ArrayList<Task> schedule) {
+		for (Task task : schedule) {
 			if (task.getNode().equals(node)) {
-				return task;
+				return true;
 			}
 		}
-		return null;
+		return false;
 	}
 }

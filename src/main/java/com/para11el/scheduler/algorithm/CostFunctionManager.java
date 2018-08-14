@@ -3,11 +3,10 @@ package com.para11el.scheduler.algorithm;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 
 /**
- * Class to calculate the cost function of the A* algorithm.
+ * Class to manage the calculations for the cost function of the A* algorithm.
  * 
  * @author Holly Hagenson, Jessica Alcantara
  *
@@ -37,25 +36,15 @@ public class CostFunctionManager {
      */
 	public int calculateCostFunction(State parentState, Node newNode, 
 			ArrayList<Task> partialSolution) {
-		
-		int parentCost;
+		int parentCost, criticalPathEstimate;
 		int boundedTime = calculateBoundedTime(partialSolution);
-		int criticalPathEstimate;
+		Task lastTask = getLastTask(partialSolution);
 		
-		if (partialSolution.size() > 0){
-			int latestFinish = 0;
-			Task lastTask = new Task(null, 0, 0);
-			
-			for(Task task : partialSolution){
-				int taskFinish = task.getStartTime() + ((Number)task.getNode().getAttribute("Weight")).intValue();
-				if (taskFinish > latestFinish){
-					latestFinish = taskFinish; 
-					lastTask = task; 
-				}
-			}
-			criticalPathEstimate = calculateCriticalPathEstimate(lastTask, partialSolution);
+		// Check if partial solution is empty
+		if (lastTask == null){
+			criticalPathEstimate = 0;
 		} else{
-			criticalPathEstimate = 0; 
+			criticalPathEstimate = calculateCriticalPathEstimate(lastTask, partialSolution); 
 		}
 		
 		// Check if parent node exists
@@ -71,6 +60,27 @@ public class CostFunctionManager {
 	}
 	
 	/**
+	 * Returns the task with the latest finish time.
+	 * @param schedule Partial schedule of tasks
+	 * @return task with the latest finish time
+	 * 
+	 * @author Jessica Alcantara, Holly Hagenson
+	 */
+	public Task getLastTask(ArrayList<Task> schedule) {
+		int latestFinish = 0;
+		Task lastTask = null;
+		
+		for(Task task : schedule){
+			int taskFinish = task.getFinishTime();
+			if (taskFinish > latestFinish){
+				latestFinish = taskFinish; 
+				lastTask = task; 
+			}
+		}
+		return lastTask;
+	}
+	
+	/**
 	 * Calculates the critical path estimate based on:
 	 * 		Cpe(S) = startTime(nlast) + bottomLevel(nlast)
 	 * 
@@ -83,7 +93,6 @@ public class CostFunctionManager {
 	public int calculateCriticalPathEstimate(Task lastTask, ArrayList<Task> solution) {
 		int bottomLevel = bottomLevel(lastTask.getNode());
 		int startTime = lastTask.getStartTime(); 
-		// TODO: find task with latest finish time
 		return startTime + bottomLevel;
 	}
 	
@@ -98,12 +107,9 @@ public class CostFunctionManager {
 	public int bottomLevel(Node node){
 		// Create path with source node
 		List<Node> path = new ArrayList<Node>(); 
-		path.add(node); 
-		
-		_max = 0; 
-
+		path.add(node);
+		_max = 0;
 		findLongestPath(path, node);
-		
 		return _max; 
 	}
 	
@@ -159,8 +165,7 @@ public class CostFunctionManager {
 	 */
 	public int calculateIdleTime(ArrayList<Task> solution) {
 		int idleTime = 0;
-		int finishTime;
-		int time;
+		int finishTime, time;
 		for (int i=1; i<= _processors; i++) {
 			finishTime = 0;
 			for (Task task : solution) {
@@ -171,8 +176,7 @@ public class CostFunctionManager {
 					if (time != 0) {
 						idleTime += Math.abs(time);
 					}
-					finishTime = task.getStartTime() + 
-							((Number)task.getNode().getAttribute("Weight")).intValue();
+					finishTime = task.getFinishTime();
 				}
 			}
 		}
