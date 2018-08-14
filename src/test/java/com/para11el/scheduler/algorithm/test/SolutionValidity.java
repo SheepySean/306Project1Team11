@@ -8,7 +8,7 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 import org.junit.Test;
 
-import com.para11el.scheduler.algorithm.SolutionSpaceManager;
+import com.para11el.scheduler.algorithm.DFSAlgorithm;
 import com.para11el.scheduler.algorithm.test.TestGraphManager;
 import com.para11el.scheduler.algorithm.Task;
 
@@ -21,7 +21,7 @@ import com.para11el.scheduler.algorithm.Task;
 public class SolutionValidity {
 	//TODO: find out why test class works locally but not on remote build
 	
-	private SolutionSpaceManager _ssManager;
+	private DFSAlgorithm _ssManager;
 	
 	/**
 	 * Unit test for no overlap in the schedule of a single entry multiple exit graph
@@ -31,7 +31,7 @@ public class SolutionValidity {
 	@Test
 	public void testSingleEntryProcessorOverlap() {
 		System.out.println("Single Entry Overlap Test:");
-		_ssManager = new SolutionSpaceManager(
+		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
 		_ssManager.initialise();
 		ArrayList<Task> solution = _ssManager.getOptimal();
@@ -47,7 +47,7 @@ public class SolutionValidity {
 	@Test
 	public void testSingleEntryProcessorOrder() {
 		System.out.println("Single Entry Order Test:");
-		_ssManager = new SolutionSpaceManager(
+		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
 		_ssManager.initialise();
 		TreeMap<String,Integer> solution = new TreeMap<String,Integer>();
@@ -71,7 +71,7 @@ public class SolutionValidity {
 	 */
 	@Test
 	public void testSingleEntryProcessorOptimality() {
-		_ssManager = new SolutionSpaceManager(
+		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
 		_ssManager.initialise();
 		ArrayList<Task> schedule = _ssManager.getOptimal();
@@ -97,7 +97,7 @@ public class SolutionValidity {
 	@Test
 	public void testSingleExitProcessorOverlap() {
 		System.out.println("Single Exit Overlap Test:");
-		_ssManager = new SolutionSpaceManager(
+		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleExitMultipleEntry(),1);
 		_ssManager.initialise();
 		ArrayList<Task> solution = _ssManager.getOptimal();
@@ -113,7 +113,7 @@ public class SolutionValidity {
 	@Test
 	public void testSingleExitProcessorOrder() {
 		System.out.println("Single Exit Order Test:");
-		_ssManager = new SolutionSpaceManager(
+		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleExitMultipleEntry(),1);
 		_ssManager.initialise();
 		TreeMap<String,Integer> solution = new TreeMap<String,Integer>();
@@ -135,7 +135,7 @@ public class SolutionValidity {
 	 */
 	@Test
 	public void testSingleExitProcessorOptimality() {
-		_ssManager = new SolutionSpaceManager(
+		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleExitMultipleEntry(),1);
 		_ssManager.initialise();
 		ArrayList<Task> solution = _ssManager.getOptimal();

@@ -1,9 +1,6 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
@@ -50,8 +47,6 @@ public abstract class Algorithm {
 		_processors = processor;
 		_cores = cores;
 	}
-	
-	public abstract ArrayList<Task> buildSolution();
 	
 	/**
 	 * Labels the graph with the startTime and processor numbers of each of the nodes for the optimal solution
@@ -100,7 +95,7 @@ public abstract class Algorithm {
 	 * @param currentTasks 
 	 * @return Task object node
 	 * 
-	 * @author Sean Oldfield, Rebekah Berriman
+	 * @author Sean Oldfield
 	 */
 	public Task findNode(Node node, ArrayList<Task> currentTasks) {
 		for (Task task : currentTasks) {

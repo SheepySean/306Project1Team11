@@ -4,13 +4,11 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.junit.*;
 
-import com.para11el.scheduler.algorithm.SolutionSpaceManager;
+import com.para11el.scheduler.algorithm.DFSAlgorithm;
 import com.para11el.scheduler.algorithm.Task;
 
 /**
@@ -20,7 +18,7 @@ import com.para11el.scheduler.algorithm.Task;
  *
  */
 public class DFSAlgorithmIT {
-	private SolutionSpaceManager _ssManager; 
+	private DFSAlgorithm _ssManager; 
 	private static Graph _graph1;
 	private static Graph _graph2;
 	private static Graph _graph3;
@@ -45,7 +43,7 @@ public class DFSAlgorithmIT {
 	public void testMultipleProcessors(){
 		_processors = 2; 
 		
-		_ssManager = new SolutionSpaceManager(_graph1, _processors);
+		_ssManager = new DFSAlgorithm(_graph1, _processors);
 		_ssManager.initialise();
 		
 		_tasks = _ssManager.getOptimal();
@@ -83,7 +81,7 @@ public class DFSAlgorithmIT {
 	public void testMultipleEntryNodes(){
 		_processors = 1;
 		
-		_ssManager = new SolutionSpaceManager(_graph2, _processors);
+		_ssManager = new DFSAlgorithm(_graph2, _processors);
 		_ssManager.initialise();
 		
 		_tasks = _ssManager.getOptimal();
@@ -118,7 +116,7 @@ public class DFSAlgorithmIT {
 	public void testMultipleEntryNodesMultiProcessor(){
 		_processors = 2;
 		
-		_ssManager = new SolutionSpaceManager(_graph2, _processors);
+		_ssManager = new DFSAlgorithm(_graph2, _processors);
 		_ssManager.initialise();
 		
 		_tasks = _ssManager.getOptimal();
@@ -155,7 +153,7 @@ public class DFSAlgorithmIT {
 	public void testMultipleExitNodes(){
 		_processors = 1; 
 		
-		_ssManager = new SolutionSpaceManager(_graph3, _processors);
+		_ssManager = new DFSAlgorithm(_graph3, _processors);
 		_ssManager.initialise();
 		
 		_tasks = _ssManager.getOptimal();
@@ -189,7 +187,7 @@ public class DFSAlgorithmIT {
 	public void testMultipleExitNodesMultiProcessor(){
 		_processors = 2; 
 		
-		_ssManager = new SolutionSpaceManager(_graph3, _processors);
+		_ssManager = new DFSAlgorithm(_graph3, _processors);
 		_ssManager.initialise();
 		
 		_tasks = _ssManager.getOptimal();
@@ -227,7 +225,7 @@ public class DFSAlgorithmIT {
 	public void testSequentialGraphSingle(){
 		_processors = 1;
 		
-		_ssManager = new SolutionSpaceManager(_graph5, _processors);
+		_ssManager = new DFSAlgorithm(_graph5, _processors);
 		_ssManager.initialise();
 		
 		_tasks = _ssManager.getOptimal();
@@ -251,7 +249,7 @@ public class DFSAlgorithmIT {
 	public void testSequentialGraphMulti(){
 		_processors = 3;
 		
-		_ssManager = new SolutionSpaceManager(_graph5, _processors);
+		_ssManager = new DFSAlgorithm(_graph5, _processors);
 		_ssManager.initialise();
 		
 		_tasks = _ssManager.getOptimal();
@@ -278,11 +276,11 @@ public class DFSAlgorithmIT {
 	public void testOutputGraph(){
 		_processors = 1;
 		
-		_ssManager = new SolutionSpaceManager(_graph4, _processors);
+		_ssManager = new DFSAlgorithm(_graph4, _processors);
 		_ssManager.initialise();
 		
 		_tasks = _ssManager.getOptimal();
-		Graph outputGraph = _ssManager.getGraph();
+		Graph outputGraph = _ssManager.getGraph(_tasks);
 
 		outputGraph.nodes().forEach((node) -> {
 			//Each node should have three attributes
@@ -320,11 +318,11 @@ public class DFSAlgorithmIT {
 	public void testOutputGraphMultipleProcessors(){
 		_processors = 3;
 		
-		_ssManager = new SolutionSpaceManager(_graph4, _processors);
+		_ssManager = new DFSAlgorithm(_graph4, _processors);
 		_ssManager.initialise();
 		
 		_tasks = _ssManager.getOptimal();
-		Graph outputGraph = _ssManager.getGraph();
+		Graph outputGraph = _ssManager.getGraph(_tasks);
 
 		//Iterate through the node set of the output graph
 		outputGraph.nodes().forEach((node) -> {
