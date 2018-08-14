@@ -19,9 +19,16 @@ public class CostFunctionManager {
 	private int _totalWeight;
 	private int _processors;
 	
-	public CostFunctionManager(int totalWeight, int processor) {
+	/**
+	 * Constructor for CostFunctionManager
+	 * @param totalWeight Total weight of nodes in the input graph
+	 * @param processors Number of processors
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public CostFunctionManager(int totalWeight, int processors) {
 		_totalWeight = totalWeight;
-		_processors = processor;	
+		_processors = processors;	
 	}
 	
     /**
@@ -47,7 +54,7 @@ public class CostFunctionManager {
 			criticalPathEstimate = calculateCriticalPathEstimate(lastTask, partialSolution); 
 		}
 		
-		// Check if parent node exists
+		// Check if parent state exists
 		if (parentState == null) {
 			parentCost = 0;
 		} else {
@@ -60,9 +67,9 @@ public class CostFunctionManager {
 	}
 	
 	/**
-	 * Returns the task with the latest finish time.
+	 * Returns the task with the latest finish time
 	 * @param schedule Partial schedule of tasks
-	 * @return task with the latest finish time
+	 * @return Task with the latest finish time
 	 * 
 	 * @author Jessica Alcantara, Holly Hagenson
 	 */
@@ -84,8 +91,8 @@ public class CostFunctionManager {
 	 * Calculates the critical path estimate based on:
 	 * 		Cpe(S) = startTime(nlast) + bottomLevel(nlast)
 	 * 
-	 * @param state Nlast, node with latest finish time in partial schedule
-	 * @param solution, task schedule for current solution
+	 * @param lastTask Task (nlast) with latest finish time in partial schedule
+	 * @param solution Task schedule for current solution
 	 * @return int of critical path estimate
 	 * 
 	 * @author Holly Hagenson
@@ -97,8 +104,7 @@ public class CostFunctionManager {
 	}
 	
 	/**
-	 * Calculates the bottom level of a node. 
-	 * 
+	 * Calculates the bottom level of a node 
 	 * @param node Node to calculate bottom level of
 	 * @return int of bottom level value
 	 * 
@@ -108,14 +114,12 @@ public class CostFunctionManager {
 		// Create path with source node
 		List<Node> path = new ArrayList<Node>(); 
 		path.add(node);
-		_max = 0;
 		findLongestPath(path, node);
 		return _max; 
 	}
 	
 	/**
-	 * Finds the longest path from the given node to a leaf node.
-	 * 
+	 * Finds the longest path from the given node to a leaf node
 	 * @param path Current path of nodes
 	 * @param source Node to find paths from
 	 * 
@@ -157,7 +161,7 @@ public class CostFunctionManager {
 	}
 	
 	/**
-	 * Calculates the sum of all idle times on each processor.
+	 * Calculates the sum of all idle times on each processor
 	 * @param solution Task schedule for current solution
 	 * @return int of the idle time
 	 * 

@@ -120,7 +120,7 @@ public class AStarAlgorithmIT {
 		Queue<State> states = new PriorityQueue<State>(am.getStateComparator());
 		states.add(queuedState);
 		
-		assertTrue(am.checkDuplicates(newState, states)); 
+		assertTrue(am.isDuplicate(newState, states)); 
 	}
 	
 	/**
