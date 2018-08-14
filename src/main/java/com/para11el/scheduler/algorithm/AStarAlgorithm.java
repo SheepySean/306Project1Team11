@@ -11,7 +11,7 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
 /**
- * A* Algorithm to find the optimal solution 
+ * A* Algorithm to find the optimal solution. 
  * 
  * @author Jessica Alcantara, Holly Hagenson
  */
@@ -49,6 +49,7 @@ public class AStarAlgorithm extends Algorithm{
 
 	/**
 	 * Initializes the algorithm and build solution
+	 * @return Final optimal solution
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -80,10 +81,9 @@ public class AStarAlgorithm extends Algorithm{
 
 	/**
 	 * Finds the earliest start time of a task on a processor with given dependencies
-	 * 
-	 * @param node to put onto processor
-	 * @param schedule to find the earliest start time of
-	 * @param processor to find the earliest start time of
+	 * @param node Node to be scheduled
+	 * @param schedule ArrayList of scheduled tasks
+	 * @param processor Processor to schedule the node on
 	 * @return int of the earliest start time
 	 * 
 	 * @author Holly Hagenson
@@ -99,7 +99,8 @@ public class AStarAlgorithm extends Algorithm{
 			if (task.getProcessor() == processor) {
 				parentLatestFinish = task.getStartTime() + nodeWeight; 
 			} else{
-				int edgeWeight = ((Number)task.getNode().getEdgeToward(node).getAttribute("Weight")).intValue();
+				int edgeWeight = ((Number)task.getNode().getEdgeToward(node)
+						.getAttribute("Weight")).intValue();
 				parentLatestFinish = task.getStartTime() + nodeWeight + edgeWeight;  
 			}
 			if (parentLatestFinish > startTime){
@@ -117,7 +118,7 @@ public class AStarAlgorithm extends Algorithm{
 	}
 
 	/**
-	 * Expands the state by finding all possible states from the free nodes.
+	 * Expands the state by finding all possible states from the free nodes
 	 * @param state Parent state
 	 * 
 	 * @author Jessica Alcantara
@@ -129,6 +130,7 @@ public class AStarAlgorithm extends Algorithm{
 			// Create states from each possible allocation of the task
 			for (int i=1; i<=_processors; i++) {
 				ArrayList<Task> schedule = new ArrayList<Task>(state.getSchedule());
+				
 				// Schedule the node
 				int startTime = getEarliestStartTime(node,schedule,i);
 				schedule.add(new Task(node,startTime,i));
@@ -136,7 +138,9 @@ public class AStarAlgorithm extends Algorithm{
 				// Create state from new schedule
 				State newState = new State(node,state,schedule,
 						_cfm.calculateCostFunction(state,node,schedule));
-				if (!checkDuplicates(newState, _states)){
+				
+				// Prune duplicate states
+				if (!isDuplicate(newState, _states)){
 					_states.add(newState);
 				}
 			}
@@ -162,7 +166,7 @@ public class AStarAlgorithm extends Algorithm{
 
 	/**
 	 * Returns the comparator used to order the states in the priority queue
-	 * @return comparator of states
+	 * @return Comparator of states
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -171,17 +175,17 @@ public class AStarAlgorithm extends Algorithm{
 	}
 	
 	/**
-	 * Check for duplicates in states. 
-	 * @param newState to be added to states
-	 * @param states already queued
+	 * Check for duplicates between states
+	 * @param newState State to be added to list of states
+	 * @param states States already in queue
 	 * @return Boolean whether there are duplicates or not
 	 * 
 	 * @author Holly Hagenson
 	 */
-	public Boolean checkDuplicates(State newState, Queue<State> states){
-		// For all queued states, check them against the state to be queued
+	public Boolean isDuplicate(State newState, Queue<State> states){
+		// Check new state against all states in queue
 		for (State state : states){
-			Boolean duplicate = compareStates(state, newState);
+			Boolean duplicate = compareStatesProcessors(state, newState);
 			Boolean makespan = compareMakespan(state, newState); 
 			if (duplicate && makespan){
 				return true;
@@ -191,14 +195,14 @@ public class AStarAlgorithm extends Algorithm{
 	}
 	
 	/**
-	 * Compare states to see if all tasks have been put on same processors.
-	 * @param newState to be added to states
-	 * @param stateInQueue already queued state
-	 * @return Boolean whether the states are the same or not
+	 * Compare states to see if all tasks have been put on same processors
+	 * @param newState State to be added to list of states
+	 * @param stateInQueue State already in queue
+	 * @return Boolean whether the states schedule tasks on the same processors
 	 * 
 	 * @author Holly Hagenson
 	 */
-	public Boolean compareStates(State newState, State stateInQueue){
+	public Boolean compareStatesProcessors(State newState, State stateInQueue){
 		ArrayList<Task> newSchedule = newState.getSchedule();
 		ArrayList<Task> scheduleInQueue = stateInQueue.getSchedule(); 
 		
@@ -215,10 +219,10 @@ public class AStarAlgorithm extends Algorithm{
 	}
 	
 	/**
-	 * Compare the makespans of states to see if they are equal.
-	 * @param newState to be added to states
-	 * @param stateInQueue already queued state
-	 * @return Boolean whether the makespans are equal or not
+	 * Compare the makespans of states to see if they are equal
+	 * @param newState State to be added to list of states
+	 * @param stateInQueue State already in queue
+	 * @return Boolean whether the makespans are equal
 	 * 
 	 * @author Holly Hagenson
 	 */
