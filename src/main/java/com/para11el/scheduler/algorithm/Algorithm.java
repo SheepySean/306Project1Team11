@@ -75,6 +75,49 @@ public abstract class Algorithm {
 	}
 	
 	/**
+	 * Returns an int of the finishTime of the last task on the processor
+	 * @param currentSchedule is an ArrayList of the currently scheduled tasks
+	 * @param processor to schedule it on
+	 * @return int of the finishTime
+	 * 
+	 * @author Rebekah Berriman
+	 */
+	public int getProcessorFinishTime(ArrayList<Task> schedule, int processor) {
+		int finishTime = 0;
+		int processorFinish;
+
+		for (Task task : schedule) {
+			if (task.getProcessor() == processor) {
+				processorFinish = task.getFinishTime();
+				if (finishTime < processorFinish) {
+					finishTime = processorFinish;
+				}
+			}	
+		}
+		return finishTime;
+	}
+	
+	/**
+	 * Return the latest finish time of a schedule
+	 * @param schedule of tasks
+	 * @return int of the latest finish time
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public int getScheduleFinishTime(ArrayList<Task> schedule) {
+		int finishTime = 0;
+		int processorFinish;
+		
+		for (int i=1; i<=_processors; i++)  {
+			processorFinish = getProcessorFinishTime(schedule,i);
+			if (processorFinish > finishTime) {
+				finishTime = processorFinish;
+			}
+		}
+		return finishTime;
+	}
+	
+	/**
 	 * Returns an ArrayList<Node> of the parents nodes a node has
 	 * @param node the node to find parents of
 	 * 
@@ -90,7 +133,7 @@ public abstract class Algorithm {
 	}
 	
 	/**
-	 * Find the node
+	 * Returns the task corresponding to the node
 	 * @param node in the inputGraph
 	 * @param currentTasks 
 	 * @return Task object node
@@ -113,7 +156,7 @@ public abstract class Algorithm {
 	 * 
 	 * @author Rebekah Berriman, Tina Chen
 	 */
-	public ArrayList<Node>  availableNode(ArrayList<Task> scheduledTasks) {
+	public ArrayList<Node> availableNode(ArrayList<Task> scheduledTasks) {
 		ArrayList<Node> scheduledNodes =  new ArrayList<Node>();
 		ArrayList<Node> available = new ArrayList<Node>();
 

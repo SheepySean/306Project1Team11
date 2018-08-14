@@ -89,7 +89,7 @@ public class AStarAlgorithm extends Algorithm{
 	 * @author Holly Hagenson
 	 */
 	public int getEarliestStartTime(Node node, ArrayList<Task> schedule, int processor) {
-		int startTime = 0, parentLatestFinish = 0, processorFinish = 0; 
+		int startTime = 0, parentLatestFinish = 0, processorFinish; 
 
 		// Get the latest finish time of the parents
 		for (Node parent : getParents(node)){
@@ -106,16 +106,11 @@ public class AStarAlgorithm extends Algorithm{
 				startTime = parentLatestFinish; 
 			}
 		}
-
-		// Get latest finish time of current processor
-		for (Task task : schedule) {
-			if (task.getProcessor() == processor) {
-				int nodeWeight = task.getWeight();
-				processorFinish = task.getStartTime() + nodeWeight;
-				if (processorFinish > startTime) {
-					startTime = processorFinish; 
-				}
-			}	
+		
+		// Get the latest finish time of the current processor
+		processorFinish = getProcessorFinishTime(schedule, processor);
+		if (processorFinish > startTime) {
+			startTime = processorFinish;
 		}
 
 		return startTime;
@@ -231,32 +226,12 @@ public class AStarAlgorithm extends Algorithm{
 		ArrayList<Task> newSchedule = newState.getSchedule();
 		ArrayList<Task> scheduleInQueue = stateInQueue.getSchedule(); 
 		
-		int newMakespan = getLatestFinish(newSchedule);
-		int queuedMakespan = getLatestFinish(scheduleInQueue); 
+		int newMakespan = getScheduleFinishTime(newSchedule);
+		int queuedMakespan = getScheduleFinishTime(scheduleInQueue); 
 		
 		if (newMakespan == queuedMakespan){
 			return true;
 		}
 		return false;		
-	}
-	
-	/**
-	 * Get latest finish time of a partial schedule. 
-	 * @param solution to find latest finish time of
-	 * @return int latest finish time of schedule.
-	 * 
-	 * @author Holly Hagenson
-	 */
-	public int getLatestFinish(ArrayList<Task> solution){
-		int maxFinish  = 0; 
-		// For all tasks in solution, find latest finish time of tasks
-		for (Task task : solution){
-			int nodeWeight = task.getWeight();
-			int finish = task.getStartTime() + nodeWeight; 
-			if (finish > maxFinish){
-				maxFinish = finish; 
-			}
-		}
-		return maxFinish; 
 	}
 }

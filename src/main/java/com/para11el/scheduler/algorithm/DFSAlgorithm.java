@@ -128,7 +128,7 @@ public class DFSAlgorithm extends Algorithm {
 		if (getParents(node).size() != 0) {
 			for (Node parents : getParents(node)) {
 				Task task = findNode(parents, solutionArrayList);
-				int nodeWeightInt = ((Number) task.getNode().getAttribute("Weight")).intValue();
+				int nodeWeightInt = task.getWeight();
 
 				if (task.getProcessor() == processor) {
 					possibleTime = task.getStartTime() + nodeWeightInt;
@@ -148,30 +148,6 @@ public class DFSAlgorithm extends Algorithm {
 			startTime = possibleTime;
 		}
 		return startTime;
-	}
-
-	/**
-	 * Returns an int of the finishTime of the last task on the processor
-	 * @param currentSchedule is an ArrayList of the currently scheduled tasks
-	 * @param processor to schedule it on
-	 * @return int of the finishTime
-	 * 
-	 * @author Rebekah Berriman
-	 */
-	private int getProcessorFinishTime(ArrayList<Task> currentSchedule, int processor) {
-		int finishTime = 0;
-		int possibleTime;
-
-		for (Task task : currentSchedule) {
-			if (task.getProcessor() == processor) {
-				int nodeWeightInt = ((Number) task.getNode().getAttribute("Weight")).intValue();
-				possibleTime = task.getStartTime() + nodeWeightInt;
-				if (finishTime < possibleTime) {
-					finishTime = possibleTime;
-				}
-			}	
-		}
-		return finishTime;
 	}
 
 	/**
