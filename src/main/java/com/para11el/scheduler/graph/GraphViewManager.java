@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Manager class that controls the view of a graph such as its ability to be labelled or not
@@ -35,12 +36,12 @@ public class GraphViewManager {
      * @author Sean Oldfield
      */
     public void labelGraph() {
-        for(Node node : _managedGraph.getNodeSet()) {
-            node.addAttribute("ui.label", node.getId()); // Name each node
-            for (Edge edge : node.getEdgeSet()) {
-                edge.addAttribute("ui.label", edge.getAttribute("Weight").toString()); // Add each edges weight
-            }
-        }
+        _managedGraph.nodes().forEach((node) -> {
+            node.setAttribute("ui.label", node.getId()); // Name each node
+            node.edges().forEach((edge) -> {
+                edge.setAttribute("ui.label", edge.getAttribute("Weight").toString()); // Add each edges weight
+            });
+        });
     }
 
     /**
@@ -48,8 +49,8 @@ public class GraphViewManager {
      * @author Sean Oldfield
      */
     public void unlabelGraph() {
-        this.removeExcludedAttributes(_managedGraph.getNodeSet()); // Each node
-        this.removeExcludedAttributes(_managedGraph.getEdgeSet()); // Each edge
+        this.removeExcludedAttributes(_managedGraph.nodes()); // Each node
+        this.removeExcludedAttributes(_managedGraph.edges()); // Each edge
     }
 
     /**
@@ -68,14 +69,14 @@ public class GraphViewManager {
      * @param set Set of elements from the graph that need certain attributes removed.
      * @author Sean Oldfield
      */
-    private void removeExcludedAttributes(Collection<? extends Element> set) {
-        for(Element e : set) {
-            Object[] attrs = e.getAttributeKeySet().toArray(); // Each attribute the element has
-            for(int i = 0; i < attrs.length; i++) { // For each attribute
-                if(ATTR_EXCLUDES.contains(attrs[i])) { // If its an excluded attribute
-                    e.removeAttribute((String)attrs[i]); // Remove it
+    private void removeExcludedAttributes(Stream<? extends Element> set) {
+        set.forEach((e) -> {
+            Object[] attrs = e.attributeKeys().toArray(); // Each attribute the element has
+            for (int i = 0; i < attrs.length; i++) { // For each attribute
+                if (ATTR_EXCLUDES.contains(attrs[i])) { // If its an excluded attribute
+                    e.removeAttribute((String) attrs[i]); // Remove it
                 }
             }
-        }
+        });
     }
 }
