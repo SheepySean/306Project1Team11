@@ -29,7 +29,7 @@ public class GraphFileManager {
      * @author Sean Oldfield
      */
     public Graph readGraphFile(String filename, String graphID) throws IOException {
-        Graph g = new SingleGraph(graphID);
+        Graph g = new SingleGraph(graphID, false,false);
         FileSource fs = new FileSourceDOT();
 
         fs.addSink(g);

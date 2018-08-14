@@ -20,7 +20,7 @@ public class Viewer extends Application {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/ViewerPane.fxml")); // Load the fxml pane
             Scene scene = new Scene(root);
 
-            //scene.getStylesheets().add("resources/main.css"); // Add the css
+            scene.getStylesheets().add("/css/main.css"); // Add the css
             stage = primaryStage;
             // Add logo to the GUI
             stage.getIcons().add(new Image(Viewer.class.getResourceAsStream("/images/logo-icon.png")));
