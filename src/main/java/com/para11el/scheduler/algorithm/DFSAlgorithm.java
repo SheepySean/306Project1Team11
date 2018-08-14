@@ -127,7 +127,7 @@ public class DFSAlgorithm extends Algorithm {
 
 		if (getParents(node).size() != 0) {
 			for (Node parents : getParents(node)) {
-				Task task = findNode(parents, solutionArrayList);
+				Task task = findNodeTask(parents, solutionArrayList);
 				int nodeWeightInt = task.getWeight();
 
 				if (task.getProcessor() == processor) {

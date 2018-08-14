@@ -93,7 +93,7 @@ public class AStarAlgorithm extends Algorithm{
 
 		// Get the latest finish time of the parents
 		for (Node parent : getParents(node)){
-			Task task = findNode(parent, schedule); 
+			Task task = findNodeTask(parent, schedule); 
 			int nodeWeight = task.getWeight();
 
 			if (task.getProcessor() == processor) {

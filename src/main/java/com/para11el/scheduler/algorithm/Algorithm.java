@@ -22,9 +22,9 @@ public abstract class Algorithm {
 	public Algorithm() {}
 	
 	/**
-	 * Constructor for AlgorithmManager for sequential solution
-	 * @param graph input graph
-	 * @param processor number of processors
+	 * Constructor for Algorithm for sequential solution
+	 * @param graph Input graph
+	 * @param processor Number of processors
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -35,10 +35,10 @@ public abstract class Algorithm {
 	}
 
 	/**
-	 * Constructor for AlgorithmManager for parallel solution
-	 * @param graph input graph
-	 * @param processor number of processors
-	 * @param cores number of cores
+	 * Constructor for Algorithm for parallel solution
+	 * @param graph Input graph
+	 * @param processor Number of processors
+	 * @param cores Number of cores
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -47,37 +47,28 @@ public abstract class Algorithm {
 		_processors = processor;
 		_cores = cores;
 	}
-	
+
 	/**
-	 * Labels the graph with the startTime and processor numbers of each of the nodes for the optimal solution
+	 * Returns and labels the graph with the startTime and processor numbers of each of the
+	 * nodes for the optimal solution
 	 * @param solution Final solution
+	 * @return graph of the nodes with labels
 	 * 
 	 * @author Rebekah Berriman
 	 */
-	private void labelGraph(ArrayList<Task> solution) {
+	public Graph getGraph(ArrayList<Task> solution) {
 		for (Task task : solution) {
 			Node node = task.getNode();
 			node.setAttribute("Start", task.getStartTime());
 			node.setAttribute("Processor", task.getProcessor());
 		}
-	}
-
-	/**
-	 * Returns the labeled graph.
-	 * @param solution Final solution
-	 * @return Graph of the nodes with labels
-	 * 
-	 * @author Rebekah Berriman
-	 */
-	public Graph getGraph(ArrayList<Task> solution) {
-		labelGraph(solution);
 		return _graph;
 	}
 	
 	/**
 	 * Returns an int of the finishTime of the last task on the processor
-	 * @param currentSchedule is an ArrayList of the currently scheduled tasks
-	 * @param processor to schedule it on
+	 * @param schedule ArrayList of the scheduled tasks
+	 * @param processor To find latest finish time of
 	 * @return int of the finishTime
 	 * 
 	 * @author Rebekah Berriman
@@ -99,27 +90,27 @@ public abstract class Algorithm {
 	
 	/**
 	 * Return the latest finish time of a schedule
-	 * @param schedule of tasks
+	 * @param schedule ArrayList of scheduled tasks
 	 * @return int of the latest finish time
 	 * 
 	 * @author Jessica Alcantara
 	 */
 	public int getScheduleFinishTime(ArrayList<Task> schedule) {
 		int finishTime = 0;
-		int processorFinish;
+		int taskFinish;
 		
-		for (int i=1; i<=_processors; i++)  {
-			processorFinish = getProcessorFinishTime(schedule,i);
-			if (processorFinish > finishTime) {
-				finishTime = processorFinish;
+		for (Task task : schedule)  {
+			taskFinish = task.getFinishTime();
+			if (taskFinish > finishTime) {
+				finishTime = taskFinish;
 			}
 		}
 		return finishTime;
 	}
 	
 	/**
-	 * Returns an ArrayList<Node> of the parents nodes a node has
-	 * @param node the node to find parents of
+	 * Returns a list of parent nodes of a node
+	 * @param node Node to find parents of
 	 * 
 	 * @author Tina Chen 
 	 */
@@ -133,15 +124,15 @@ public abstract class Algorithm {
 	}
 	
 	/**
-	 * Returns the task corresponding to the node
-	 * @param node in the inputGraph
-	 * @param currentTasks 
+	 * Returns the task corresponding to a node
+	 * @param node From input graph
+	 * @param schedule ArrayList of scheduled tasks
 	 * @return Task object node
 	 * 
 	 * @author Sean Oldfield
 	 */
-	public Task findNode(Node node, ArrayList<Task> currentTasks) {
-		for (Task task : currentTasks) {
+	public Task findNodeTask(Node node, ArrayList<Task> schedule) {
+		for (Task task : schedule) {
 			if (task.getNode().equals(node)) {
 				return task;
 			}
@@ -150,7 +141,8 @@ public abstract class Algorithm {
 	}
 	
 	/**
-	 * Find the available nodes that can be scheduled given what nodes have already been scheduled.
+	 * Find the available nodes that can be scheduled given what nodes have already 
+	 * been scheduled
 	 * @param scheduledTasks
 	 * @return ArrayList of available nodes
 	 * 
@@ -160,19 +152,25 @@ public abstract class Algorithm {
 		ArrayList<Node> scheduledNodes =  new ArrayList<Node>();
 		ArrayList<Node> available = new ArrayList<Node>();
 
+		// Get list of scheduled nodes
 		for (Task task : scheduledTasks) {
 			scheduledNodes.add(task.getNode());
 		}
 
 		_graph.nodes().forEach((node) -> {
-			if (!scheduledNodes.contains(node)) { // If Node is not already scheduled
+			// Find nodes that have not been scheduled
+			if (!scheduledNodes.contains(node)) {
 				ArrayList<Node> parents = getParents(node);
-				if (parents.size() == 0) { // Node has no parents so can be scheduled
-					available.add(node);
+				
+				// Add nodes with no parents to available nodes
+				if (parents.size() == 0) {
+					available.add(node);		
+				// Check all the parents of the node have been scheduled
 				} else {
 					boolean availableNode = true;
 					for (Node parentNode : parents) {
-						if (!scheduledNodes.contains(parentNode)) { // If the schedule does not contain a parent node of the node, set availableNode to false
+						// Node is not available if parent has not been scheduled
+						if (!scheduledNodes.contains(parentNode)) {
 							availableNode = false;
 						}
 					}
