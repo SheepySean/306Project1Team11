@@ -5,7 +5,8 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
 /**
- * DFS Recursive Algorithm to find the solution 
+ * DFS Recursive Algorithm to find the optimal solution.
+ * This algorithm implementation does not support parallelisation.
  * 
  * @author Rebekah Berriman, Tina Chen
  */
@@ -14,14 +15,6 @@ public class DFSAlgorithm extends Algorithm {
 	private int _minimumTime;
 	private ArrayList<Task> _optimalSolution = new ArrayList<Task>();
 
-	/**
-	 * Constructor for SolutionSpaceManager if user does not specify number
-	 * of cores for execution in parallel
-	 * @param graph input graph
-	 * @param processor number of processors
-	 * 
-	 * @author Tina Chen, Rebekah Berriman
-	 */
 	public DFSAlgorithm() {
 		super();
 	}
@@ -30,15 +23,6 @@ public class DFSAlgorithm extends Algorithm {
 		super(graph, processor);
 	}
 
-	/**
-	 * Constructor for SolutionSpaceManager if user specifies number
-	 * of cores for execution in parallel
-	 * @param graph input graph
-	 * @param processor number of processors
-	 * @param cores number of cores
-	 * 
-	 * @author Tina Chen, Rebekah Berriman
-	 */
 	public DFSAlgorithm(Graph graph, int processor, int cores) {
 		super(graph, processor, cores);
 	}
@@ -63,8 +47,8 @@ public class DFSAlgorithm extends Algorithm {
 	}
 	
 	/**
-	 * Sets the absolute maximum time to complete all tasks (sequentially on a single processor), which
-	 * can then be used for bounding. Sets a private int _minimumTime
+	 * Sets the absolute maximum time to complete all tasks (sequentially on a single 
+	 * processor), which can then be used for bounding. Sets a private int _minimumTime
 	 * 
 	 * @author Rebekah Berriman
 	 */
@@ -78,8 +62,7 @@ public class DFSAlgorithm extends Algorithm {
 	/**
 	 * Recursively builds a potential schedule to the total solution schedule 
 	 * ArrayList<ArrayList<Task>> using a DFS approach
-	 * 
-	 * @param solutionArrayList of the current scheduled nodes
+	 * @param solutionArrayList List of the current scheduled nodes
 	 *
 	 * @author Rebekah Berriman, Tina Chen
 	 */
@@ -94,7 +77,7 @@ public class DFSAlgorithm extends Algorithm {
 				// For each available processor add available node to possible schedule
 				for (int i = 1; i <= _processors; i++) {
 					privateSolutionArrayList = (ArrayList<Task>) solutionArrayList.clone();		
-					int startTime = getStartTime(privateSolutionArrayList, node, i);
+					int startTime = getEarliestStartTime(node, privateSolutionArrayList, i);
 					if (startTime > _minimumTime) {
 						break;
 					}
@@ -104,50 +87,11 @@ public class DFSAlgorithm extends Algorithm {
 				}
 			}
 		} else {
-			// If no more available nodes, add the possible solution schedule to full solution space
+			// Add schedule to solution space if there are no more available nodes
 			if (privateSolutionArrayList.size() == _graph.getNodeCount()) {
 				findOptimal(privateSolutionArrayList);
 			}
 		}
-	}
-
-
-	/**
-	 * Returns the earliest start time of the node on the processor
-	 * @param solutionArrayList of the scheduled tasks
-	 * @param node to be scheduled next
-	 * @param processor for task to be scheduled on
-	 * @return int of start time for the task
-	 * 
-	 * @author Rebekah Berriman
-	 */
-	private int getStartTime(ArrayList<Task> solutionArrayList, Node node, int processor) {
-		int startTime = 0;
-		int possibleTime;
-
-		if (getParents(node).size() != 0) {
-			for (Node parents : getParents(node)) {
-				Task task = findNodeTask(parents, solutionArrayList);
-				int nodeWeightInt = task.getWeight();
-
-				if (task.getProcessor() == processor) {
-					possibleTime = task.getStartTime() + nodeWeightInt;
-				} else {
-					int edgeWeightInt = ((Number) task.getNode().getEdgeToward(node).getAttribute("Weight")).intValue();
-					possibleTime = task.getStartTime() + nodeWeightInt + edgeWeightInt;
-				}
-
-				if (startTime < possibleTime) {
-					startTime = possibleTime;
-				}
-			}		
-		}
-
-		possibleTime = getProcessorFinishTime(solutionArrayList, processor);
-		if (startTime < possibleTime ) {
-			startTime = possibleTime;
-		}
-		return startTime;
 	}
 
 	/**

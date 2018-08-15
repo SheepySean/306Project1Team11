@@ -80,44 +80,6 @@ public class AStarAlgorithm extends Algorithm{
 	}
 
 	/**
-	 * Finds the earliest start time of a task on a processor with given dependencies
-	 * @param node Node to be scheduled
-	 * @param schedule ArrayList of scheduled tasks
-	 * @param processor Processor to schedule the node on
-	 * @return int of the earliest start time
-	 * 
-	 * @author Holly Hagenson
-	 */
-	public int getEarliestStartTime(Node node, ArrayList<Task> schedule, int processor) {
-		int startTime = 0, parentLatestFinish = 0, processorFinish; 
-
-		// Get the latest finish time of the parents
-		for (Node parent : getParents(node)){
-			Task task = findNodeTask(parent, schedule); 
-			int nodeWeight = task.getWeight();
-
-			if (task.getProcessor() == processor) {
-				parentLatestFinish = task.getStartTime() + nodeWeight; 
-			} else{
-				int edgeWeight = ((Number)task.getNode().getEdgeToward(node)
-						.getAttribute("Weight")).intValue();
-				parentLatestFinish = task.getStartTime() + nodeWeight + edgeWeight;  
-			}
-			if (parentLatestFinish > startTime){
-				startTime = parentLatestFinish; 
-			}
-		}
-		
-		// Get the latest finish time of the current processor
-		processorFinish = getProcessorFinishTime(schedule, processor);
-		if (processorFinish > startTime) {
-			startTime = processorFinish;
-		}
-
-		return startTime;
-	}
-
-	/**
 	 * Expands the state by finding all possible states from the free nodes
 	 * @param state Parent state
 	 * 
