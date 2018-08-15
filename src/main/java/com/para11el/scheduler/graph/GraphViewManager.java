@@ -41,7 +41,7 @@ public class GraphViewManager {
         _managedGraph.nodes().forEach((node) -> {
             node.setAttribute("ui.label", node.getId()); // Name each node
             node.edges().forEach((edge) -> {
-                edge.setAttribute("ui.label", edge.getAttribute("Weight").toString()); // Add each edges weight
+                edge.setAttribute("ui.label", ((Number)edge.getAttribute("Weight")).intValue()); // Add each edges weight
             });
         });
     }
