@@ -8,7 +8,7 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 
 /**
- * Class to manage the calculations for the cost function of the A* algorithm.
+ * Manager class to perform calculations for the cost function of the A* algorithm.
  * 
  * @author Holly Hagenson, Jessica Alcantara
  *

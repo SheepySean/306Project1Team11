@@ -47,6 +47,8 @@ public abstract class Algorithm {
 		_processors = processor;
 		_cores = cores;
 	}
+	
+	public abstract ArrayList<Task> buildSolution();
 
 	/**
 	 * Returns and labels the graph with the startTime and processor numbers of each of the
@@ -63,6 +65,46 @@ public abstract class Algorithm {
 			node.setAttribute("Processor", task.getProcessor());
 		}
 		return _graph;
+	}
+	
+	/**
+	 * Finds the earliest start time of a task on a processor with given dependencies
+	 * @param node Node to be scheduled
+	 * @param schedule ArrayList of scheduled tasks
+	 * @param processor Processor to schedule the node on
+	 * @return int of the earliest start time
+	 * 
+	 * @author Holly Hagenson, Rebekah Berriman
+	 */
+	public int getEarliestStartTime(Node node, ArrayList<Task> schedule, int processor) {
+		int processorFinish; 
+		int startTime = 0;
+		int parentLatestFinish = 0;
+
+		// Get the latest finish time of the parents
+		for (Node parent : getParents(node)){
+			Task task = findNodeTask(parent, schedule); 
+			int nodeWeight = task.getWeight();
+
+			if (task.getProcessor() == processor) {
+				parentLatestFinish = task.getStartTime() + nodeWeight; 
+			} else{
+				int edgeWeight = ((Number)task.getNode().getEdgeToward(node)
+						.getAttribute("Weight")).intValue();
+				parentLatestFinish = task.getStartTime() + nodeWeight + edgeWeight;  
+			}
+			if (parentLatestFinish > startTime){
+				startTime = parentLatestFinish; 
+			}
+		}
+		
+		// Get the latest finish time of the current processor
+		processorFinish = getProcessorFinishTime(schedule, processor);
+		if (processorFinish > startTime) {
+			startTime = processorFinish;
+		}
+
+		return startTime;
 	}
 	
 	/**
@@ -84,26 +126,6 @@ public abstract class Algorithm {
 					finishTime = processorFinish;
 				}
 			}	
-		}
-		return finishTime;
-	}
-	
-	/**
-	 * Return the latest finish time of a schedule
-	 * @param schedule ArrayList of scheduled tasks
-	 * @return int of the latest finish time
-	 * 
-	 * @author Jessica Alcantara
-	 */
-	public int getScheduleFinishTime(ArrayList<Task> schedule) {
-		int finishTime = 0;
-		int taskFinish;
-		
-		for (Task task : schedule)  {
-			taskFinish = task.getFinishTime();
-			if (taskFinish > finishTime) {
-				finishTime = taskFinish;
-			}
 		}
 		return finishTime;
 	}

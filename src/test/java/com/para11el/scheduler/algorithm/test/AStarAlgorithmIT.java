@@ -13,6 +13,7 @@ import org.graphstream.graph.implementations.SingleGraph;
 import org.junit.Test;
 
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
+import com.para11el.scheduler.algorithm.PruningManager;
 import com.para11el.scheduler.algorithm.State;
 import com.para11el.scheduler.algorithm.Task;
 
@@ -120,7 +121,8 @@ public class AStarAlgorithmIT {
 		Queue<State> states = new PriorityQueue<State>(am.getStateComparator());
 		states.add(queuedState);
 		
-		assertTrue(am.isDuplicate(newState, states)); 
+		PruningManager pm = new PruningManager();
+		assertTrue(pm.doPrune(newState, states)); 
 	}
 	
 	/**

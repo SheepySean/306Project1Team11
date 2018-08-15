@@ -21,6 +21,7 @@ public class AStarAlgorithm extends Algorithm{
 	 * Comparator to sort states according to the results of the cost
 	 * function.
 	 * 
+	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 * @author Jessica Alcantara
 	 */
 	private Comparator<State> _stateComparator = new Comparator<State>() {
@@ -32,6 +33,7 @@ public class AStarAlgorithm extends Algorithm{
 
 	private Queue<State> _states = new PriorityQueue<State>(_stateComparator);
 	private CostFunctionManager _cfm;
+	private PruningManager _pm;
 
 	public AStarAlgorithm() {
 		super();
@@ -40,11 +42,13 @@ public class AStarAlgorithm extends Algorithm{
 	public AStarAlgorithm(Graph graph, int processor) {
 		super(graph, processor);
 		_cfm = new CostFunctionManager(calculateTotalWeight(graph.nodes()), processor);
+		_pm = new PruningManager();
 	}
 
 	public AStarAlgorithm(Graph graph, int processor, int cores) {
 		super(graph, processor, cores);
 		_cfm = new CostFunctionManager(calculateTotalWeight(graph.nodes()), processor);
+		_pm = new PruningManager();
 	}
 
 	/**
@@ -80,44 +84,6 @@ public class AStarAlgorithm extends Algorithm{
 	}
 
 	/**
-	 * Finds the earliest start time of a task on a processor with given dependencies
-	 * @param node Node to be scheduled
-	 * @param schedule ArrayList of scheduled tasks
-	 * @param processor Processor to schedule the node on
-	 * @return int of the earliest start time
-	 * 
-	 * @author Holly Hagenson
-	 */
-	public int getEarliestStartTime(Node node, ArrayList<Task> schedule, int processor) {
-		int startTime = 0, parentLatestFinish = 0, processorFinish; 
-
-		// Get the latest finish time of the parents
-		for (Node parent : getParents(node)){
-			Task task = findNodeTask(parent, schedule); 
-			int nodeWeight = task.getWeight();
-
-			if (task.getProcessor() == processor) {
-				parentLatestFinish = task.getStartTime() + nodeWeight; 
-			} else{
-				int edgeWeight = ((Number)task.getNode().getEdgeToward(node)
-						.getAttribute("Weight")).intValue();
-				parentLatestFinish = task.getStartTime() + nodeWeight + edgeWeight;  
-			}
-			if (parentLatestFinish > startTime){
-				startTime = parentLatestFinish; 
-			}
-		}
-		
-		// Get the latest finish time of the current processor
-		processorFinish = getProcessorFinishTime(schedule, processor);
-		if (processorFinish > startTime) {
-			startTime = processorFinish;
-		}
-
-		return startTime;
-	}
-
-	/**
 	 * Expands the state by finding all possible states from the free nodes
 	 * @param state Parent state
 	 * 
@@ -140,7 +106,7 @@ public class AStarAlgorithm extends Algorithm{
 						_cfm.calculateCostFunction(state,node,schedule));
 				
 				// Prune duplicate states
-				if (!isDuplicate(newState, _states)){
+				if (!_pm.doPrune(newState, _states)){
 					_states.add(newState);
 				}
 			}
@@ -172,70 +138,5 @@ public class AStarAlgorithm extends Algorithm{
 	 */
 	public Comparator<State> getStateComparator() {
 		return _stateComparator;
-	}
-	
-	/**
-	 * Check for duplicates between states
-	 * @param newState State to be added to list of states
-	 * @param states States already in queue
-	 * @return Boolean whether there are duplicates or not
-	 * 
-	 * @author Holly Hagenson
-	 */
-	public Boolean isDuplicate(State newState, Queue<State> states){
-		// Check new state against all states in queue
-		for (State state : states){
-			Boolean duplicate = compareStatesProcessors(state, newState);
-			Boolean makespan = compareMakespan(state, newState); 
-			if (duplicate && makespan){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * Compare states to see if all tasks have been put on same processors
-	 * @param newState State to be added to list of states
-	 * @param stateInQueue State already in queue
-	 * @return Boolean whether the states schedule tasks on the same processors
-	 * 
-	 * @author Holly Hagenson
-	 */
-	public Boolean compareStatesProcessors(State newState, State stateInQueue){
-		ArrayList<Task> newSchedule = newState.getSchedule();
-		ArrayList<Task> scheduleInQueue = stateInQueue.getSchedule(); 
-		
-		// For all tasks in both schedule, compare task allocation
-		for (Task newTask : newSchedule){
-			for (Task queuedTask : scheduleInQueue){
-				if (newTask.getNode().getId().equals(queuedTask.getNode().getId())
-						&& newTask.getProcessor() != queuedTask.getProcessor()){
-					return false; 
-				}
-			}
-		}
-		return true; 
-	}
-	
-	/**
-	 * Compare the makespans of states to see if they are equal
-	 * @param newState State to be added to list of states
-	 * @param stateInQueue State already in queue
-	 * @return Boolean whether the makespans are equal
-	 * 
-	 * @author Holly Hagenson
-	 */
-	public Boolean compareMakespan(State newState, State stateInQueue){
-		ArrayList<Task> newSchedule = newState.getSchedule();
-		ArrayList<Task> scheduleInQueue = stateInQueue.getSchedule(); 
-		
-		int newMakespan = getScheduleFinishTime(newSchedule);
-		int queuedMakespan = getScheduleFinishTime(scheduleInQueue); 
-		
-		if (newMakespan == queuedMakespan){
-			return true;
-		}
-		return false;		
 	}
 }
