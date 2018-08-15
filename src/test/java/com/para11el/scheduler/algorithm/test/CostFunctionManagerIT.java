@@ -68,6 +68,8 @@ public class CostFunctionManagerIT {
 	 */
 	@Test
 	public void testCalculateCriticalPathEstimate(){
+		createGraph();
+		
 		Node nlast = _graph1.getNode("2");
 		nlast.setAttribute("Start", "3");
 		Task lastTask = new Task(nlast, 3, 1);

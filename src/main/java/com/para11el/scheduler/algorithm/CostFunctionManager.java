@@ -1,8 +1,10 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 
 /**
@@ -126,7 +128,7 @@ public class CostFunctionManager {
 	 * @author Holly Hagenson
 	 */
 	private void findLongestPath(List<Node> path, Node source){
-		// Calculate cost of current path at leaf node
+		// Calculate cost of current path at leaf node		
 		if (source.getOutDegree() == 0){
 			for (Node n : path){
 				_dist += ((Number)n.getAttribute("Weight")).intValue();
@@ -137,13 +139,13 @@ public class CostFunctionManager {
 			}
 			_dist = 0; 
 		} else {
-			// Traverse through graph to find all paths from source
+			// Traverse through graph to find all paths from source		
 			source.edges().forEach((edge) -> {
 				List<Node> newPath = new ArrayList<Node>(path); 
 				newPath.add(edge.getNode1());
 				findLongestPath(newPath, edge.getNode1());
 			});
-		}	
+		}
 	}
 	
 	/**

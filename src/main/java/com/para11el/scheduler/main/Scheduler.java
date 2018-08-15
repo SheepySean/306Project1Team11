@@ -3,7 +3,7 @@ package com.para11el.scheduler.main;
 
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
 import com.para11el.scheduler.algorithm.DFSAlgorithm;
-
+import com.para11el.scheduler.algorithm.Task;
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
@@ -18,6 +18,7 @@ import org.graphstream.ui.view.View;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 
 /**
@@ -71,17 +72,17 @@ public class Scheduler {
 			return;
 		}
 		
-/*		//Create the SolutionSpace
-		SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
-		solutionSpaceManager.initialise();
+		//Create the SolutionSpace
+		//SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
+		//solutionSpaceManager.initialise();
 		
-		//AStarAlgorithm astar = new AStarAlgorithm(_inGraph, _scheduleProcessors);
-		//ArrayList<Task> solution = astar.buildSolution(); 
+		AStarAlgorithm astar = new AStarAlgorithm(_inGraph, _scheduleProcessors);
+		ArrayList<Task> solution = astar.buildSolution(); 
 		
 		//Get the graph labeled with the optimal solution
 
-		Graph newGraph = solutionSpaceManager.getGraph();
-		//Graph newGraph = astar.getGraph(solution);*/
+		//Graph newGraph = solutionSpaceManager.getGraph();
+		Graph newGraph = astar.getGraph(solution);
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
