@@ -1,13 +1,14 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 
 /**
- * Class to calculate the cost function of the A* algorithm.
+ * Manager class to perform calculations for the cost function of the A* algorithm.
  * 
  * @author Holly Hagenson, Jessica Alcantara
  *
@@ -20,9 +21,16 @@ public class CostFunctionManager {
 	private int _totalWeight;
 	private int _processors;
 	
-	public CostFunctionManager(int totalWeight, int processor) {
+	/**
+	 * Constructor for CostFunctionManager
+	 * @param totalWeight Total weight of nodes in the input graph
+	 * @param processors Number of processors
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public CostFunctionManager(int totalWeight, int processors) {
 		_totalWeight = totalWeight;
-		_processors = processor;	
+		_processors = processors;	
 	}
 	
     /**
@@ -37,28 +45,18 @@ public class CostFunctionManager {
      */
 	public int calculateCostFunction(State parentState, Node newNode, 
 			ArrayList<Task> partialSolution) {
-		
-		int parentCost;
+		int parentCost, criticalPathEstimate;
 		int boundedTime = calculateBoundedTime(partialSolution);
-		int criticalPathEstimate;
+		Task lastTask = getLastTask(partialSolution);
 		
-		if (partialSolution.size() > 0){
-			int latestFinish = 0;
-			Task lastTask = new Task(null, 0, 0);
-			
-			for(Task task : partialSolution){
-				int taskFinish = task.getStartTime() + ((Number)task.getNode().getAttribute("Weight")).intValue();
-				if (taskFinish > latestFinish){
-					latestFinish = taskFinish; 
-					lastTask = task; 
-				}
-			}
-			criticalPathEstimate = calculateCriticalPathEstimate(lastTask, partialSolution);
+		// Check if partial solution is empty
+		if (lastTask == null){
+			criticalPathEstimate = 0;
 		} else{
-			criticalPathEstimate = 0; 
+			criticalPathEstimate = calculateCriticalPathEstimate(lastTask, partialSolution); 
 		}
 		
-		// Check if parent node exists
+		// Check if parent state exists
 		if (parentState == null) {
 			parentCost = 0;
 		} else {
@@ -71,11 +69,32 @@ public class CostFunctionManager {
 	}
 	
 	/**
+	 * Returns the task with the latest finish time
+	 * @param schedule Partial schedule of tasks
+	 * @return Task with the latest finish time
+	 * 
+	 * @author Jessica Alcantara, Holly Hagenson
+	 */
+	public Task getLastTask(ArrayList<Task> schedule) {
+		int latestFinish = 0;
+		Task lastTask = null;
+		
+		for(Task task : schedule){
+			int taskFinish = task.getFinishTime();
+			if (taskFinish > latestFinish){
+				latestFinish = taskFinish; 
+				lastTask = task; 
+			}
+		}
+		return lastTask;
+	}
+	
+	/**
 	 * Calculates the critical path estimate based on:
 	 * 		Cpe(S) = startTime(nlast) + bottomLevel(nlast)
 	 * 
-	 * @param state Nlast, node with latest finish time in partial schedule
-	 * @param solution, task schedule for current solution
+	 * @param lastTask Task (nlast) with latest finish time in partial schedule
+	 * @param solution Task schedule for current solution
 	 * @return int of critical path estimate
 	 * 
 	 * @author Holly Hagenson
@@ -83,13 +102,11 @@ public class CostFunctionManager {
 	public int calculateCriticalPathEstimate(Task lastTask, ArrayList<Task> solution) {
 		int bottomLevel = bottomLevel(lastTask.getNode());
 		int startTime = lastTask.getStartTime(); 
-		// TODO: find task with latest finish time
 		return startTime + bottomLevel;
 	}
 	
 	/**
-	 * Calculates the bottom level of a node. 
-	 * 
+	 * Calculates the bottom level of a node 
 	 * @param node Node to calculate bottom level of
 	 * @return int of bottom level value
 	 * 
@@ -98,25 +115,20 @@ public class CostFunctionManager {
 	public int bottomLevel(Node node){
 		// Create path with source node
 		List<Node> path = new ArrayList<Node>(); 
-		path.add(node); 
-		
-		_max = 0; 
-
+		path.add(node);
 		findLongestPath(path, node);
-		
 		return _max; 
 	}
 	
 	/**
-	 * Finds the longest path from the given node to a leaf node.
-	 * 
+	 * Finds the longest path from the given node to a leaf node
 	 * @param path Current path of nodes
 	 * @param source Node to find paths from
 	 * 
 	 * @author Holly Hagenson
 	 */
 	private void findLongestPath(List<Node> path, Node source){
-		// Calculate cost of current path at leaf node
+		// Calculate cost of current path at leaf node		
 		if (source.getOutDegree() == 0){
 			for (Node n : path){
 				_dist += ((Number)n.getAttribute("Weight")).intValue();
@@ -127,13 +139,16 @@ public class CostFunctionManager {
 			}
 			_dist = 0; 
 		} else {
-			// Traverse through graph to find all paths from source
-			source.edges().forEach((edge) -> {
-				List<Node> newPath = new ArrayList<Node>(path); 
-				newPath.add(edge.getNode1());
-				findLongestPath(newPath, edge.getNode1());
-			});
-		}	
+			// Traverse through graph to find all paths from source		
+			Iterator<Edge> edges = source.edges().iterator();
+			while(edges.hasNext()){
+				if (edges.next().getNode0().equals(source)){
+					List<Node> newPath = new ArrayList<Node>(path); 
+					newPath.add(edges.next().getNode1());
+					findLongestPath(newPath, edges.next().getNode1());					
+				}
+			}
+		}
 	}
 	
 	/**
@@ -151,7 +166,7 @@ public class CostFunctionManager {
 	}
 	
 	/**
-	 * Calculates the sum of all idle times on each processor.
+	 * Calculates the sum of all idle times on each processor
 	 * @param solution Task schedule for current solution
 	 * @return int of the idle time
 	 * 
@@ -159,8 +174,7 @@ public class CostFunctionManager {
 	 */
 	public int calculateIdleTime(ArrayList<Task> solution) {
 		int idleTime = 0;
-		int finishTime;
-		int time;
+		int finishTime, time;
 		for (int i=1; i<= _processors; i++) {
 			finishTime = 0;
 			for (Task task : solution) {
@@ -171,8 +185,7 @@ public class CostFunctionManager {
 					if (time != 0) {
 						idleTime += Math.abs(time);
 					}
-					finishTime = task.getStartTime() + 
-							((Number)task.getNode().getAttribute("Weight")).intValue();
+					finishTime = task.getFinishTime();
 				}
 			}
 		}

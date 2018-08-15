@@ -22,9 +22,9 @@ public abstract class Algorithm {
 	public Algorithm() {}
 	
 	/**
-	 * Constructor for AlgorithmManager for sequential solution
-	 * @param graph input graph
-	 * @param processor number of processors
+	 * Constructor for Algorithm for sequential solution
+	 * @param graph Input graph
+	 * @param processor Number of processors
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -35,10 +35,10 @@ public abstract class Algorithm {
 	}
 
 	/**
-	 * Constructor for AlgorithmManager for parallel solution
-	 * @param graph input graph
-	 * @param processor number of processors
-	 * @param cores number of cores
+	 * Constructor for Algorithm for parallel solution
+	 * @param graph Input graph
+	 * @param processor Number of processors
+	 * @param cores Number of cores
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -48,35 +48,91 @@ public abstract class Algorithm {
 		_cores = cores;
 	}
 	
+	public abstract ArrayList<Task> buildSolution();
+
 	/**
-	 * Labels the graph with the startTime and processor numbers of each of the nodes for the optimal solution
+	 * Returns and labels the graph with the startTime and processor numbers of each of the
+	 * nodes for the optimal solution
 	 * @param solution Final solution
+	 * @return graph of the nodes with labels
 	 * 
 	 * @author Rebekah Berriman
 	 */
-	private void labelGraph(ArrayList<Task> solution) {
+	public Graph getGraph(ArrayList<Task> solution) {
 		for (Task task : solution) {
 			Node node = task.getNode();
 			node.setAttribute("Start", task.getStartTime());
 			node.setAttribute("Processor", task.getProcessor());
 		}
-	}
-
-	/**
-	 * Returns the labeled graph.
-	 * @param solution Final solution
-	 * @return Graph of the nodes with labels
-	 * 
-	 * @author Rebekah Berriman
-	 */
-	public Graph getGraph(ArrayList<Task> solution) {
-		labelGraph(solution);
 		return _graph;
 	}
 	
 	/**
-	 * Returns an ArrayList<Node> of the parents nodes a node has
-	 * @param node the node to find parents of
+	 * Finds the earliest start time of a task on a processor with given dependencies
+	 * @param node Node to be scheduled
+	 * @param schedule ArrayList of scheduled tasks
+	 * @param processor Processor to schedule the node on
+	 * @return int of the earliest start time
+	 * 
+	 * @author Holly Hagenson, Rebekah Berriman
+	 */
+	public int getEarliestStartTime(Node node, ArrayList<Task> schedule, int processor) {
+		int processorFinish; 
+		int startTime = 0;
+		int parentLatestFinish = 0;
+
+		// Get the latest finish time of the parents
+		for (Node parent : getParents(node)){
+			Task task = findNodeTask(parent, schedule); 
+			int nodeWeight = task.getWeight();
+
+			if (task.getProcessor() == processor) {
+				parentLatestFinish = task.getStartTime() + nodeWeight; 
+			} else{
+				int edgeWeight = ((Number)task.getNode().getEdgeToward(node)
+						.getAttribute("Weight")).intValue();
+				parentLatestFinish = task.getStartTime() + nodeWeight + edgeWeight;  
+			}
+			if (parentLatestFinish > startTime){
+				startTime = parentLatestFinish; 
+			}
+		}
+		
+		// Get the latest finish time of the current processor
+		processorFinish = getProcessorFinishTime(schedule, processor);
+		if (processorFinish > startTime) {
+			startTime = processorFinish;
+		}
+
+		return startTime;
+	}
+	
+	/**
+	 * Returns an int of the finishTime of the last task on the processor
+	 * @param schedule ArrayList of the scheduled tasks
+	 * @param processor To find latest finish time of
+	 * @return int of the finishTime
+	 * 
+	 * @author Rebekah Berriman
+	 */
+	public int getProcessorFinishTime(ArrayList<Task> schedule, int processor) {
+		int finishTime = 0;
+		int processorFinish;
+
+		for (Task task : schedule) {
+			if (task.getProcessor() == processor) {
+				processorFinish = task.getFinishTime();
+				if (finishTime < processorFinish) {
+					finishTime = processorFinish;
+				}
+			}	
+		}
+		return finishTime;
+	}
+	
+	/**
+	 * Returns a list of parent nodes of a node
+	 * @param node Node to find parents of
 	 * 
 	 * @author Tina Chen 
 	 */
@@ -90,15 +146,15 @@ public abstract class Algorithm {
 	}
 	
 	/**
-	 * Find the node
-	 * @param node in the inputGraph
-	 * @param currentTasks 
+	 * Returns the task corresponding to a node
+	 * @param node From input graph
+	 * @param schedule ArrayList of scheduled tasks
 	 * @return Task object node
 	 * 
 	 * @author Sean Oldfield
 	 */
-	public Task findNode(Node node, ArrayList<Task> currentTasks) {
-		for (Task task : currentTasks) {
+	public Task findNodeTask(Node node, ArrayList<Task> schedule) {
+		for (Task task : schedule) {
 			if (task.getNode().equals(node)) {
 				return task;
 			}
@@ -107,29 +163,36 @@ public abstract class Algorithm {
 	}
 	
 	/**
-	 * Find the available nodes that can be scheduled given what nodes have already been scheduled.
+	 * Find the available nodes that can be scheduled given what nodes have already 
+	 * been scheduled
 	 * @param scheduledTasks
 	 * @return ArrayList of available nodes
 	 * 
 	 * @author Rebekah Berriman, Tina Chen
 	 */
-	public ArrayList<Node>  availableNode(ArrayList<Task> scheduledTasks) {
+	public ArrayList<Node> availableNode(ArrayList<Task> scheduledTasks) {
 		ArrayList<Node> scheduledNodes =  new ArrayList<Node>();
 		ArrayList<Node> available = new ArrayList<Node>();
 
+		// Get list of scheduled nodes
 		for (Task task : scheduledTasks) {
 			scheduledNodes.add(task.getNode());
 		}
 
 		_graph.nodes().forEach((node) -> {
-			if (!scheduledNodes.contains(node)) { // If Node is not already scheduled
+			// Find nodes that have not been scheduled
+			if (!scheduledNodes.contains(node)) {
 				ArrayList<Node> parents = getParents(node);
-				if (parents.size() == 0) { // Node has no parents so can be scheduled
-					available.add(node);
+				
+				// Add nodes with no parents to available nodes
+				if (parents.size() == 0) {
+					available.add(node);		
+				// Check all the parents of the node have been scheduled
 				} else {
 					boolean availableNode = true;
 					for (Node parentNode : parents) {
-						if (!scheduledNodes.contains(parentNode)) { // If the schedule does not contain a parent node of the node, set availableNode to false
+						// Node is not available if parent has not been scheduled
+						if (!scheduledNodes.contains(parentNode)) {
 							availableNode = false;
 						}
 					}

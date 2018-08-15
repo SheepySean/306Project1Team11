@@ -1,7 +1,6 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.stream.Stream;
 
 import org.graphstream.graph.Node;
@@ -22,7 +21,6 @@ public class State {
 	
 	/**
 	 * State constructor
-	 * 
 	 * @param node Node in input graph
 	 * @param parent Parent state
 	 * @param schedule Schedule representing partial solution
@@ -54,12 +52,12 @@ public class State {
 	}
 	
 	public void setCost(int cost) {
-		_cost = cost;
+		this._cost = cost;
 	}
 	
 	/**
 	 * Compares state based on the cost
-	 * @param compareState
+	 * @param compareState State being compared against
 	 * @return int representing ascending order
 	 * 
 	 * @author Jessica Alcantara
@@ -71,9 +69,9 @@ public class State {
 	
 	/**
 	 * Checks that if the state is a complete solution where all input
-	 * tasks are scheduled.
+	 * tasks are scheduled
 	 * @param nodes All nodes of the input graph
-	 * @return boolean true if solution is complete
+	 * @return Boolean true if solution is complete
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -86,19 +84,18 @@ public class State {
 	}
 	
 	/**
-	 * Finds the task corresponding to the last node in the state
-	 * @param node in the inputGraph
-	 * @param tasks in the partial solution
-	 * @return Task object node
+	 * Checks whether the node has been scheduled in the solution state
+	 * @param node Node representing a task
+	 * @return Boolean true if solution contains the node
 	 * 
-	 * @author Sean Oldfield, Rebekah Berriman
+	 * @author Jessica Alcantara
 	 */
-	public Task findNode(Node node, ArrayList<Task> tasks) {
-		for (Task task : tasks) {
+	public boolean stateContainsNode(Node node, ArrayList<Task> schedule) {
+		for (Task task : schedule) {
 			if (task.getNode().equals(node)) {
-				return task;
+				return true;
 			}
 		}
-		return null;
+		return false;
 	}
 }

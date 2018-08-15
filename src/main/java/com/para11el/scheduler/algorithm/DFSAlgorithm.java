@@ -5,7 +5,8 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
 /**
- * DFS Recursive Algorithm to find the solution 
+ * DFS Recursive Algorithm to find the optimal solution.
+ * This algorithm implementation does not support parallelisation.
  * 
  * @author Rebekah Berriman, Tina Chen
  */
@@ -14,14 +15,6 @@ public class DFSAlgorithm extends Algorithm {
 	private int _minimumTime;
 	private ArrayList<Task> _optimalSolution = new ArrayList<Task>();
 
-	/**
-	 * Constructor for SolutionSpaceManager if user does not specify number
-	 * of cores for execution in parallel
-	 * @param graph input graph
-	 * @param processor number of processors
-	 * 
-	 * @author Tina Chen, Rebekah Berriman
-	 */
 	public DFSAlgorithm() {
 		super();
 	}
@@ -30,17 +23,13 @@ public class DFSAlgorithm extends Algorithm {
 		super(graph, processor);
 	}
 
-	/**
-	 * Constructor for SolutionSpaceManager if user specifies number
-	 * of cores for execution in parallel
-	 * @param graph input graph
-	 * @param processor number of processors
-	 * @param cores number of cores
-	 * 
-	 * @author Tina Chen, Rebekah Berriman
-	 */
 	public DFSAlgorithm(Graph graph, int processor, int cores) {
 		super(graph, processor, cores);
+	}
+	
+	public ArrayList<Task> buildSolution() {
+		initialise();
+		return _optimalSolution;
 	}
 
 	/**
@@ -63,8 +52,8 @@ public class DFSAlgorithm extends Algorithm {
 	}
 	
 	/**
-	 * Sets the absolute maximum time to complete all tasks (sequentially on a single processor), which
-	 * can then be used for bounding. Sets a private int _minimumTime
+	 * Sets the absolute maximum time to complete all tasks (sequentially on a single 
+	 * processor), which can then be used for bounding. Sets a private int _minimumTime
 	 * 
 	 * @author Rebekah Berriman
 	 */
@@ -77,9 +66,8 @@ public class DFSAlgorithm extends Algorithm {
 
 	/**
 	 * Recursively builds a potential schedule to the total solution schedule 
-	 * ArrayList<ArrayList<Task>> using a DFS approach
-	 * 
-	 * @param solutionArrayList of the current scheduled nodes
+	 * ArrayList<Task> using a DFS approach
+	 * @param solutionArrayList List of the current scheduled nodes
 	 *
 	 * @author Rebekah Berriman, Tina Chen
 	 */
@@ -94,7 +82,7 @@ public class DFSAlgorithm extends Algorithm {
 				// For each available processor add available node to possible schedule
 				for (int i = 1; i <= _processors; i++) {
 					privateSolutionArrayList = (ArrayList<Task>) solutionArrayList.clone();		
-					int startTime = getStartTime(privateSolutionArrayList, node, i);
+					int startTime = getEarliestStartTime(node, privateSolutionArrayList, i);
 					if (startTime > _minimumTime) {
 						break;
 					}
@@ -104,102 +92,39 @@ public class DFSAlgorithm extends Algorithm {
 				}
 			}
 		} else {
-			// If no more available nodes, add the possible solution schedule to full solution space
+			// Add schedule to solution space if there are no more available nodes
 			if (privateSolutionArrayList.size() == _graph.getNodeCount()) {
 				findOptimal(privateSolutionArrayList);
 			}
 		}
 	}
 
-
 	/**
-	 * Returns the earliest start time of the node on the processor
-	 * @param solutionArrayList of the scheduled tasks
-	 * @param node to be scheduled next
-	 * @param processor for task to be scheduled on
-	 * @return int of start time for the task
-	 * 
-	 * @author Rebekah Berriman
-	 */
-	private int getStartTime(ArrayList<Task> solutionArrayList, Node node, int processor) {
-		int startTime = 0;
-		int possibleTime;
-
-		if (getParents(node).size() != 0) {
-			for (Node parents : getParents(node)) {
-				Task task = findNode(parents, solutionArrayList);
-				int nodeWeightInt = ((Number) task.getNode().getAttribute("Weight")).intValue();
-
-				if (task.getProcessor() == processor) {
-					possibleTime = task.getStartTime() + nodeWeightInt;
-				} else {
-					int edgeWeightInt = ((Number) task.getNode().getEdgeToward(node).getAttribute("Weight")).intValue();
-					possibleTime = task.getStartTime() + nodeWeightInt + edgeWeightInt;
-				}
-
-				if (startTime < possibleTime) {
-					startTime = possibleTime;
-				}
-			}		
-		}
-
-		possibleTime = getProcessorFinishTime(solutionArrayList, processor);
-		if (startTime < possibleTime ) {
-			startTime = possibleTime;
-		}
-		return startTime;
-	}
-
-	/**
-	 * Returns an int of the finishTime of the last task on the processor
-	 * @param currentSchedule is an ArrayList of the currently scheduled tasks
-	 * @param processor to schedule it on
-	 * @return int of the finishTime
-	 * 
-	 * @author Rebekah Berriman
-	 */
-	private int getProcessorFinishTime(ArrayList<Task> currentSchedule, int processor) {
-		int finishTime = 0;
-		int possibleTime;
-
-		for (Task task : currentSchedule) {
-			if (task.getProcessor() == processor) {
-				int nodeWeightInt = ((Number) task.getNode().getAttribute("Weight")).intValue();
-				possibleTime = task.getStartTime() + nodeWeightInt;
-				if (finishTime < possibleTime) {
-					finishTime = possibleTime;
-				}
-			}	
-		}
-		return finishTime;
-	}
-
-	/**
-	 * Checks if the new solution is a better solution that currently stored.
-	 * Returns a full task schedule solution with the shortest completion time.
-	 * @return an ArrayList<Task> of the optimal solution
+	 * Compares the new solution to the current solution and changes the optimal solution
+	 * to be the schedule with the shortest completion time
+	 * @param solution List of scheduled tasks representing a possible solution
 	 * 
 	 * @author Rebekah Berriman
 	 */
 	@SuppressWarnings("unchecked")
 	private void findOptimal(ArrayList<Task> solution) {
 		if (solution != null) {
-			ArrayList<Task> newSolution = (ArrayList<Task>)solution.clone();
-			
 			int solutionTime = 0; 
+			ArrayList<Task> newSolution = (ArrayList<Task>)solution.clone();
+
 			for (int processor=1; processor <= _processors; processor++) {
-				int possibleSolutionTime = getProcessorFinishTime(newSolution, processor);
+				int solutionFinishTime = getProcessorFinishTime(newSolution, processor);
 				
-				if (possibleSolutionTime > _minimumTime) {
+				if (solutionFinishTime > _minimumTime) {
 					return;
 				}
-				// If the finishTime of one processor is later than another, update the finish time of the task
-				if (solutionTime < possibleSolutionTime) {
-					solutionTime = possibleSolutionTime;
+				// Update latest finish time
+				if (solutionTime < solutionFinishTime) {
+					solutionTime = solutionFinishTime;
 				}
 			}
 
-			// If the solution time is less than or equal to the minimal time, update the _solution
+			// Update minimal time and optimal solution
 			if (_minimumTime >= solutionTime) {
 				_minimumTime = solutionTime;
 				_optimalSolution = newSolution;
@@ -208,9 +133,8 @@ public class DFSAlgorithm extends Algorithm {
 	}
 
 	/**
-	 * Returns the optimal schedule in an arraylist of type Task.
-	 * 
-	 * @return the optimal schedule
+	 * Returns the optimal schedule in an ArrayList of type Task
+	 * @return ArrayList representing the optimal schedule
 	 * 
 	 * @author Rebekah Berriman
 	 */
@@ -219,8 +143,8 @@ public class DFSAlgorithm extends Algorithm {
 	}
 	
 	/**
-	 * Ensures that testing can ensure that the minimum test time is found
-	 * @return int of the finish time of the optimal solution (the earliest time that the tasks can be computed).
+	 * Returns the finish time of the optimal solution
+	 * @return int of the finish time 
 	 * 
 	 * @author Rebekah Berriman
 	 */

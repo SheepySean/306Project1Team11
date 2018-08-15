@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.embed.swing.SwingNode?>
 <?import javafx.geometry.Insets?>
+<?import javafx.geometry.Point3D?>
 <?import javafx.scene.chart.BubbleChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -12,6 +12,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -41,14 +42,14 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: white;">
                            <children>
-                              <TabPane prefHeight="386.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE">
+                              <TabPane fx:id="tabPane" focusTraversable="false" prefHeight="386.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE">
                                 <tabs>
                                   <Tab text="DAG View">
                                     <content>
-                                      <AnchorPane fx:id="graphContainer" minHeight="0.0" minWidth="0.0" prefHeight="316.0" prefWidth="1024.0">
-                                             <children>
-                                                <SwingNode fx:id="inGraph" />
-                                             </children>
+                                      <AnchorPane fx:id="graphContainer" accessibleRole="NODE" minHeight="0.0" minWidth="0.0" onMouseClicked="#giveGraphFocus" prefHeight="316.0" prefWidth="1024.0" scaleZ="2.0">
+                                             <rotationAxis>
+                                                <Point3D z="2.0" />
+                                             </rotationAxis>
                                           </AnchorPane>
                                     </content>
                                   </Tab>
@@ -80,9 +81,9 @@
                               </GridPane>
                            </children>
                         </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" style="-fx-border-color: #282828; -fx-border-width: 1;">
+                      <AnchorPane fx:id="statisticsAnchor" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" style="-fx-border-color: #282828; -fx-border-width: 1;">
                            <children>
-                              <BorderPane prefHeight="157.0" prefWidth="800.0">
+                              <BorderPane prefHeight="148.0" prefWidth="800.0">
                                  <center>
                                     <GridPane maxHeight="-Infinity" prefHeight="100.0" prefWidth="800.0" BorderPane.alignment="TOP_CENTER">
                                       <columnConstraints>
@@ -140,9 +141,12 @@
                       </Menu>
                       <Menu mnemonicParsing="false" text="View">
                         <items>
-                          <MenuItem mnemonicParsing="false" onAction="#resetViewAction" text="Reset View (Shift + r)" />
+                          <MenuItem mnemonicParsing="false" onAction="#resetViewAction" text="Reset View" />
                               <SeparatorMenuItem mnemonicParsing="false" />
-                              <MenuItem mnemonicParsing="false" onAction="#zoomInAction" text="Zoom In" />
+                              <MenuItem mnemonicParsing="false" onAction="#zoomInAction" text="Zoom In">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="PAGE_UP" control="UP" meta="UP" shift="UP" shortcut="ANY" />
+                                 </accelerator></MenuItem>
                               <MenuItem mnemonicParsing="false" onAction="#zoomOutAction" text="Zoom Out" />
                               <SeparatorMenuItem mnemonicParsing="false" />
                               <MenuItem mnemonicParsing="false" text="Pan Up" />

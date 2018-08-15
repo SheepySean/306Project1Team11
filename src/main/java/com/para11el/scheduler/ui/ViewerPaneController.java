@@ -1,20 +1,15 @@
 package com.para11el.scheduler.ui;
 
 
-import com.para11el.scheduler.graph.GraphFileManager;
 import javafx.application.Platform;
-import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Text;
-import org.graphstream.graph.Graph;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
-import org.graphstream.ui.fx_viewer.FxViewPanel;
 import org.graphstream.ui.fx_viewer.FxViewer;
-import org.graphstream.ui.javafx.FxGraphRenderer;
 import org.graphstream.ui.layout.HierarchicalLayout;
+import org.graphstream.ui.javafx.FxGraphRenderer;
 import org.graphstream.ui.layout.Layout;
 import org.graphstream.ui.layout.springbox.implementations.LinLog;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
@@ -25,26 +20,15 @@ import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.camera.Camera;
 
-import javax.swing.*;
-import java.awt.*;
 
 public class ViewerPaneController {
     private static FxViewer _viewer;
-    @FXML
-    private AnchorPane anchor;
-
-
+    private static Camera _camera;
+    private FxDefaultView viewPanel;
 
     @FXML
     private AnchorPane graphContainer;
 
-    @FXML
-    private Text label;
-
-    private JPanel graphPanel;
-
-    @FXML
-    private SwingNode inGraph;
     /**
      * Initialize some of the GUI's components to initial states
      */
@@ -60,9 +44,19 @@ public class ViewerPaneController {
         graphPanel.add(graphViewPanel);*/
         //view.display((GraphicGraph)_inGraph, true);
         //createAndSetSwingContent(inGraph, graphPanel);
+
         _viewer.addDefaultView(false, _viewer.newDefaultGraphRenderer());
-        _viewer.enableAutoLayout();
-        graphContainer.getChildren().add((FxViewPanel)_viewer.getDefaultView());
+        _viewer.enableAutoLayout(new HierarchicalLayout());
+
+        viewPanel = (FxDefaultView) _viewer.getDefaultView();
+        viewPanel.setFocusTraversable(true);
+        viewPanel.setMaxHeight(357);
+        viewPanel.setMinWidth(800);
+        viewPanel.requireFocus();
+        _camera = _viewer.getDefaultView().getCamera();
+        graphContainer.getChildren().add(viewPanel);
+
+
     }
 
     public static void setViewer(FxViewer viewer) {
@@ -98,25 +92,29 @@ public class ViewerPaneController {
     @FXML
     private void zoomInAction(ActionEvent event) {
         Platform.runLater(() -> {
-            Camera camera = _viewer.getDefaultView().getCamera();
-            camera.setViewPercent(Math.max(9.999999747378752E-5D, camera.getViewPercent() * 0.8999999761581421D));
+            _camera.setViewPercent(Math.max(0.0001f,
+                    _camera.getViewPercent() * 0.9f));
         });
     }
 
     @FXML
     private void zoomOutAction(ActionEvent event) {
         Platform.runLater(() -> {
-            Camera camera = _viewer.getDefaultView().getCamera();
-            camera.setViewPercent(camera.getViewPercent() * 1.100000023841858D);
+            _camera.setViewPercent(_camera.getViewPercent() * 1.1f);
+        });
+    }
+
+
+    @FXML
+    private void resetViewAction(ActionEvent event) {
+        Platform.runLater(() -> {
+              _camera.resetView();
         });
     }
 
     @FXML
-    private void resetViewAction(ActionEvent event) {
-/*        SwingUtilities.invokeLater(() -> {
-            Camera camera = _viewer.getDefaultView().getCamera();
-            camera.resetView();
-        });*/
+    void giveGraphFocus(MouseEvent event) {
+        viewPanel.requestFocus();
     }
 
 }
