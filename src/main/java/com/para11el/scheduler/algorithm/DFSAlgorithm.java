@@ -61,7 +61,7 @@ public class DFSAlgorithm extends Algorithm {
 
 	/**
 	 * Recursively builds a potential schedule to the total solution schedule 
-	 * ArrayList<ArrayList<Task>> using a DFS approach
+	 * ArrayList<Task> using a DFS approach
 	 * @param solutionArrayList List of the current scheduled nodes
 	 *
 	 * @author Rebekah Berriman, Tina Chen
@@ -95,31 +95,31 @@ public class DFSAlgorithm extends Algorithm {
 	}
 
 	/**
-	 * Checks if the new solution is a better solution that currently stored.
-	 * Returns a full task schedule solution with the shortest completion time.
-	 * @return an ArrayList<Task> of the optimal solution
+	 * Compares the new solution to the current solution and changes the optimal solution
+	 * to be the schedule with the shortest completion time
+	 * @param solution List of scheduled tasks representing a possible solution
 	 * 
 	 * @author Rebekah Berriman
 	 */
 	@SuppressWarnings("unchecked")
 	private void findOptimal(ArrayList<Task> solution) {
 		if (solution != null) {
-			ArrayList<Task> newSolution = (ArrayList<Task>)solution.clone();
-			
 			int solutionTime = 0; 
+			ArrayList<Task> newSolution = (ArrayList<Task>)solution.clone();
+
 			for (int processor=1; processor <= _processors; processor++) {
-				int possibleSolutionTime = getProcessorFinishTime(newSolution, processor);
+				int solutionFinishTime = getProcessorFinishTime(newSolution, processor);
 				
-				if (possibleSolutionTime > _minimumTime) {
+				if (solutionFinishTime > _minimumTime) {
 					return;
 				}
-				// If the finishTime of one processor is later than another, update the finish time of the task
-				if (solutionTime < possibleSolutionTime) {
-					solutionTime = possibleSolutionTime;
+				// Update latest finish time
+				if (solutionTime < solutionFinishTime) {
+					solutionTime = solutionFinishTime;
 				}
 			}
 
-			// If the solution time is less than or equal to the minimal time, update the _solution
+			// Update minimal time and optimal solution
 			if (_minimumTime >= solutionTime) {
 				_minimumTime = solutionTime;
 				_optimalSolution = newSolution;
@@ -128,9 +128,8 @@ public class DFSAlgorithm extends Algorithm {
 	}
 
 	/**
-	 * Returns the optimal schedule in an arraylist of type Task.
-	 * 
-	 * @return the optimal schedule
+	 * Returns the optimal schedule in an ArrayList of type Task
+	 * @return ArrayList representing the optimal schedule
 	 * 
 	 * @author Rebekah Berriman
 	 */
@@ -139,8 +138,8 @@ public class DFSAlgorithm extends Algorithm {
 	}
 	
 	/**
-	 * Ensures that testing can ensure that the minimum test time is found
-	 * @return int of the finish time of the optimal solution (the earliest time that the tasks can be computed).
+	 * Returns the finish time of the optimal solution
+	 * @return int of the finish time 
 	 * 
 	 * @author Rebekah Berriman
 	 */
