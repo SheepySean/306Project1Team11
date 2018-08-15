@@ -1,3 +1,4 @@
+/*
 package com.para11el.scheduler.algorithm.test;
 
 import static org.junit.Assert.assertEquals;
@@ -11,21 +12,25 @@ import org.junit.Test;
 import com.para11el.scheduler.algorithm.SolutionSpaceManager;
 import com.para11el.scheduler.algorithm.Task;
 
+*/
 /**
  * Junit test to test the validity of our Solution.
  * 
  * @author Jessica Alcantara
  *
- */
+ *//*
+
 public class SolutionValidityTest {
 	
 	private SolutionSpaceManager _ssManager;
 	
-	/**
+	*/
+/**
 	 * Unit test for the correct schedule order of a single entry multiple exit graph
 	 * with one processor.
 	 * @author Jessica Alcantara
-	 */
+	 *//*
+
 	@Test
 	public void testSingleEntryProcessorOrder() {
 		_ssManager = new SolutionSpaceManager(
@@ -44,11 +49,13 @@ public class SolutionValidityTest {
 		assertTrue(isBefore(solution.get("c"), solution.get("d")));
 	}
 	
-	/**
+	*/
+/**
 	 * Unit test for the optimality of a single entry multiple exit graph
 	 * with one processor.
 	 * @author Jessica Alcantara
-	 */
+	 *//*
+
 	@Test
 	public void testSingleEntryProcessorOptimality() {
 		_ssManager = new SolutionSpaceManager(
@@ -69,11 +76,13 @@ public class SolutionValidityTest {
 		assertEquals(latestFinish,9);
 	}
 	
-	/**
+	*/
+/**
 	 * Unit test for no overlap in the schedule of a single exit multiple entry graph
 	 * with one processor.
 	 * @author Jessica Alcantara
-	 */
+	 *//*
+
 	@Test
 	public void testSingleExitProcessorOverlap() {
 		_ssManager = new SolutionSpaceManager(
@@ -84,11 +93,13 @@ public class SolutionValidityTest {
 		assertTrue(noSingleProcessorOverlap(solution));
 	}
 	
-	/**
+	*/
+/**
 	 * Unit test for the correct schedule order of a single exit multiple entry graph
 	 * with one processor.
 	 * @author Jessica Alcantara
-	 */
+	 *//*
+
 	@Test
 	public void testSingleExitProcessorOrder() {
 		_ssManager = new SolutionSpaceManager(
@@ -105,11 +116,13 @@ public class SolutionValidityTest {
 		assertTrue(isBefore(solution.get("b"), solution.get("c")));
 	}
 	
-	/**
+	*/
+/**
 	 * Unit test for the optimality of a single exit multiple entry graph
 	 * with one processor.
 	 * @author Jessica Alcantara
-	 */
+	 *//*
+
 	@Test
 	public void testSingleExitProcessorOptimality() {
 		_ssManager = new SolutionSpaceManager(
@@ -129,13 +142,15 @@ public class SolutionValidityTest {
 		assertEquals(latestFinish,9);
 	}
 	
-	/**
+	*/
+/**
 	 * Compares order of tasks
 	 * @param taskA start time of taskA
 	 * @param taskB start time of taskB
 	 * @return Boolean true taskA starts before taskB
 	 * @author Jessica Alcantara
-	 */
+	 *//*
+
 	private Boolean isBefore(int taskA, int taskB) {	
 		if (taskA < taskB) {
 			return true;
@@ -145,12 +160,14 @@ public class SolutionValidityTest {
 	}
 	
 	
-	/**
+	*/
+/**
 	 * Checks if tasks times overlap
 	 * @param schedule list representing a schedule
 	 * @return Boolean true if no task time overlap
 	 * @author Jessica Alcantara
-	 */
+	 *//*
+
 	private Boolean noSingleProcessorOverlap(ArrayList<Task> schedule) {
 		TreeMap<Integer,Integer> taskTimes = new TreeMap<Integer,Integer>();
 		
@@ -176,3 +193,4 @@ public class SolutionValidityTest {
 	}
 
 }
+*/

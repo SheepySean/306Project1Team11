@@ -8,6 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
+import org.graphstream.ui.geom.Point3;
 import org.graphstream.ui.layout.HierarchicalLayout;
 import org.graphstream.ui.view.camera.Camera;
 
@@ -84,14 +85,14 @@ public class ViewerPaneController {
     private void zoomInAction(ActionEvent event) {
         Platform.runLater(() -> {
             _camera.setViewPercent(Math.max(0.0001f,
-                    _camera.getViewPercent() * 0.9f));
+                    _camera.getViewPercent() * 0.7f));
         });
     }
 
     @FXML
     private void zoomOutAction(ActionEvent event) {
         Platform.runLater(() -> {
-            _camera.setViewPercent(_camera.getViewPercent() * 1.1f);
+            _camera.setViewPercent(_camera.getViewPercent() * 1.3f);
         });
     }
 
@@ -104,9 +105,53 @@ public class ViewerPaneController {
     }
 
     @FXML
+    private void panUpAction(ActionEvent event) {
+        Platform.runLater(() -> {
+            double delta = calculateDelta();
+
+            Point3 p = _camera.getViewCenter();
+            _camera.setViewCenter(p.x, p.y + delta, 0);
+        });
+    }
+
+
+    @FXML
+    private void panDownAction(ActionEvent event) {
+        Platform.runLater(() -> {
+            double delta = calculateDelta();
+
+            Point3 p = _camera.getViewCenter();
+            _camera.setViewCenter(p.x, p.y - delta, 0);
+        });
+    }
+
+    @FXML
+    private void panRightAction(ActionEvent event) {
+        Platform.runLater(() -> {
+            double delta = calculateDelta();
+
+            Point3 p = _camera.getViewCenter();
+            _camera.setViewCenter(p.x + delta, p.y, 0);
+        });
+    }
+
+    @FXML
+    private void panLeftAction(ActionEvent event) {
+        Platform.runLater(() -> {
+            double delta = calculateDelta();
+
+            Point3 p = _camera.getViewCenter();
+            _camera.setViewCenter(p.x - delta, p.y, 0);
+        });
+    }
+
+    @FXML
     void giveGraphFocus(MouseEvent event) {
         viewPanel.requestFocus();
     }
 
+    private double calculateDelta() {
+        return  _camera.getViewPercent() * _camera.getGraphDimension() * 0.1f;
+    }
 }
 

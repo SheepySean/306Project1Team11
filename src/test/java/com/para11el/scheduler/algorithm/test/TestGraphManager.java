@@ -1,19 +1,24 @@
+/*
 package com.para11el.scheduler.algorithm.test;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
 
+*/
 /**
  * Manager class that creates example Graph objects for testing.
  *
  * @author Jessica Alcantara
- */
+ *//*
+
 public class TestGraphManager {
 	
-	/**
+	*/
+/**
 	 * Create example graph with a single exit and exit.
 	 * @author Jessica Alcantara
-	 */
+	 *//*
+
 	public Graph createSingleEntrySingleExit() {
 		Graph graph = new SingleGraph("Single");
 		graph.addNode("a").addAttribute("Weight", 2);
@@ -31,10 +36,12 @@ public class TestGraphManager {
 		return graph;
 	}
 	
-	/**
+	*/
+/**
 	 * Create example graph with a single entry and multiple exits.
 	 * @author Jessica Alcantara
-	 */
+	 *//*
+
 	public Graph createSingleEntryMultipleExit() {
 		Graph graph = new SingleGraph("Single Entry");
 		graph.addNode("a").addAttribute("Weight", 2);
@@ -55,10 +62,12 @@ public class TestGraphManager {
 		return graph;
 	}
 	
-	/**
+	*/
+/**
 	 * Create example graph with a single exit and multiple entries.
 	 * @author Jessica Alcantara
-	 */
+	 *//*
+
 	public Graph createSingleExitMultipleEntry() {
 		Graph graph = new SingleGraph("Single Exit");
 		graph.addNode("a").addAttribute("Weight", 2);
@@ -75,3 +84,4 @@ public class TestGraphManager {
 	}
 
 }
+*/

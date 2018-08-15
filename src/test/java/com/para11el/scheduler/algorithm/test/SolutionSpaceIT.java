@@ -1,3 +1,4 @@
+/*
 package com.para11el.scheduler.algorithm.test;
 
 import static org.junit.Assert.*;
@@ -12,12 +13,14 @@ import org.junit.*;
 import com.para11el.scheduler.algorithm.SolutionSpaceManager;
 import com.para11el.scheduler.algorithm.Task;
 
+*/
 /**
  * Junit test to test the behaviour of the SolutionSpaceManager.
  * 
  * @author Holly Hagenson
  *
- */
+ *//*
+
 public class SolutionSpaceIT {
 	private SolutionSpaceManager _ssManager; 
 	private static Graph _graph1;
@@ -27,17 +30,21 @@ public class SolutionSpaceIT {
 	private int _processors;
 	private ArrayList<Task> _tasks = new ArrayList<Task>();
 	
-	/**
+	*/
+/**
 	 * Create multiple graphs to test output.
-	 */
+	 *//*
+
 	@BeforeClass
 	public static void initialise(){
 		createGraphs();
 	}
 	
-	/**
+	*/
+/**
 	 * Test output is correct for multiple processors being utilised.
-	 */
+	 *//*
+
 	@Test
 	public void testMultipleProcessors(){		
 		_processors = 2; 
@@ -70,9 +77,11 @@ public class SolutionSpaceIT {
 		
 	}
 	
-	/**
+	*/
+/**
 	 * Test output is correct for graph with multiple entry nodes.
-	 */
+	 *//*
+
 	@Test
 	public void testMultipleEntryNodes(){
 		_processors = 1;
@@ -97,9 +106,11 @@ public class SolutionSpaceIT {
 		}
 	}
 	
-	/**
+	*/
+/**
 	 * Test output is correct for graph with multiple exit nodes.
-	 */
+	 *//*
+
 	@Test
 	public void testMultipleExitNodes(){
 		
@@ -204,3 +215,4 @@ public class SolutionSpaceIT {
 	}
 
 }
+*/

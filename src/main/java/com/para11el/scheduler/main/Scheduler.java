@@ -11,6 +11,7 @@ import com.para11el.scheduler.ui.ViewerPaneController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
 import org.graphstream.stream.ProxyPipe;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Iterator;
 
 
 /**
@@ -101,7 +103,7 @@ public class Scheduler {
 		//Create the SolutionSpace
 		SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
 		solutionSpaceManager.initialise();
-		
+
 		//Get the graph labeled with the optimal solution
 		Graph newGraph = solutionSpaceManager.getGraph();
 		
