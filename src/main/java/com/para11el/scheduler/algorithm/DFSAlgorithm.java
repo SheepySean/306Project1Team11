@@ -26,6 +26,11 @@ public class DFSAlgorithm extends Algorithm {
 	public DFSAlgorithm(Graph graph, int processor, int cores) {
 		super(graph, processor, cores);
 	}
+	
+	public ArrayList<Task> buildSolution() {
+		initialise();
+		return _optimalSolution;
+	}
 
 	/**
 	 * Initialises the root nodes in a schedule for each available processor

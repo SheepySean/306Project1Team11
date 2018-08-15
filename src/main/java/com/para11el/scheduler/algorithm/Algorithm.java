@@ -47,6 +47,8 @@ public abstract class Algorithm {
 		_processors = processor;
 		_cores = cores;
 	}
+	
+	public abstract ArrayList<Task> buildSolution();
 
 	/**
 	 * Returns and labels the graph with the startTime and processor numbers of each of the
@@ -124,26 +126,6 @@ public abstract class Algorithm {
 					finishTime = processorFinish;
 				}
 			}	
-		}
-		return finishTime;
-	}
-	
-	/**
-	 * Return the latest finish time of a schedule
-	 * @param schedule ArrayList of scheduled tasks
-	 * @return int of the latest finish time
-	 * 
-	 * @author Jessica Alcantara
-	 */
-	public int getScheduleFinishTime(ArrayList<Task> schedule) {
-		int finishTime = 0;
-		int taskFinish;
-		
-		for (Task task : schedule)  {
-			taskFinish = task.getFinishTime();
-			if (taskFinish > finishTime) {
-				finishTime = taskFinish;
-			}
 		}
 		return finishTime;
 	}
