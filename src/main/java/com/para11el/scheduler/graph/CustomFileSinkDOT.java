@@ -165,15 +165,17 @@ public class CustomFileSinkDOT extends FileSinkDOT {
             AtomicBoolean first = new AtomicBoolean(true);
             int count = 0;
             for(String key : keys) {
-                if(count > 0) {
-                    first.set(false);
+                if(!GraphViewManager.ATTR_EXCLUDES.contains(key)) {
+                    if (count > 0) {
+                        first.set(false);
+                    }
+                    Object value = e.getAttribute(key);
+                    if (value instanceof Number) {
+                        value = ((Number) value).intValue(); // Write a number as an int
+                    }
+                    count++;
+                    buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", key, value));
                 }
-                Object value = e.getAttribute(key);
-                if (value instanceof Number) {
-                    value = ((Number) value).intValue(); // Write a number as an int
-                }
-                count++;
-                buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", key, value));
             }
             return buffer.append(']').toString();
         }
