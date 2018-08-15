@@ -38,7 +38,7 @@ public class DFSAlgorithm extends Algorithm {
 	 * 
 	 * @author Rebekah Berriman, Tina Chen
 	 */
-	public void initialise() {
+	private void initialise() {
 		setMaximumTime();
 
 		_graph.nodes().forEach((node) -> {
