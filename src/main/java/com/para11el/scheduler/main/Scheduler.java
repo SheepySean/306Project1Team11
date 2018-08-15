@@ -14,6 +14,7 @@ import javafx.concurrent.Task;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
 import org.graphstream.stream.ProxyPipe;
+import org.graphstream.stream.Source;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
 import org.graphstream.ui.view.View;
@@ -84,9 +85,11 @@ public class Scheduler {
 
 			// For viewing the Graph
 			GraphicGraph viewGraph = viewer.getGraphicGraph();
+			System.out.println(viewGraph);
 			viewGraph.setAttribute("ui.stylesheet", "url('file://C:\\Users\\seano\\Documents\\Uni\\SOFTENG 306\\Project 1\\306Project1Team11\\src\\main\\resources\\css\\graph.css')");
-			GraphViewManager viewManager = new GraphViewManager(viewGraph);
+			GraphViewManager viewManager = new GraphViewManager(_inGraph);
 			viewManager.labelGraph();
+            //_inGraph.getNode("0").setAttribute("ui.class", "some");
         }
 
 		//Create the SolutionSpace

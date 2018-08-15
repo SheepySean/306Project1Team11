@@ -66,8 +66,6 @@ public class GraphResourceIT {
             _viewManager = new GraphViewManager(g);
             _viewManager.labelGraph();
             assertTrue(g.getNode(0).hasAttribute("ui.label"));
-            _viewManager.unlabelGraph();
-            assertFalse(g.getNode(0).hasAttribute("ui.label"));
         } catch (Exception e) {
 	        e.printStackTrace();
 	        fail();
