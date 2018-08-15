@@ -1,7 +1,8 @@
 package com.para11el.scheduler.main;
 
 
-import com.para11el.scheduler.algorithm.SolutionSpaceManager;
+import com.para11el.scheduler.algorithm.AStarAlgorithm;
+import com.para11el.scheduler.algorithm.DFSAlgorithm;
 
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
@@ -83,8 +84,12 @@ public class Scheduler {
 		SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
 		solutionSpaceManager.initialise();
 		
+		//AStarAlgorithm astar = new AStarAlgorithm(_inGraph, _scheduleProcessors);
+		//ArrayList<Task> solution = astar.buildSolution(); 
+		
 		//Get the graph labeled with the optimal solution
 		Graph newGraph = solutionSpaceManager.getGraph();
+		//Graph newGraph = astar.getGraph(solution);*/
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);

@@ -10,16 +10,18 @@ import org.graphstream.graph.implementations.SingleGraph;
  */
 public class TestGraphManager {
 	
+	public TestGraphManager() {}
+	
 	/**
 	 * Create example graph with a single exit and exit.
 	 * @author Jessica Alcantara
 	 */
 	public Graph createSingleEntrySingleExit() {
 		Graph graph = new SingleGraph("Single");
-		graph.addNode("a").addAttribute("Weight", 2);
-		graph.addNode("b").addAttribute("Weight", 1);
-		graph.addNode("c").addAttribute("Weight", 1); 
-		graph.addNode("d").addAttribute("Weight", 2);
+		graph.addNode("a").setAttribute("Weight", 2);
+		graph.addNode("b").setAttribute("Weight", 1);
+		graph.addNode("c").setAttribute("Weight", 1); 
+		graph.addNode("d").setAttribute("Weight", 2);
 		graph.addEdge("a -> b", "a", "b", true)
 		.setAttribute("Weight", 4);
 		graph.addEdge("a -> c", "a", "c", true)
@@ -37,11 +39,11 @@ public class TestGraphManager {
 	 */
 	public Graph createSingleEntryMultipleExit() {
 		Graph graph = new SingleGraph("Single Entry");
-		graph.addNode("a").addAttribute("Weight", 2);
-		graph.addNode("b").addAttribute("Weight", 1);
-		graph.addNode("c").addAttribute("Weight", 3); 
-		graph.addNode("d").addAttribute("Weight", 2);
-		graph.addNode("e").addAttribute("Weight", 1);
+		graph.addNode("a").setAttribute("Weight", 2);
+		graph.addNode("b").setAttribute("Weight", 1);
+		graph.addNode("c").setAttribute("Weight", 3); 
+		graph.addNode("d").setAttribute("Weight", 2);
+		graph.addNode("e").setAttribute("Weight", 1);
 		graph.addEdge("a -> b", "a", "b", true)
 		.setAttribute("Weight", 4);
 		graph.addEdge("b -> c", "b", "c", true)
@@ -61,10 +63,10 @@ public class TestGraphManager {
 	 */
 	public Graph createSingleExitMultipleEntry() {
 		Graph graph = new SingleGraph("Single Exit");
-		graph.addNode("a").addAttribute("Weight", 2);
-		graph.addNode("b").addAttribute("Weight", 1);
-		graph.addNode("c").addAttribute("Weight", 4); 
-		graph.addNode("d").addAttribute("Weight", 2);
+		graph.addNode("a").setAttribute("Weight", 2);
+		graph.addNode("b").setAttribute("Weight", 1);
+		graph.addNode("c").setAttribute("Weight", 4); 
+		graph.addNode("d").setAttribute("Weight", 2);
 		graph.addEdge("a -> c", "a", "c", true)
 		.setAttribute("Weight", 2);
 		graph.addEdge("a -> d", "a", "d", true)

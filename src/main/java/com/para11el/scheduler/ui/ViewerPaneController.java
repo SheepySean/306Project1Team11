@@ -9,6 +9,15 @@ import javafx.scene.layout.AnchorPane;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.layout.HierarchicalLayout;
+import org.graphstream.ui.javafx.FxGraphRenderer;
+import org.graphstream.ui.layout.Layout;
+import org.graphstream.ui.layout.springbox.implementations.LinLog;
+import org.graphstream.ui.layout.springbox.implementations.SpringBox;
+/*import org.graphstream.ui.swingViewer.DefaultView;
+import org.graphstream.ui.swingViewer.ViewPanel;
+import org.graphstream.ui.view.Camera;*/
+import org.graphstream.ui.view.View;
+import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.camera.Camera;
 
 

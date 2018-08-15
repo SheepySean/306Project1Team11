@@ -8,7 +8,8 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 import org.junit.Test;
 
-import com.para11el.scheduler.algorithm.SolutionSpaceManager;
+import com.para11el.scheduler.algorithm.DFSAlgorithm;
+import com.para11el.scheduler.algorithm.test.TestGraphManager;
 import com.para11el.scheduler.algorithm.Task;
 
 /**
@@ -17,9 +18,26 @@ import com.para11el.scheduler.algorithm.Task;
  * @author Jessica Alcantara
  *
  */
-public class SolutionValidityTest {
+public class SolutionValidity {
+	//TODO: find out why test class works locally but not on remote build
 	
-	private SolutionSpaceManager _ssManager;
+	private DFSAlgorithm _ssManager;
+	
+	/**
+	 * Unit test for no overlap in the schedule of a single entry multiple exit graph
+	 * with one processor.
+	 * @author Jessica Alcantara
+	 */
+	@Test
+	public void testSingleEntryProcessorOverlap() {
+		System.out.println("Single Entry Overlap Test:");
+		_ssManager = new DFSAlgorithm(
+				new TestGraphManager().createSingleEntryMultipleExit(),1);
+		_ssManager.initialise();
+		ArrayList<Task> solution = _ssManager.getOptimal();
+		
+		assertTrue(noSingleProcessorOverlap(solution));
+	}
 	
 	/**
 	 * Unit test for the correct schedule order of a single entry multiple exit graph
@@ -28,12 +46,14 @@ public class SolutionValidityTest {
 	 */
 	@Test
 	public void testSingleEntryProcessorOrder() {
-		_ssManager = new SolutionSpaceManager(
+		System.out.println("Single Entry Order Test:");
+		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
 		_ssManager.initialise();
 		TreeMap<String,Integer> solution = new TreeMap<String,Integer>();
 		
 		for (Task t : _ssManager.getOptimal()) {
+			System.out.println(t.getNode().getId());
 			solution.put(t.getNode().getId(), t.getStartTime());
 		}
 		
@@ -51,7 +71,7 @@ public class SolutionValidityTest {
 	 */
 	@Test
 	public void testSingleEntryProcessorOptimality() {
-		_ssManager = new SolutionSpaceManager(
+		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
 		_ssManager.initialise();
 		ArrayList<Task> schedule = _ssManager.getOptimal();
@@ -59,7 +79,7 @@ public class SolutionValidityTest {
 		
 		for (Task task : schedule) {
 			int startTime = task.getStartTime();
-			int finishTime = (int) task.getNode().getAttribute("Weight")
+			int finishTime = ((Number) task.getNode().getAttribute("Weight")).intValue()
 					+ startTime;
 			if (finishTime > latestFinish) {
 				latestFinish = finishTime;
@@ -76,8 +96,9 @@ public class SolutionValidityTest {
 	 */
 	@Test
 	public void testSingleExitProcessorOverlap() {
-		_ssManager = new SolutionSpaceManager(
-				new TestGraphManager().createSingleEntryMultipleExit(),1);
+		System.out.println("Single Exit Overlap Test:");
+		_ssManager = new DFSAlgorithm(
+				new TestGraphManager().createSingleExitMultipleEntry(),1);
 		_ssManager.initialise();
 		ArrayList<Task> solution = _ssManager.getOptimal();
 		
@@ -91,12 +112,14 @@ public class SolutionValidityTest {
 	 */
 	@Test
 	public void testSingleExitProcessorOrder() {
-		_ssManager = new SolutionSpaceManager(
-				new TestGraphManager().createSingleEntryMultipleExit(),1);
+		System.out.println("Single Exit Order Test:");
+		_ssManager = new DFSAlgorithm(
+				new TestGraphManager().createSingleExitMultipleEntry(),1);
 		_ssManager.initialise();
 		TreeMap<String,Integer> solution = new TreeMap<String,Integer>();
 		
 		for (Task t : _ssManager.getOptimal()) {
+			System.out.println(t.getNode().getId());
 			solution.put(t.getNode().getId(), t.getStartTime());
 		}
 		
@@ -112,15 +135,15 @@ public class SolutionValidityTest {
 	 */
 	@Test
 	public void testSingleExitProcessorOptimality() {
-		_ssManager = new SolutionSpaceManager(
-				new TestGraphManager().createSingleEntryMultipleExit(),1);
+		_ssManager = new DFSAlgorithm(
+				new TestGraphManager().createSingleExitMultipleEntry(),1);
 		_ssManager.initialise();
 		ArrayList<Task> solution = _ssManager.getOptimal();
 		int latestFinish = 0;
 		
 		for (Task task : solution) {
 			int startTime = task.getStartTime();
-			int finishTime = (int) task.getNode().getAttribute("Weight")
+			int finishTime = ((Number) task.getNode().getAttribute("Weight")).intValue()
 					+ startTime;
 			if (finishTime > latestFinish) {
 				latestFinish = finishTime;
@@ -156,7 +179,7 @@ public class SolutionValidityTest {
 		
 		for (Task task : schedule) {
 			int startTime = task.getStartTime();
-			int finishTime = (int) task.getNode().getAttribute("Weight")
+			int finishTime = ((Number) task.getNode().getAttribute("Weight")).intValue()
 					+ startTime;
 			taskTimes.put(startTime, finishTime);
 		}
@@ -165,6 +188,7 @@ public class SolutionValidityTest {
 		int finish = 0;
 		
 		for (Entry<Integer, Integer> e : taskTimes.entrySet()) {
+			System.out.println(e.getKey() + " " + e.getValue());
 			if (e.getKey() < finish && e.getKey() > start) {
 				return false;
 			}
