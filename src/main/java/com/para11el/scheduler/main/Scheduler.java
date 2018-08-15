@@ -8,6 +8,9 @@ import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
 import com.para11el.scheduler.ui.Viewer;
 import com.para11el.scheduler.ui.ViewerPaneController;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
 import org.graphstream.stream.ProxyPipe;
@@ -37,8 +40,8 @@ public class Scheduler {
 	 * @param args Command line arguments
 	 */
 	public static void main(String[] args) {
-        System.setProperty("org.graphstream.ui", "javafx");
-		//System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.javafx.FxGraphRenderer");
+        System.setProperty("org.graphstream.ui", "javafx"); // Use JavaFx for GUI
+
 		// Read the parameters provided on the command line
 		try {
             readParameters(args);
@@ -69,22 +72,25 @@ public class Scheduler {
 			System.out.println("Cannot find the specified input file '" + _filename + "'");
 			return;
 		}
-		
-/*		//Create the SolutionSpace
+
+        if(_visualise) { // Start the GUI on an another thread
+            new Thread(() -> {
+                ViewerPaneController.setViewer(new FxViewer(_inGraph, FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD));
+                Application.launch(Viewer.class, args);
+            }).start();
+
+		//Create the SolutionSpace
 		SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
 		solutionSpaceManager.initialise();
 		
 		//Get the graph labeled with the optimal solution
-		Graph newGraph = solutionSpaceManager.getGraph();*/
+		Graph newGraph = solutionSpaceManager.getGraph();
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
 /*		viewManager.labelGraph();
 		viewManager.unlabelGraph();*/
-		if(_visualise) {
-		    ViewerPaneController.setViewer(new FxViewer(_inGraph, org.graphstream.ui.view.Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD));
-			Viewer.main(null);
-			//view.getCamera().setViewCenter(0, 0,0);
+
 
         }
 		// Name the file if no specific output name was provided
@@ -93,6 +99,7 @@ public class Scheduler {
 					+ "-output" + GraphConstants.FILE_EXT.getValue();
 		}
 		// Write the output file
+
 		try {
 			fileManager.writeGraphFile(_outputFilename,
 					_inGraph, true);
@@ -100,6 +107,8 @@ public class Scheduler {
 		} catch(IOException e) {
 			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
 		}
+
+		return;
 	}
 
 	/**
