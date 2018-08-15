@@ -1,5 +1,6 @@
 package com.para11el.scheduler.algorithm;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.graphstream.graph.Node;
 
 /**
@@ -107,10 +108,10 @@ public class Task {
 	  */
 	@Override
 	public int hashCode() {
-		int result = 17;
-		result = 31*result + _startTime;
-		result = 31*result + _node.getId().hashCode();
-		return result;
+		return new HashCodeBuilder(17, 31). 
+	            append(_startTime).
+	            append(_node.getId().hashCode()).
+	            toHashCode();
 	}
 	
 	/**
