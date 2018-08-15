@@ -83,6 +83,7 @@ public class Scheduler {
                 ViewerPaneController.setViewer(new FxViewer(_inGraph, FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD));
                 Application.launch(Viewer.class, args);
             }).start();
+        }
 
 		//Create the SolutionSpace
 		//SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
@@ -100,11 +101,9 @@ public class Scheduler {
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
-/*		viewManager.labelGraph();
-		viewManager.unlabelGraph();*/
+		viewManager.labelGraph();
 
 
-        }
 		// Name the file if no specific output name was provided
 		if(_outputFilename == null) {
 			_outputFilename = removeFileExt(_filename)
