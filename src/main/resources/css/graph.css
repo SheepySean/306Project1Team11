@@ -1,0 +1,18 @@
+graph { fill-color: gray; }
+
+
+node {
+	text-alignment: above;
+	text-color: white;
+	text-style: bold;
+	text-background-mode: rounded-box;
+	text-background-color: #222C;
+	text-padding: 10px, 4px;
+	text-offset: 20px, 0px;
+}
+
+node#C {text-alignment:above; text-offset: 0px, -5px;}
+
+node.some {
+	stroke-color: green;
+}
