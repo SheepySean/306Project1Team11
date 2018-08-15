@@ -6,11 +6,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.geom.Point3;
+import org.graphstream.ui.layout.Eades84Layout;
 import org.graphstream.ui.layout.HierarchicalLayout;
+import org.graphstream.ui.layout.springbox.implementations.LinLog;
+import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.camera.Camera;
+
+import java.util.List;
 
 
 public class ViewerPaneController {
@@ -18,8 +24,26 @@ public class ViewerPaneController {
     private static Camera _camera;
     private FxDefaultView viewPanel;
 
+    private static String _inputFile;
+    private static String _outputFile;
+    private static String _processors;
+    private static String _cores;
+
     @FXML
     private AnchorPane graphContainer;
+
+
+    @FXML
+    private Text inputFileText;
+
+    @FXML
+    private Text processorsText;
+
+    @FXML
+    private Text coresText;
+
+    @FXML
+    private Text outputFileText;
 
     /**
      * Initialize some of the GUI's components to initial states
@@ -38,7 +62,7 @@ public class ViewerPaneController {
         //createAndSetSwingContent(inGraph, graphPanel);
 
         _viewer.addDefaultView(false, _viewer.newDefaultGraphRenderer());
-        _viewer.enableAutoLayout(new HierarchicalLayout());
+        _viewer.enableAutoLayout();
 
         viewPanel = (FxDefaultView) _viewer.getDefaultView();
         viewPanel.setFocusTraversable(true);
@@ -47,6 +71,11 @@ public class ViewerPaneController {
         viewPanel.requireFocus();
         _camera = _viewer.getDefaultView().getCamera();
         graphContainer.getChildren().add(viewPanel);
+
+        inputFileText.setText(_inputFile);
+        coresText.setText(_cores);
+        processorsText.setText(_processors);
+        outputFileText.setText(_outputFile);
 
 
     }
@@ -146,8 +175,38 @@ public class ViewerPaneController {
     }
 
     @FXML
+    void setHierarchicalLayout(ActionEvent event) {
+        _viewer.disableAutoLayout();
+        _viewer.enableAutoLayout(new HierarchicalLayout());
+    }
+
+    @FXML
+    void setLinLogLayout(ActionEvent event) {
+        _viewer.disableAutoLayout();
+        _viewer.enableAutoLayout(new LinLog());
+    }
+
+    @FXML
+    void setSpringBoxLayout(ActionEvent event) {
+        _viewer.disableAutoLayout();
+        _viewer.enableAutoLayout(new SpringBox());
+    }
+
+    @FXML
     void giveGraphFocus(MouseEvent event) {
         viewPanel.requestFocus();
+    }
+
+    public static void setParameters(List<String> parameters) {
+        _inputFile = parameters.get(0);
+        _processors = parameters.get(1);
+        if(parameters.get(2).equals("0")) {
+            _cores = "Not Set";
+        } else {
+            _cores = parameters.get(2);
+        }
+        _outputFile = parameters.get(3);
+
     }
 
     private double calculateDelta() {
