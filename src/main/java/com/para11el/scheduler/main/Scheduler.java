@@ -26,6 +26,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.logging.LogManager;
 
 
 /**
@@ -49,6 +50,7 @@ public class Scheduler {
         System.setProperty("org.graphstream.ui", "javafx"); // Use JavaFx for GUI
 		System.setProperty("gs.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
+        LogManager.getLogManager().reset();
 		// Read the parameters provided on the command line
 		try {
             readParameters(args);
@@ -65,7 +67,7 @@ public class Scheduler {
 		}
 
 		// Get just the name of the graph file, removing dir paths and extensions
-		String trueFileName = removeFileExt(Paths.get(_filename).getFileName().toString());
+		String trueFileName = removeFileExt(getFilenameNoDirectory(_filename));
 		// Name the graph "outputFilename"
 		String graphName = "output" + StringUtils.capitalize(trueFileName);
 
@@ -80,12 +82,24 @@ public class Scheduler {
 			return;
 		}
 
+		// Name the file if no specific output name was provided
+		if(_outputFilename == null) {
+			_outputFilename = removeFileExt(_filename)
+					+ "-output" + GraphConstants.FILE_EXT.getValue();
+		}
+
+		String[] guiArgs = {
+				getFilenameNoDirectory(_filename),
+				Integer.toString(_scheduleProcessors),
+				Integer.toString(_numCores),
+				getFilenameNoDirectory(_outputFilename)};
+
         if(_visualise) { // Start the GUI on an another thread
 
 			FxViewer viewer = new FxViewer(_inGraph, FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 			ViewerPaneController.setViewer(viewer);
             new Thread(() -> {
-                Application.launch(Viewer.class, args);
+                Application.launch(Viewer.class, guiArgs);
             }).start();
 
 
@@ -110,11 +124,7 @@ public class Scheduler {
 
 
 
-		// Name the file if no specific output name was provided
-		if(_outputFilename == null) {
-			_outputFilename = removeFileExt(_filename)
-					+ "-output" + GraphConstants.FILE_EXT.getValue();
-		}
+
 		// Write the output file
 
 		try {
@@ -178,4 +188,9 @@ public class Scheduler {
 	        return filename;
         }
     }
+
+    private static String getFilenameNoDirectory(String path) {
+		return Paths.get(path).getFileName().toString();
+	}
+
 }
