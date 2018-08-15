@@ -19,7 +19,10 @@ import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
 import org.graphstream.ui.view.View;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.nio.file.Paths;
 
 
@@ -42,6 +45,7 @@ public class Scheduler {
 	 */
 	public static void main(String[] args) {
         System.setProperty("org.graphstream.ui", "javafx"); // Use JavaFx for GUI
+		System.setProperty("gs.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
 		// Read the parameters provided on the command line
 		try {
@@ -85,8 +89,10 @@ public class Scheduler {
 
 			// For viewing the Graph
 			GraphicGraph viewGraph = viewer.getGraphicGraph();
-			System.out.println(viewGraph);
-			viewGraph.setAttribute("ui.stylesheet", "url('file://C:\\Users\\seano\\Documents\\Uni\\SOFTENG 306\\Project 1\\306Project1Team11\\src\\main\\resources\\css\\graph.css')");
+			// Get css for decorating the graph
+			URL url = Scheduler.class.getResource("/css/graph.css");
+			// Add the css
+			viewGraph.setAttribute("ui.stylesheet", "url('" + url + "')");
 			GraphViewManager viewManager = new GraphViewManager(_inGraph);
 			viewManager.labelGraph();
             //_inGraph.getNode("0").setAttribute("ui.class", "some");
