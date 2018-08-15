@@ -74,10 +74,19 @@ public class Scheduler {
 		}
 
         if(_visualise) { // Start the GUI on an another thread
+
+			FxViewer viewer = new FxViewer(_inGraph, FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+			ViewerPaneController.setViewer(viewer);
             new Thread(() -> {
-                ViewerPaneController.setViewer(new FxViewer(_inGraph, FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD));
                 Application.launch(Viewer.class, args);
             }).start();
+
+
+			// For viewing the Graph
+			GraphicGraph viewGraph = viewer.getGraphicGraph();
+			viewGraph.setAttribute("ui.stylesheet", "url('file://C:\\Users\\seano\\Documents\\Uni\\SOFTENG 306\\Project 1\\306Project1Team11\\src\\main\\resources\\css\\graph.css')");
+			GraphViewManager viewManager = new GraphViewManager(viewGraph);
+			viewManager.labelGraph();
         }
 
 		//Create the SolutionSpace
@@ -87,10 +96,7 @@ public class Scheduler {
 		//Get the graph labeled with the optimal solution
 		Graph newGraph = solutionSpaceManager.getGraph();
 		
-		// For viewing the Graph
-		GraphViewManager viewManager = new GraphViewManager(_inGraph);
-/*		viewManager.labelGraph();
-		viewManager.unlabelGraph();*/
+
 
 
 		// Name the file if no specific output name was provided
