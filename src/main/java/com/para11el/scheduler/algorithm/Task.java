@@ -15,10 +15,9 @@ public class Task {
 	
 	/**
 	 * Task constructor
-	 * 
-	 * @param node a task in input graph
-	 * @param startTime the start time of a scheduled task
-	 * @param processor the processor a task is scheduled on
+	 * @param node Node task in input graph
+	 * @param startTime Start time of a scheduled task
+	 * @param processor Processor a task is scheduled on
 	 * 
 	 * @author Tina Chen, Rebekah Berriman
 	 */
@@ -53,8 +52,8 @@ public class Task {
 	}
 	
 	/**
-	 * Returns the weight of a task.
-	 * @return weight of task
+	 * Returns the weight of a task
+	 * @return Weight of task
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -64,8 +63,8 @@ public class Task {
 	}
 	
 	/**
-	 * Returns the finish time of a task.
-	 * @return finishTime of task
+	 * Returns the finish time of a task
+	 * @return Finish time of task
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -77,6 +76,7 @@ public class Task {
 	
 	/**
 	 * Returns a string representation of a Task object
+	 * @return String representing task object
 	 * 
 	 * @author Tina Chen
 	 */

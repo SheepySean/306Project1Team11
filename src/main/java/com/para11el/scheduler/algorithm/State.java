@@ -21,7 +21,6 @@ public class State {
 	
 	/**
 	 * State constructor
-	 * 
 	 * @param node Node in input graph
 	 * @param parent Parent state
 	 * @param schedule Schedule representing partial solution
@@ -53,12 +52,12 @@ public class State {
 	}
 	
 	public void setCost(int cost) {
-		_cost = cost;
+		this._cost = cost;
 	}
 	
 	/**
 	 * Compares state based on the cost
-	 * @param compareState
+	 * @param compareState State being compared against
 	 * @return int representing ascending order
 	 * 
 	 * @author Jessica Alcantara
@@ -70,9 +69,9 @@ public class State {
 	
 	/**
 	 * Checks that if the state is a complete solution where all input
-	 * tasks are scheduled.
+	 * tasks are scheduled
 	 * @param nodes All nodes of the input graph
-	 * @return boolean true if solution is complete
+	 * @return Boolean true if solution is complete
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -87,7 +86,7 @@ public class State {
 	/**
 	 * Checks whether the node has been scheduled in the solution state
 	 * @param node Node representing a task
-	 * @return boolean true if solution contains the node
+	 * @return Boolean true if solution contains the node
 	 * 
 	 * @author Jessica Alcantara
 	 */
