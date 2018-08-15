@@ -1,16 +1,25 @@
-graph { fill-color: gray; }
+graph { fill-color: white; }
 
 
 node {
+	fill-color: #01233f;
 	text-alignment: above;
 	text-color: white;
 	text-style: bold;
+	text-size: 14px;
 	text-background-mode: rounded-box;
-	text-background-color: #222C;
-	text-padding: 10px, 4px;
+	text-background-color: #26a6bd;
+	text-padding: 10px, 10px;
 	text-offset: 20px, 0px;
 }
 
+edge {
+	fill-color: #139389;
+	text-alignment: above;
+	text-color: #01233f;
+	text-style: bold;
+
+}
 node#C {text-alignment:above; text-offset: 0px, -5px;}
 
 node.some {
