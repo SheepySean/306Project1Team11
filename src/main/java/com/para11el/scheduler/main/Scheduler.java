@@ -11,7 +11,6 @@ import com.para11el.scheduler.ui.Viewer;
 import com.para11el.scheduler.ui.ViewerPaneController;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
 import org.graphstream.stream.ProxyPipe;
@@ -76,7 +75,6 @@ public class Scheduler {
 		}
 		
 		//Create the SolutionSpace
-		DFSAlgorithm DFS
 		//SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
 		//solutionSpaceManager.initialise();
 
