@@ -35,22 +35,26 @@ public class CustomFileSinkDOT extends FileSinkDOT {
         _digraph = digraph;
     }
 
-
+    /**
+     * @see FileSinkDOT#setDirected(boolean)
+     */
     public void setDirected(boolean digraph) {
         this._digraph = digraph;
     }
 
+    /**
+     * @see FileSinkDOT#isDirected()
+     */
     public boolean isDirected() {
         return this._digraph;
     }
 
-    // Changed
+    /**
+     * @see FileSinkDOT#exportGraph(Graph)
+     */
     protected void exportGraph(Graph graph) {
         String graphId = graph.getId();
         AtomicLong timeId = new AtomicLong(0L);
-        graph.attributeKeys().forEach((key) -> {
-            this.graphAttributeAdded(graphId, timeId.getAndIncrement(), key, graph.getAttribute(key));
-        });
         Iterator var5 = graph.iterator();
 
         while(var5.hasNext()) {
@@ -75,82 +79,33 @@ public class CustomFileSinkDOT extends FileSinkDOT {
             this._out.printf(" %s;%n", attr);
         });
     }
-    // Changed
+
+    /**
+     * @see FileSinkDOT#outputHeader()
+     */
     protected void outputHeader() throws IOException {
         this._out = (PrintWriter)this.output;
         _out.printf("%s {%n", _digraph ? "digraph \"" + _graphName +  "\"" : "graph \"" + _graphName +  "\"");
 
     }
 
+    /**
+     * @see FileSinkDOT#outputEndOfFile()
+     */
     protected void outputEndOfFile() throws IOException {
         this._out.printf("}%n");
     }
 
-    public void edgeAttributeAdded(String graphId, long timeId, String edgeId, String attribute, Object value) {
-    }
-
-    public void edgeAttributeChanged(String graphId, long timeId, String edgeId, String attribute, Object oldValue, Object newValue) {
-    }
-
-    public void edgeAttributeRemoved(String graphId, long timeId, String edgeId, String attribute) {
-    }
-
-    public void graphAttributeAdded(String graphId, long timeId, String attribute, Object value) {
-        this._out.printf("\tgraph [ %s ];%n", this.outputAttribute(attribute, value, true));
-    }
-
-    public void graphAttributeChanged(String graphId, long timeId, String attribute, Object oldValue, Object newValue) {
-        this._out.printf("\tgraph [ %s ];%n", this.outputAttribute(attribute, newValue, true));
-    }
-
-    public void graphAttributeRemoved(String graphId, long timeId, String attribute) {
-    }
-
-    public void nodeAttributeAdded(String graphId, long timeId, String nodeId, String attribute, Object value) {
-        this._out.printf("\t\"%s\" [ %s ];%n", nodeId, this.outputAttribute(attribute, value, true));
-    }
-
-    public void nodeAttributeChanged(String graphId, long timeId, String nodeId, String attribute, Object oldValue, Object newValue) {
-        this._out.printf("\t\"%s\" [ %s ];%n", nodeId, this.outputAttribute(attribute, newValue, true));
-    }
-
-    public void nodeAttributeRemoved(String graphId, long timeId, String nodeId, String attribute) {
-    }
-
-    public void edgeAdded(String graphId, long timeId, String edgeId, String fromNodeId, String toNodeId, boolean directed) {
-        if (this._digraph) {
-            this._out.printf("\t%s -> %s", fromNodeId, toNodeId);
-            if (!directed) {
-                this._out.printf(" -> %s", fromNodeId);
-            }
-
-            this._out.printf(";%n");
-        } else {
-            this._out.printf("\t%s -- %s;%n", fromNodeId, toNodeId);
-        }
-
-    }
-
-    public void edgeRemoved(String graphId, long timeId, String edgeId) {
-    }
-
-    public void graphCleared(String graphId, long timeId) {
-    }
-
-    public void nodeAdded(String graphId, long timeId, String nodeId) {
-        this.out.printf("\t\"%s\";%n", nodeId);
-    }
-
-    public void nodeRemoved(String graphId, long timeId, String nodeId) {
-    }
-
-    public void stepBegins(String graphId, long timeId, double step) {
-    }
-
+    /**
+     * @see FileSinkDOT#outputAttribute(String, Object, boolean)
+     */
     protected String outputAttribute(String key, Object value, boolean first) {
-        return String.format("%s%s=%s", key, value);
+        return String.format("%s=%s", key, value);
     }
 
+    /**
+     * @see FileSinkDOT#outputAttributes(Element)
+     */
     protected String outputAttributes(Element e) {
         if (e.getAttributeCount() == 0) {
             return "";
