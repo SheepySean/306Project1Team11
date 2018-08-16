@@ -4,8 +4,13 @@ package com.para11el.scheduler.ui;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
@@ -17,6 +22,7 @@ import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.camera.Camera;
 
 import java.util.List;
+import java.util.Random;
 
 
 public class ViewerPaneController {
@@ -28,10 +34,12 @@ public class ViewerPaneController {
     private static String _outputFile;
     private static String _processors;
     private static String _cores;
+    
+    private int _cellWidth;
+    private int _cellHeight = 20;
 
     @FXML
     private AnchorPane graphContainer;
-
 
     @FXML
     private Text inputFileText;
@@ -44,6 +52,16 @@ public class ViewerPaneController {
 
     @FXML
     private Text outputFileText;
+    
+    @FXML
+    private TilePane colLabelTile;
+    
+    @FXML
+    private TilePane tile;
+
+    @FXML
+    private ScrollPane scrollPane;
+
 
     /**
      * Initialize some of the GUI's components to initial states
@@ -60,6 +78,35 @@ public class ViewerPaneController {
         graphPanel.add(graphViewPanel);*/
         //view.display((GraphicGraph)_inGraph, true);
         //createAndSetSwingContent(inGraph, graphPanel);
+    	
+    	scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    	
+
+    	
+    	setCellSize(Integer.parseInt(_processors));
+    	
+    	initialisePane(30);
+    	initialiseLabel(30);
+
+
+		// set cell: processor, start time, length of time, colour (string)
+		setCell("a", 2, 3, 2, generateColours());
+		setCell("b", 4, 0, 7, generateColours());
+
+		setCell("b2", 4, 7, 7, generateColours());
+
+		setCell("c", 3, 1, 12, generateColours());
+
+		setCell("b", 1, 0, 1, generateColours());
+
+		setCell("b", 1, 1, 1, generateColours());
+
+		setCell("b", 1, 7, 4, generateColours());
+		
+		
+		// testing more processors
+    	
+    	
 
         _viewer.addDefaultView(false, _viewer.newDefaultGraphRenderer());
         _viewer.enableAutoLayout();
@@ -76,7 +123,6 @@ public class ViewerPaneController {
         coresText.setText(_cores);
         processorsText.setText(_processors);
         outputFileText.setText(_outputFile);
-
 
     }
 
@@ -142,7 +188,6 @@ public class ViewerPaneController {
             _camera.setViewCenter(p.x, p.y + delta, 0);
         });
     }
-
 
     @FXML
     private void panDownAction(ActionEvent event) {
@@ -212,5 +257,76 @@ public class ViewerPaneController {
     private double calculateDelta() {
         return  _camera.getViewPercent() * _camera.getGraphDimension() * 0.1f;
     }
+    
+    // ====================================
+    
+    private void initialisePane(int num) {
+
+		for (int i = 0; i < num*Integer.parseInt(_processors); i++) {
+			Pane p = new Pane();
+			p.setPrefSize(_cellWidth, _cellHeight);
+			p.setStyle("-fx-background-color: #D3D3D3");
+			tile.getChildren().add(p);
+		}
+	}
+    
+    private void initialiseLabel(int num) {
+    	
+    	for (int i = 1; i < num+1; i++) {
+    		
+    		Label colLabel = new Label(Integer.toString(i));
+    		colLabel.setPrefSize(30, _cellHeight);
+    		colLabel.setAlignment(Pos.CENTER_RIGHT);
+    		
+    		colLabelTile.getChildren().add(colLabel);
+			
+		}
+    	
+    }
+    
+    
+    private void setCell(String label, int processor, int startTime, int length, String colour) {
+
+		int cell = (processor + Integer.parseInt(_processors) * startTime) -1;
+
+		for (int i = 0; i < length; i++) {
+
+			if (i == 0) {
+
+				Label nodeLabel = new Label(label);
+				nodeLabel.setPrefSize(_cellWidth, _cellHeight);
+				nodeLabel.setAlignment(Pos.CENTER);
+				tile.getChildren().set(cell, nodeLabel);
+				tile.getChildren().get(cell).setStyle(colour);
+			}
+			tile.getChildren().get(cell).setStyle("-fx-background-color: " + colour);
+			cell = cell + Integer.parseInt(_processors);
+		}
+	}
+
+	private String generateColours() {
+
+		Random rand = new Random();
+
+		float r = rand.nextFloat();
+		float g = rand.nextFloat() / 2f;
+		float b = rand.nextFloat() / 2f;
+
+		java.awt.Color randomColor = new java.awt.Color(r, g, b);
+		String hex = Integer.toHexString(randomColor.getRGB() & 0xffffff);
+
+		if (hex.length() < 6) {
+			hex = "0" + hex;
+		}
+		hex = "#" + hex;
+
+		return hex;
+	}
+	
+	private void setCellSize(int processors) {
+		
+		int gapSize = (processors - 1)*2;
+		_cellWidth = (int)(Math.floor((300 - gapSize)/processors));
+	}
 }
 
