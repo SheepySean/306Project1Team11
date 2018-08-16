@@ -14,6 +14,7 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Viewer extends Application {
@@ -29,7 +30,8 @@ public class Viewer extends Application {
         popup.getContent().addAll(new Circle(25, 25, 50, Color.AQUAMARINE));
         Stage stage = null;
         try{
-            ViewerPaneController.setParameters(getParameters().getRaw());
+            List<String> params = getParameters().getRaw();
+            ViewerPaneController.setParameters(params);
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/ViewerPane.fxml")); // Load the fxml pane
             Scene scene = new Scene(root);
 
@@ -39,7 +41,7 @@ public class Viewer extends Application {
             stage.getIcons().add(new Image(Viewer.class.getResourceAsStream("/images/logo-icon.png")));
             stage.setScene(scene);
             //stage.setResizable(false);
-            stage.setTitle("Para11el - Task Scheduler");
+            stage.setTitle("Para11el | Task Scheduler | " + params.get(0));
 
             stage.show();
         } catch(Exception e) {
