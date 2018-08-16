@@ -40,7 +40,6 @@ public class AStarAlgorithmIT {
 		State stateThree = new State();
 		stateThree.setCost(9);
 		
-		// 
 		AStarAlgorithm am = new AStarAlgorithm();
 		Queue<State> states = new PriorityQueue<State>(am.getStateComparator());
 		states.add(stateOne);
@@ -70,59 +69,6 @@ public class AStarAlgorithmIT {
 		int totalWeight = am.calculateTotalWeight(nodes.stream()); 
 		
 		assertEquals(totalWeight, 17); 	
-	}
-	
-	/**
-	 * Unit test for getting the earliest start time of a node. 
-	 * @author Holly Hagenson
-	 */
-	@Test
-	public void testGetEarliestStartTime() {		
-		createGraph(); 
-		
-		// Create test schedule to get earliest start time of
-		ArrayList<Task> testSchedule = new ArrayList<Task>(); 
-		testSchedule.add(new Task(_graph1.getNode("1"),0,1));
-		testSchedule.add(new Task(_graph1.getNode("2"),3,1));
-		testSchedule.add(new Task(_graph1.getNode("3"),5,2));
-		
-		AStarAlgorithm am = new AStarAlgorithm(); 
-		int start = am.getEarliestStartTime(_graph1.getNode("4"), testSchedule, 1);
-		
-		assertEquals(start, 7); 
-	}
-	
-	/**
-	 * Unit test to check for duplicate states within priority queue.
-	 * @author Holly Hagenson
-	 */
-	@Test
-	public void testCheckDuplicates(){
-		// Create test schedules and states to compare against each other
-		ArrayList<Task> testSchedule = new ArrayList<Task>();  
-		Node nodeB  = new MockNode(null,"B",2);
-		testSchedule.add(new Task(new MockNode(null,"A",2),0,1));
-		testSchedule.add(new Task(nodeB,1,2));
-		testSchedule.add(new Task(new MockNode(null,"C",3),0,2));
-		testSchedule.add(new Task(new MockNode(null,"D",1),3,1));
-		
-		State newState = new State(nodeB, null, testSchedule, 12); 
-		
-		ArrayList<Task> testSchedule1 = new ArrayList<Task>();  
-		Node node2  = new MockNode(null,"B",2);
-		testSchedule1.add(new Task(new MockNode(null,"A",2),0,1));
-		testSchedule1.add(new Task(node2,1,2));
-		testSchedule1.add(new Task(new MockNode(null,"C",3),0,2));
-		testSchedule1.add(new Task(new MockNode(null,"D",1),3,1));
-		
-		State queuedState = new State(node2, null, testSchedule1, 12);
-		
-		AStarAlgorithm am = new AStarAlgorithm();
-		Queue<State> states = new PriorityQueue<State>(am.getStateComparator());
-		states.add(queuedState);
-		
-		PruningManager pm = new PruningManager();
-		assertTrue(pm.doPrune(newState, states)); 
 	}
 	
 	/**
