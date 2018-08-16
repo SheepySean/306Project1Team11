@@ -30,7 +30,6 @@ import java.util.ArrayList;
 public class Scheduler {
 
 	private static Graph _inGraph = null;
-
 	private static String _filename = null;
 	private static int _scheduleProcessors = 0;
 	private static int _numCores = 0;
@@ -56,10 +55,10 @@ public class Scheduler {
 		} catch (NumberFormatException e) {
 			System.out.println("Please ensure that processors and cores specified " +
 					"are numbers");
-			return;
+			return; //Exit
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println("Please ensure that number of cores is specified");
-			return;
+			return; //Exit
 		}
 
 		// Get just the name of the graph file, removing dir paths and extensions
@@ -77,14 +76,11 @@ public class Scheduler {
 			System.out.println("Cannot find the specified input file '" + _filename + "'");
 			return;
 		}
-		
-		//Create the SolutionSpace
-		//SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
-		//solutionSpaceManager.initialise();
 
-		//Check if any of the optional parameters are invalid in conjunction
+		//Check if any of the optional parameters are invalid
 		if (invalidOptional()) {
-			return; //Exit if options are invalid
+			//Exit if options are invalid
+			return; 
 		}
 		
 		if (_timeout) { //Start a timeout on a new thread
@@ -102,7 +98,7 @@ public class Scheduler {
 		Graph newGraph;
 		
         if(_astar) {
-        	//Searches with A Star Algorithm
+        	//Searches with A Star Algorithm (default)
         	AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
     		ArrayList<Task> solution = algorithm.buildSolution(); 
     		newGraph = algorithm.getGraph(solution);
@@ -126,8 +122,8 @@ public class Scheduler {
 			_outputFilename = removeFileExt(_filename)
 					+ "-output" + GraphConstants.FILE_EXT.getValue();
 		}
+		
 		// Write the output file
-
 		try {
 			fileManager.writeGraphFile(_outputFilename,
 					newGraph, true);
@@ -144,6 +140,7 @@ public class Scheduler {
 	 * @param params Command line arguments
 	 * @throws ParameterLengthException Thrown if less than the required number of parameters is provided
 	 * @throws NumberFormatException Thrown if expected number parameters are not numbers
+	 * 
 	 * @author Sean Oldfield
 	 */
 	private static void readParameters(String[] params)
@@ -197,7 +194,13 @@ public class Scheduler {
         }
     }
 	
-	
+	/**
+	 * Checks whether the additional features specified when the program is run
+	 * are valid in conjunction with one another.
+	 * @return whether the additional features are valid
+	 * 
+	 * @author Rebekah Berriman
+	 */
 	private static boolean invalidOptional() {
 		if (!_astar && (_visualise || (_numCores !=0))) {
 			System.out.println("To run the algorithm using DFS, visualisation (-v) and parallelisation (-p) of the search are disabled.");
@@ -206,6 +209,6 @@ public class Scheduler {
 			System.out.println("An optimal solution cannot be found in 0 seconds.");
 			return true;
 		}
-		return false;
+		return false; 
 	}
 }
