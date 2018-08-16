@@ -19,7 +19,7 @@ import com.para11el.scheduler.algorithm.Task;
  * @author Jessica Alcantara
  *
  */
-public class ModelIT {
+public class ModelClassIT {
 	
 	/**
 	 * Unit test to check that tasks with the same node id and start time are 

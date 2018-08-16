@@ -13,6 +13,11 @@ import com.para11el.scheduler.algorithm.PruningManager;
 import com.para11el.scheduler.algorithm.State;
 import com.para11el.scheduler.algorithm.Task;
 
+/**
+ * Class to test the functionality of the PruningManager
+ *
+ *@author Jessica Alcantara
+ */
 public class PruningManagerIT {
 	
 	/**
