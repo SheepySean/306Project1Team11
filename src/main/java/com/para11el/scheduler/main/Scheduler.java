@@ -49,7 +49,7 @@ public class Scheduler {
 	public static void main(String[] args) {
         System.setProperty("org.graphstream.ui", "javafx"); // Use JavaFx for GUI
 		System.setProperty("gs.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-
+        long startTime = System.currentTimeMillis();
         LogManager.getLogManager().reset();
 		// Read the parameters provided on the command line
 		try {
@@ -89,10 +89,12 @@ public class Scheduler {
 		}
 
 		String[] guiArgs = {
-				getFilenameNoDirectory(_filename),
+				_filename,
 				Integer.toString(_scheduleProcessors),
 				Integer.toString(_numCores),
-				getFilenameNoDirectory(_outputFilename)};
+				getFilenameNoDirectory(_outputFilename),
+                Long.toString(startTime)
+		};
 
         if(_visualise) { // Start the GUI on an another thread
 

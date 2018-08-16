@@ -1,12 +1,20 @@
 package com.para11el.scheduler.ui;
 
 
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.geom.Point3;
@@ -17,21 +25,26 @@ import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.camera.Camera;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class ViewerPaneController {
     private static FxViewer _viewer;
     private static Camera _camera;
     private FxDefaultView viewPanel;
-
+    private static AnimationTimer _timer;
     private static String _inputFile;
     private static String _outputFile;
     private static String _processors;
     private static String _cores;
+    private static long _startTime;
 
     @FXML
     private AnchorPane graphContainer;
 
+
+    @FXML
+    private Label timerLabel;
 
     @FXML
     private Text inputFileText;
@@ -77,6 +90,26 @@ public class ViewerPaneController {
         processorsText.setText(_processors);
         outputFileText.setText(_outputFile);
 
+        //long startTime = System.currentTimeMillis();
+
+        _timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                long elapsedMillis = System.currentTimeMillis() - _startTime ;
+                String timeLabel = String.format("%02d:%02d:%02d",
+                        (elapsedMillis / 60000),
+                        ((elapsedMillis % 60000) / 1000),
+                        ((elapsedMillis % 1000) / 10));
+                timerLabel.setText(timeLabel);
+            }
+        };
+
+        ViewerPaneController.toggleTimer(true);
+/*        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(
+                new KeyFrame(Duration.seconds(151),
+                        new KeyValue(15, 0)));
+        timeline.playFromStart();*/
 
     }
 
@@ -206,11 +239,24 @@ public class ViewerPaneController {
             _cores = parameters.get(2);
         }
         _outputFile = parameters.get(3);
+        _startTime = Long.parseLong(parameters.get(4));
 
     }
 
     private double calculateDelta() {
         return  _camera.getViewPercent() * _camera.getGraphDimension() * 0.1f;
+    }
+
+    /**
+     * Start or stop the program timer
+     * @param enable True if the timer is to be started, false to stop it
+     */
+    public static void toggleTimer(boolean enable) {
+        if(enable) {
+            _timer.start();
+        } else {
+            _timer.stop();
+        }
     }
 }
 
