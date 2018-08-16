@@ -5,10 +5,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
+import org.graphstream.graph.Node;
 import org.junit.Test;
 
-import com.para11el.scheduler.algorithm.PruningManager;
+import com.para11el.scheduler.algorithm.State;
 import com.para11el.scheduler.algorithm.Task;
 
 /**
@@ -21,7 +23,7 @@ public class ModelIT {
 	
 	/**
 	 * Unit test to check that tasks with the same node id and start time are 
-	 * given the same hashcode.
+	 * given the same hashcode for Task
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -36,7 +38,7 @@ public class ModelIT {
 	
 	/**
 	 * Unit test to check that tasks with the same node id and start time are 
-	 * equal.
+	 * equal for Task
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -51,12 +53,12 @@ public class ModelIT {
 	
 	/**
 	 * Unit test to check that the contains method will return true if the tasks
-	 * are equal.
+	 * are equal for Task
 	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
-	public void testListContainsTask() {
+	public void testTaskListContainsTask() {
 		MockNode nodeOne = new MockNode(null,"testOne",5);
 		MockNode nodeEqual = new MockNode(null,"testOne",5);
 		MockNode nodeTwo = new MockNode(null,"testTwo",5);
@@ -74,11 +76,12 @@ public class ModelIT {
 	}
 	
 	/**
-	 * Unit test to check that schedules with tasks allocated to the 
-	 * same processor are duplicates.
+	 * Unit test to check task weight calculation on Task
+	 * 
+	 * @author Jessica Alcantara
 	 */
 	@Test
-	public void testGetWeight() {
+	public void testTaskGetWeight() {
 		MockNode nodeA = new MockNode(null,"A",5);
 		Task taskA = new Task(nodeA,0,1);
 
@@ -86,15 +89,64 @@ public class ModelIT {
 	}
 	
 	/**
-	 * Unit test to check that schedules with tasks allocated to the 
-	 * same processor are duplicates.
+	 * Unit test to check task finish time calculation on Task
+	 * 
+	 * @author Jessica Alcantara
 	 */
 	@Test
-	public void testGetFinishTime() {
+	public void testTaskGetFinishTime() {
 		MockNode nodeA = new MockNode(null,"A",5);
 		Task taskA = new Task(nodeA,5,1);
 
 		assertEquals(10,taskA.getFinishTime());
+	}
+	
+	/**
+	 * Unit test to check that state is a complete solution for State
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	@Test
+	public void testStateIsComplete() {
+		MockNode nodeA = new MockNode(null,"A",5);
+		MockNode nodeB = new MockNode(null,"B",5);
+		MockNode nodeC = new MockNode(null,"C",5);
+		Task taskA = new Task(nodeA,0,1);
+		Task taskB = new Task(nodeB,5,2);
+		Task taskC = new Task(nodeC,0,1);
+	
+		ArrayList<Task> completeSchedule = new ArrayList<Task>();
+		completeSchedule.add(taskA);
+		completeSchedule.add(taskB);
+		completeSchedule.add(taskC);
+		
+		State testState = new State(null,null,completeSchedule,0);
+		Stream<Node> nodes = Stream.of(nodeA, nodeB, nodeC);
+
+		assertTrue(testState.isComplete(nodes));
+	}
+	
+	/**
+	 * Unit test to check that state contains node for State
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	@Test
+	public void testStateContainsNode() {
+		MockNode nodeA = new MockNode(null,"A",5);
+		MockNode nodeB = new MockNode(null,"B",5);
+		MockNode nodeC = new MockNode(null,"C",5);
+		Task taskA = new Task(nodeA,0,1);
+		Task taskB = new Task(nodeB,5,2);
+		Task taskC = new Task(nodeC,0,1);
+	
+		ArrayList<Task> completeSchedule = new ArrayList<Task>();
+		completeSchedule.add(taskA);
+		completeSchedule.add(taskB);
+		completeSchedule.add(taskC);	
+		State testState = new State(null,null,completeSchedule,0);
+
+		assertTrue(testState.stateContainsNode(nodeA,completeSchedule));
 	}
 
 }
