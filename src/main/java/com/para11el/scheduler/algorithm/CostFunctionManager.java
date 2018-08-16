@@ -42,7 +42,7 @@ public class CostFunctionManager {
 	public int calculateCostFunction(State parentState, Node newNode, 
 			ArrayList<Task> partialSolution) {
 		int parentCost;
-		int criticalPathEstimate = criticalPathEstimate(partialSolution);
+		int criticalPathEstimate = criticalPathEstimate(partialSolution, newNode);
 		int boundedTime = calculateBoundedTime(partialSolution);
 		
 		// Check if parent state exists
@@ -80,21 +80,34 @@ public class CostFunctionManager {
 	
 	/**
 	 * Calculates the critical path estimate based on:
-	 * 		Cpe(S) = max{startTime(n) + bottomLevel(n)}
+	 * 		Cpe(S) = startTime(nlast) + bottomLevel(nlast)}
 	 * @param solution Task schedule for current solution
+	 * @param lastAdded Node last added to the state
 	 * @return int of critical path estimate
 	 * 
 	 * @author Jessica Alcantara
 	 */
-	public int criticalPathEstimate(ArrayList<Task> schedule) {
-		int max = 0;
+	public int criticalPathEstimate(ArrayList<Task> schedule, Node lastAdded) {
+		Task task = findNodeTask(lastAdded,schedule);
+		int cpe = task.getStartTime() + _nm.getBottomLevel(lastAdded);
+		return cpe;
+	}
+	
+	/**
+	 * Returns the task corresponding to a node
+	 * @param node From input graph
+	 * @param schedule ArrayList of scheduled tasks
+	 * @return Task object node
+	 * 
+	 * @author Sean Oldfield
+	 */
+	public Task findNodeTask(Node node, ArrayList<Task> schedule) {
 		for (Task task : schedule) {
-			int help = task.getStartTime() + _nm.getBottomLevel(task.getNode());
-			if (help > max) {
-				max = help;
+			if (task.getNode().equals(node)) {
+				return task;
 			}
 		}
-		return max;
+		return null;
 	}
 	
 	/**
