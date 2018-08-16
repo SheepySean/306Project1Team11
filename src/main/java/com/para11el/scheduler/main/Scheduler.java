@@ -11,14 +11,9 @@ import com.para11el.scheduler.ui.Viewer;
 import com.para11el.scheduler.ui.ViewerPaneController;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
-import org.graphstream.stream.ProxyPipe;
 import org.graphstream.ui.fx_viewer.FxViewer;
-import org.graphstream.ui.graphicGraph.GraphicGraph;
-import org.graphstream.ui.view.View;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -83,12 +78,14 @@ public class Scheduler {
 			return; 
 		}
 		
-		Thread timeOutThread = null;
+		//Initialise a timeoutCounter for use if there is a timeout specified
+		Thread timeoutCounter = null;
 		
 		if (_timeout) { //Start a timeout on a new thread
-			new Thread(() -> {
-	                new TimeOut(_timeoutSeconds);
-	            }).start();
+			timeoutCounter = new Thread(() -> {
+	            new TimeOut(_timeoutSeconds);
+	         });
+			timeoutCounter.start();
 		}
 		
 		if(_visualise) { // Start the GUI on an another thread
@@ -98,25 +95,26 @@ public class Scheduler {
             }).start();
         } 
         
-		Graph newGraph;
+		//Initialise the output graph
+		Graph outputGraph;
 		
         if(_astar) {
         	//Searches with A Star Algorithm (default)
         	AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
     		ArrayList<Task> solution = algorithm.buildSolution(); 
-    		newGraph = algorithm.getGraph(solution);
+    		outputGraph = algorithm.getGraph(solution);
         	
         } else {
         	//Searches with DFS Algorithm
     		DFSAlgorithm algorithm = new DFSAlgorithm(_inGraph, _scheduleProcessors);
     		ArrayList<Task> solution = algorithm.buildSolution();
-    		newGraph = algorithm.getGraph(solution); 	
+    		outputGraph = algorithm.getGraph(solution); 	
         }
 
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
-/*		viewManager.labelGraph();
+		/*viewManager.labelGraph();
 		viewManager.unlabelGraph();*/
 		
 		
@@ -129,13 +127,19 @@ public class Scheduler {
 		// Write the output file
 		try {
 			fileManager.writeGraphFile(_outputFilename,
-					newGraph, true);
+					outputGraph, true);
             System.out.println("Graph file successfully written to '" + _outputFilename+ "'");
 		} catch(IOException e) {
 			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
 		}
 		
+		//Interrupt the timeout thread and stop it
+		if (_timeout) {
+			timeoutCounter.interrupt();
+		}
+		
 		return;
+		
 	}
 
 	/**
