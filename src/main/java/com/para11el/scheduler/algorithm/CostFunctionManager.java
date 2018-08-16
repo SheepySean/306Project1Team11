@@ -1,11 +1,7 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 
 /**
@@ -15,14 +11,10 @@ import org.graphstream.graph.Node;
  *
  */
 public class CostFunctionManager {
-	
-	private int _max = 0; 
-	private int _dist = 0; 
-	
+
+	private NodeManager _nm;
 	private int _totalWeight;
 	private int _processors;
-	
-	ArrayList<Integer> _costs = new ArrayList<Integer>();
 	
 	/**
 	 * Constructor for CostFunctionManager
@@ -31,7 +23,8 @@ public class CostFunctionManager {
 	 * 
 	 * @author Jessica Alcantara
 	 */
-	public CostFunctionManager(int totalWeight, int processors) {
+	public CostFunctionManager(NodeManager nm, int totalWeight, int processors) {
+		_nm = nm;
 		_totalWeight = totalWeight;
 		_processors = processors;	
 	}
@@ -48,16 +41,9 @@ public class CostFunctionManager {
      */
 	public int calculateCostFunction(State parentState, Node newNode, 
 			ArrayList<Task> partialSolution) {
-		int parentCost, criticalPathEstimate;
+		int parentCost;
+		int criticalPathEstimate = criticalPathEstimate(partialSolution);
 		int boundedTime = calculateBoundedTime(partialSolution);
-		Task lastTask = getLastTask(partialSolution);
-		
-		// Check if partial solution is empty
-		if (lastTask == null){
-			criticalPathEstimate = 0;
-		} else{
-			criticalPathEstimate = calculateCriticalPathEstimate(lastTask, partialSolution); 
-		}
 		
 		// Check if parent state exists
 		if (parentState == null) {
@@ -66,10 +52,8 @@ public class CostFunctionManager {
 			parentCost = parentState.getCost();
 		}
 		
-		int pls = pls(partialSolution);
-		
-		//int maxCost = Math.max(parentCost, boundedTime);
-		int maxCost = Math.max(boundedTime, pls);
+		int maxCost = Math.max(parentCost, boundedTime);
+		maxCost = Math.max(maxCost, criticalPathEstimate);
 		return maxCost;
 	}
 	
@@ -78,7 +62,7 @@ public class CostFunctionManager {
 	 * @param schedule Partial schedule of tasks
 	 * @return Task with the latest finish time
 	 * 
-	 * @author Jessica Alcantara, Holly Hagenson
+	 * @author Holly Hagenson
 	 */
 	public Task getLastTask(ArrayList<Task> schedule) {
 		int latestFinish = 0;
@@ -94,92 +78,23 @@ public class CostFunctionManager {
 		return lastTask;
 	}
 	
-	public void recursive(Node node, int cost) {
-		int currentCost = cost + ((Number)node.getAttribute("Weight")).intValue();
-		if (node.getOutDegree() == 0) {
-			_costs.add(currentCost);
-		} else {
-			Iterator<Edge> edges = node.leavingEdges().iterator();
-			while (edges.hasNext()) {
-				recursive(edges.next().getTargetNode(), currentCost);
-			}
-		}
-	}
-	
-	public int pls(ArrayList<Task> schedule) {
+	/**
+	 * Calculates the critical path estimate based on:
+	 * 		Cpe(S) = max{startTime(n) + bottomLevel(n)}
+	 * @param solution Task schedule for current solution
+	 * @return int of critical path estimate
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public int criticalPathEstimate(ArrayList<Task> schedule) {
 		int max = 0;
 		for (Task task : schedule) {
-			//recursive(task.getNode(),0);
-			//int bottomLevel = Collections.max(_costs);
-			int help = task.getStartTime() + bottomLevel(task.getNode());
+			int help = task.getStartTime() + _nm.getBottomLevel(task.getNode());
 			if (help > max) {
 				max = help;
 			}
 		}
 		return max;
-	}
-	
-	/**
-	 * Calculates the critical path estimate based on:
-	 * 		Cpe(S) = startTime(nlast) + bottomLevel(nlast)
-	 * 
-	 * @param lastTask Task (nlast) with latest finish time in partial schedule
-	 * @param solution Task schedule for current solution
-	 * @return int of critical path estimate
-	 * 
-	 * @author Holly Hagenson
-	 */
-	public int calculateCriticalPathEstimate(Task lastTask, ArrayList<Task> solution) {
-		int bottomLevel = bottomLevel(lastTask.getNode());
-		int startTime = lastTask.getStartTime(); 
-		return startTime + bottomLevel;
-	}
-	
-	/**
-	 * Calculates the bottom level of a node 
-	 * @param node Node to calculate bottom level of
-	 * @return int of bottom level value
-	 * 
-	 * @author Holly Hagenson
-	 */
-	public int bottomLevel(Node node){
-		// Create path with source node
-		List<Node> path = new ArrayList<Node>(); 
-		path.add(node);
-		findLongestPath(path, node);
-		return _max; 
-	}
-	
-	/**
-	 * Finds the longest path from the given node to a leaf node
-	 * @param path Current path of nodes
-	 * @param source Node to find paths from
-	 * 
-	 * @author Holly Hagenson
-	 */
-	private void findLongestPath(List<Node> path, Node source){
-		// Calculate cost of current path at leaf node		
-		if (source.getOutDegree() == 0){
-			for (Node n : path){
-				_dist += ((Number)n.getAttribute("Weight")).intValue();
-			}
-			// Update maximum path length
-			if (_dist > _max){
-				_max = _dist;
-			}
-			_dist = 0; 
-		} else {
-			// Traverse through graph to find all paths from source		
-			Iterator<Edge> edges = source.edges().iterator();
-			while(edges.hasNext()){
-				Edge currentEdge = edges.next(); 
-				if (currentEdge.getNode0().equals(source)){
-					List<Node> newPath = new ArrayList<Node>(path); 
-					newPath.add(currentEdge.getNode1());
-					findLongestPath(newPath, currentEdge.getNode1());					
-				}
-			}
-		}
 	}
 	
 	/**

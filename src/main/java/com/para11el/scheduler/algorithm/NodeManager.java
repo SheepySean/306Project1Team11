@@ -49,5 +49,9 @@ public class NodeManager {
 			System.out.println(e.getKey().getId() + " " + e.getValue());
 		}
 	}
+	
+	public int getBottomLevel(Node node) {
+		return _bottomLevel.get(node);
+	}
 
 }
