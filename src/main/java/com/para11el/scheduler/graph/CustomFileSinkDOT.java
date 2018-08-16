@@ -148,7 +148,7 @@ public class CustomFileSinkDOT extends FileSinkDOT {
 	}
 
 	protected String outputAttribute(String key, Object value, boolean first) {
-		return String.format("%s%s=%s", key, value);
+		return String.format("%s=%s", key, value);
 	}
 
 	protected String outputAttributes(Element e) {

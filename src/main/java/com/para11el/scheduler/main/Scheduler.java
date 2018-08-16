@@ -9,6 +9,7 @@ import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
 import com.para11el.scheduler.ui.Viewer;
 import com.para11el.scheduler.ui.ViewerPaneController;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import org.graphstream.graph.Graph;
@@ -35,6 +36,9 @@ public class Scheduler {
 	private static int _numCores = 0;
 	private static String _outputFilename = null;
 	private static boolean _visualise = false;
+	private static boolean _astar = true;
+	private static boolean _timeout = false;
+	private static int _timeoutSeconds = 0;
 
 	/**
 	 * Entry point for the program
@@ -78,33 +82,45 @@ public class Scheduler {
 		//SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
 		//solutionSpaceManager.initialise();
 
-        if(_visualise) { // Start the GUI on an another thread
+		//Check if any of the optional parameters are invalid in conjunction
+		if (invalidOptional()) {
+			return; //Exit if options are invalid
+		}
+		
+		if (_timeout) { //Start a timeout on a new thread
+			TimeOut timeout = new TimeOut(_timeoutSeconds);
+			timeout.start();
+		}
+		
+		if(_visualise) { // Start the GUI on an another thread
             new Thread(() -> {
                 ViewerPaneController.setViewer(new FxViewer(_inGraph, FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD));
                 Application.launch(Viewer.class, args);
             }).start();
-
-		//Create the SolutionSpace
-		//SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
-		//solutionSpaceManager.initialise();
+        } 
+        
+		Graph newGraph;
 		
-		AStarAlgorithm astar = new AStarAlgorithm(_inGraph, _scheduleProcessors);
-		ArrayList<Task> solution = astar.buildSolution(); 
-		
-		//Get the graph labeled with the optimal solution
+        if(_astar) {
+        	//Searches with A Star Algorithm
+        	AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
+    		ArrayList<Task> solution = algorithm.buildSolution(); 
+    		newGraph = algorithm.getGraph(solution);
+        	
+        } else {
+        	//Searches with DFS Algorithm
+    		DFSAlgorithm algorithm = new DFSAlgorithm(_inGraph, _scheduleProcessors);
+    		ArrayList<Task> solution = algorithm.buildSolution();
+    		newGraph = algorithm.getGraph(solution); 	
+        }
 
-		//Graph newGraph = solutionSpaceManager.getGraph();
-		Graph newGraph = astar.getGraph(solution);
-		//Graph newGraph = solutionSpaceManager.getGraph();
-		//Graph newGraph = astar.getGraph(solution);*/
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
 /*		viewManager.labelGraph();
 		viewManager.unlabelGraph();*/
-
-
-        }
+		
+		
 		// Name the file if no specific output name was provided
 		if(_outputFilename == null) {
 			_outputFilename = removeFileExt(_filename)
@@ -114,7 +130,7 @@ public class Scheduler {
 
 		try {
 			fileManager.writeGraphFile(_outputFilename,
-					_inGraph, true);
+					newGraph, true);
             System.out.println("Graph file successfully written to '" + _outputFilename+ "'");
 		} catch(IOException e) {
 			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
@@ -144,7 +160,7 @@ public class Scheduler {
 		// Read the additional parameters if there are any
 		for(int i = ParameterType.REQUIRED_PARAMS; i < params.length; i++) {
 			switch (params[i]) {
-			case ParameterType.PARRALISE:
+			case ParameterType.PARALLELISE:
 				_numCores = Integer.parseInt(params[i + 1]);
 				break;
 			case ParameterType.VISUALISE:
@@ -154,6 +170,13 @@ public class Scheduler {
 				try {
 					_outputFilename = params[i + 1];
 				} catch (ArrayIndexOutOfBoundsException e) {}
+				break;
+			case ParameterType.DFS:
+				_astar = false;
+				break;
+			case ParameterType.TIME_OUT:
+				_timeout = true;
+				_timeoutSeconds = Integer.parseInt(params[i + 1]);
 				break;
 			}
 		}
@@ -173,4 +196,16 @@ public class Scheduler {
 	        return filename;
         }
     }
+	
+	
+	private static boolean invalidOptional() {
+		if (!_astar && (_visualise || (_numCores !=0))) {
+			System.out.println("To run the algorithm using DFS, visualisation (-v) and parallelisation (-p) of the search are disabled.");
+			return true;
+		} else if (_timeout && (_timeoutSeconds==0)) {
+			System.out.println("An optimal solution cannot be found in 0 seconds.");
+			return true;
+		}
+		return false;
+	}
 }
