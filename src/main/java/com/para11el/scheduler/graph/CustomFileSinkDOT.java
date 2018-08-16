@@ -6,14 +6,10 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Element;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.stream.file.FileSinkBase;
 import org.graphstream.stream.file.FileSinkDOT;
-
-import javax.sound.midi.SysexMessage;
 
 /**
  * Custom Dot Writer that extends GraphStream's FileSinkDOT
@@ -28,7 +24,7 @@ public class CustomFileSinkDOT extends FileSinkDOT {
 	/**
 	 * @see FileSinkDOT
 	 * @param digraph True if graph is a digraph
-	 * @param graphName Name of the outputted graph
+	 * @param graphName Name of the output graph
 	 */
 	public CustomFileSinkDOT(boolean digraph, String graphName) {
 		_graphName = graphName;
@@ -148,14 +144,14 @@ public class CustomFileSinkDOT extends FileSinkDOT {
 	}
 
 	protected String outputAttribute(String key, Object value, boolean first) {
-		return String.format("%s%s=%s", key, value);
+		return String.format("%s=%s", key, value);
 	}
 
 	protected String outputAttributes(Element e) {
 		if (e.getAttributeCount() == 0) {
 			return "";
 		} else {
-			// Convert the key atrributes into an ArrayList as opposed to an Iterator
+			// Convert the key attributes into an ArrayList as opposed to an Iterator
 			ArrayList<String> keys = new ArrayList<>();
 
 			e.attributeKeys().sorted(Comparator.reverseOrder()).forEach((key) -> {
