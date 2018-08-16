@@ -1,6 +1,7 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class CostFunctionManager {
 	
 	private int _totalWeight;
 	private int _processors;
+	
+	ArrayList<Integer> _costs = new ArrayList<Integer>();
 	
 	/**
 	 * Constructor for CostFunctionManager
@@ -63,8 +66,10 @@ public class CostFunctionManager {
 			parentCost = parentState.getCost();
 		}
 		
-		int maxCost = Math.max(parentCost, boundedTime);
-		maxCost = Math.max(maxCost, criticalPathEstimate);
+		int pls = pls(partialSolution);
+		
+		//int maxCost = Math.max(parentCost, boundedTime);
+		int maxCost = Math.max(boundedTime, pls);
 		return maxCost;
 	}
 	
@@ -87,6 +92,31 @@ public class CostFunctionManager {
 			}
 		}
 		return lastTask;
+	}
+	
+	public void recursive(Node node, int cost) {
+		int currentCost = cost + ((Number)node.getAttribute("Weight")).intValue();
+		if (node.getOutDegree() == 0) {
+			_costs.add(currentCost);
+		} else {
+			Iterator<Edge> edges = node.leavingEdges().iterator();
+			while (edges.hasNext()) {
+				recursive(edges.next().getTargetNode(), currentCost);
+			}
+		}
+	}
+	
+	public int pls(ArrayList<Task> schedule) {
+		int max = 0;
+		for (Task task : schedule) {
+			//recursive(task.getNode(),0);
+			//int bottomLevel = Collections.max(_costs);
+			int help = task.getStartTime() + bottomLevel(task.getNode());
+			if (help > max) {
+				max = help;
+			}
+		}
+		return max;
 	}
 	
 	/**
