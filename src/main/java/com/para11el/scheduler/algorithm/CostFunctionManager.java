@@ -142,10 +142,11 @@ public class CostFunctionManager {
 			// Traverse through graph to find all paths from source		
 			Iterator<Edge> edges = source.edges().iterator();
 			while(edges.hasNext()){
-				if (edges.next().getNode0().equals(source)){
+				Edge currentEdge = edges.next(); 
+				if (currentEdge.getNode0().equals(source)){
 					List<Node> newPath = new ArrayList<Node>(path); 
-					newPath.add(edges.next().getNode1());
-					findLongestPath(newPath, edges.next().getNode1());					
+					newPath.add(currentEdge.getNode1());
+					findLongestPath(newPath, currentEdge.getNode1());					
 				}
 			}
 		}

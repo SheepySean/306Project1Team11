@@ -44,9 +44,7 @@ public class DFSAlgorithmIT {
 		_processors = 2; 
 		
 		_ssManager = new DFSAlgorithm(_graph1, _processors);
-		_ssManager.initialise();
-		
-		_tasks = _ssManager.getOptimal();
+		_tasks = _ssManager.buildSolution();
 		
 		//Check finish time of optimal schedule meets the true optimal
 		assertEquals(10, _ssManager.getOptimalFinishTime());
@@ -82,9 +80,7 @@ public class DFSAlgorithmIT {
 		_processors = 1;
 		
 		_ssManager = new DFSAlgorithm(_graph2, _processors);
-		_ssManager.initialise();
-		
-		_tasks = _ssManager.getOptimal();
+		_tasks = _ssManager.buildSolution();
 		
 		//Check finish time of optimal schedule
 		assertEquals(18, _ssManager.getOptimalFinishTime());
@@ -117,9 +113,7 @@ public class DFSAlgorithmIT {
 		_processors = 2;
 		
 		_ssManager = new DFSAlgorithm(_graph2, _processors);
-		_ssManager.initialise();
-		
-		_tasks = _ssManager.getOptimal();
+		_tasks = _ssManager.buildSolution();
 		
 		//Ensure that the optimal finish time is met
 		assertEquals(12, _ssManager.getOptimalFinishTime());
@@ -154,9 +148,7 @@ public class DFSAlgorithmIT {
 		_processors = 1; 
 		
 		_ssManager = new DFSAlgorithm(_graph3, _processors);
-		_ssManager.initialise();
-		
-		_tasks = _ssManager.getOptimal();
+		_tasks = _ssManager.buildSolution();
 		
 		assertEquals(14, _ssManager.getOptimalFinishTime());
 		
@@ -188,9 +180,7 @@ public class DFSAlgorithmIT {
 		_processors = 2; 
 		
 		_ssManager = new DFSAlgorithm(_graph3, _processors);
-		_ssManager.initialise();
-		
-		_tasks = _ssManager.getOptimal();
+		_tasks = _ssManager.buildSolution();
 		
 		//Check finish time of optimal schedule is accurate
 		assertEquals(11, _ssManager.getOptimalFinishTime());
@@ -226,9 +216,7 @@ public class DFSAlgorithmIT {
 		_processors = 1;
 		
 		_ssManager = new DFSAlgorithm(_graph5, _processors);
-		_ssManager.initialise();
-		
-		_tasks = _ssManager.getOptimal();
+		_tasks = _ssManager.buildSolution();
 		
 		//Check finish time is optimal
 		assertEquals(14, _ssManager.getOptimalFinishTime());
@@ -250,9 +238,7 @@ public class DFSAlgorithmIT {
 		_processors = 3;
 		
 		_ssManager = new DFSAlgorithm(_graph5, _processors);
-		_ssManager.initialise();
-		
-		_tasks = _ssManager.getOptimal();
+		_tasks = _ssManager.buildSolution();
 		
 		//Check finish time is optimal
 		assertEquals(14, _ssManager.getOptimalFinishTime());
@@ -277,9 +263,7 @@ public class DFSAlgorithmIT {
 		_processors = 1;
 		
 		_ssManager = new DFSAlgorithm(_graph4, _processors);
-		_ssManager.initialise();
-		
-		_tasks = _ssManager.getOptimal();
+		_tasks = _ssManager.buildSolution();
 		Graph outputGraph = _ssManager.getGraph(_tasks);
 
 		outputGraph.nodes().forEach((node) -> {
@@ -319,9 +303,7 @@ public class DFSAlgorithmIT {
 		_processors = 3;
 		
 		_ssManager = new DFSAlgorithm(_graph4, _processors);
-		_ssManager.initialise();
-		
-		_tasks = _ssManager.getOptimal();
+		_tasks = _ssManager.buildSolution();
 		Graph outputGraph = _ssManager.getGraph(_tasks);
 
 		//Iterate through the node set of the output graph

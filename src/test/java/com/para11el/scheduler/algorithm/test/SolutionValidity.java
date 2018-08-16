@@ -30,11 +30,9 @@ public class SolutionValidity {
 	 */
 	@Test
 	public void testSingleEntryProcessorOverlap() {
-		System.out.println("Single Entry Overlap Test:");
 		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
-		_ssManager.initialise();
-		ArrayList<Task> solution = _ssManager.getOptimal();
+		ArrayList<Task> solution = _ssManager.buildSolution();
 		
 		assertTrue(noSingleProcessorOverlap(solution));
 	}
@@ -73,8 +71,7 @@ public class SolutionValidity {
 	public void testSingleEntryProcessorOptimality() {
 		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
-		_ssManager.initialise();
-		ArrayList<Task> schedule = _ssManager.getOptimal();
+		ArrayList<Task> schedule = _ssManager.buildSolution();
 		int latestFinish = 0;
 		
 		for (Task task : schedule) {
@@ -99,8 +96,7 @@ public class SolutionValidity {
 		System.out.println("Single Exit Overlap Test:");
 		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleExitMultipleEntry(),1);
-		_ssManager.initialise();
-		ArrayList<Task> solution = _ssManager.getOptimal();
+		ArrayList<Task> solution = _ssManager.buildSolution();
 		
 		assertTrue(noSingleProcessorOverlap(solution));
 	}
@@ -137,8 +133,7 @@ public class SolutionValidity {
 	public void testSingleExitProcessorOptimality() {
 		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleExitMultipleEntry(),1);
-		_ssManager.initialise();
-		ArrayList<Task> solution = _ssManager.getOptimal();
+		ArrayList<Task> solution = _ssManager.buildSolution();
 		int latestFinish = 0;
 		
 		for (Task task : solution) {
