@@ -22,6 +22,10 @@ public class SolutionValidity {
 	//TODO: find out why test class works locally but not on remote build
 	
 	private DFSAlgorithm _ssManager;
+	private static TestGraphManager _tgManager;
+	private static Graph _testGraph;
+	private int _processors;
+	private ArrayList<Task> _tasks = new 
 	
 	/**
 	 * Unit test for no overlap in the schedule of a single entry multiple exit graph

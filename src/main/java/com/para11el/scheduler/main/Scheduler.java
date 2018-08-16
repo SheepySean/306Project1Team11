@@ -77,6 +77,8 @@ public class Scheduler {
 		//Create the SolutionSpace
 		//SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
 		//solutionSpaceManager.initialise();
+		//DFSAlgorithm dfs = new DFSAlgorithm(_inGraph, _scheduleProcessors); 
+		//ArrayList<Task> solution = dfs.buildSolution(); 
 
         if(_visualise) { // Start the GUI on an another thread
             new Thread(() -> {
@@ -96,6 +98,7 @@ public class Scheduler {
 
 		//Graph newGraph = solutionSpaceManager.getGraph();
 		Graph newGraph = astar.getGraph(solution);
+        //Graph newGraph = dfs.getGraph(solution);
 		//Graph newGraph = solutionSpaceManager.getGraph();
 		//Graph newGraph = astar.getGraph(solution);*/
 		
