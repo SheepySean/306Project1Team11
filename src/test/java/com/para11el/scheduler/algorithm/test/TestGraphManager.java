@@ -8,7 +8,7 @@ import org.graphstream.graph.implementations.SingleGraph;
 /**
  * Manager class that creates example Graph objects for testing.
  *
- * @author Jessica Alcantara
+ * @author Holly Hagenson
  */
 public class TestGraphManager {
 	
