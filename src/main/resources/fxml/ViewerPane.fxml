@@ -93,7 +93,7 @@
                                   </Tab>
                                 </tabs>
                               </TabPane>
-                              <GridPane accessibleRole="BUTTON" alignment="CENTER_LEFT" depthTest="ENABLE" layoutX="740.0" layoutY="300.0">
+                              <GridPane accessibleRole="BUTTON" alignment="CENTER_LEFT" depthTest="ENABLE" layoutX="545.0" layoutY="300.0">
                                 <columnConstraints>
                                   <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
                                 </columnConstraints>
