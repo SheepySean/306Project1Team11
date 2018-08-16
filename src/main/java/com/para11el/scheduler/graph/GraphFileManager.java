@@ -28,7 +28,7 @@ public class GraphFileManager {
      * @author Sean Oldfield
      */
     public Graph readGraphFile(String filename, String graphID) throws IOException {
-        Graph g = new SingleGraph(graphID);
+        Graph g = new SingleGraph(graphID, false,false);
         FileSource fs = new FileSourceDOT();
 
         fs.addSink(g);
@@ -45,7 +45,7 @@ public class GraphFileManager {
      * @author Sean Oldfield
      */
     public void writeGraphFile(String filename, Graph graph, boolean isDigraph) throws IOException {
-        CustomFileSinkDot fso = new CustomFileSinkDot(true, graph.getId());
+        CustomFileSinkDOT fso = new CustomFileSinkDOT(true, graph.getId());
         fso.writeAll(graph, filename); // Write to .dot file
     }
 }

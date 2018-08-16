@@ -1,18 +1,22 @@
 package com.para11el.scheduler.main;
 
 
-import com.para11el.scheduler.algorithm.SolutionSpaceManager;
+import com.para11el.scheduler.algorithm.AStarAlgorithm;
+import com.para11el.scheduler.algorithm.DFSAlgorithm;
 import com.para11el.scheduler.algorithm.Task;
-
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
-import org.graphstream.graph.Edge;
+import com.para11el.scheduler.ui.Viewer;
+import com.para11el.scheduler.ui.ViewerPaneController;
+
+import javafx.application.Application;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
+import org.graphstream.ui.fx_viewer.FxViewer;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 
 /**
@@ -21,20 +25,22 @@ import java.nio.file.Paths;
 public class Scheduler {
 
 	private static Graph _inGraph = null;
-
 	private static String _filename = null;
 	private static int _scheduleProcessors = 0;
 	private static int _numCores = 0;
 	private static String _outputFilename = null;
 	private static boolean _visualise = false;
+	private static boolean _astar = true;
+	private static boolean _timeout = false;
+	private static int _timeoutSeconds = 0;
 
 	/**
 	 * Entry point for the program
 	 * @param args Command line arguments
 	 */
 	public static void main(String[] args) {
-        // Set the Graph to be viewed with JavaFx
-        System.setProperty("org.graphstream.ui", "javafx");
+        System.setProperty("org.graphstream.ui", "javafx"); // Use JavaFx for GUI
+
 		// Read the parameters provided on the command line
 		try {
             readParameters(args);
@@ -44,10 +50,10 @@ public class Scheduler {
 		} catch (NumberFormatException e) {
 			System.out.println("Please ensure that processors and cores specified " +
 					"are numbers");
-			return;
+			return; //Exit
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println("Please ensure that number of cores is specified");
-			return;
+			return; //Exit
 		}
 
 		// Get just the name of the graph file, removing dir paths and extensions
@@ -65,34 +71,74 @@ public class Scheduler {
 			System.out.println("Cannot find the specified input file '" + _filename + "'");
 			return;
 		}
+
+		//Check if any of the optional parameters are invalid
+		if (invalidOptional()) {
+			//Exit if options are invalid
+			return; 
+		}
 		
-		//Create the SolutionSpace
-		SolutionSpaceManager solutionSpaceManager = new SolutionSpaceManager(_inGraph, _scheduleProcessors);
-		solutionSpaceManager.initialise();
+		//Initialise a timeoutCounter for use if there is a timeout specified
+		Thread timeoutCounter = null;
 		
-		//Get the graph labeled with the optimal solution
-		Graph newGraph = solutionSpaceManager.getGraph();
+		if (_timeout) { //Start a timeout on a new thread
+			timeoutCounter = new Thread(() -> {
+	            new TimeOut(_timeoutSeconds);
+	         });
+			timeoutCounter.start();
+		}
+		
+		if(_visualise) { // Start the GUI on an another thread
+            new Thread(() -> {
+                ViewerPaneController.setViewer(new FxViewer(_inGraph, FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD));
+                Application.launch(Viewer.class, args);
+            }).start();
+        } 
+        
+		//Initialise the output graph
+		Graph outputGraph;
+		
+        if(_astar) {
+        	//Searches with A Star Algorithm (default)
+        	AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
+    		ArrayList<Task> solution = algorithm.buildSolution(); 
+    		outputGraph = algorithm.getGraph(solution);
+        	
+        } else {
+        	//Searches with DFS Algorithm
+    		DFSAlgorithm algorithm = new DFSAlgorithm(_inGraph, _scheduleProcessors);
+    		ArrayList<Task> solution = algorithm.buildSolution();
+    		outputGraph = algorithm.getGraph(solution); 	
+        }
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
-/*		viewManager.labelGraph();
+		/*viewManager.labelGraph();
 		viewManager.unlabelGraph();*/
-		if(_visualise) {
-            _inGraph.display();
-        }
+		
+		
 		// Name the file if no specific output name was provided
 		if(_outputFilename == null) {
 			_outputFilename = removeFileExt(_filename)
 					+ "-output" + GraphConstants.FILE_EXT.getValue();
 		}
+		
 		// Write the output file
 		try {
 			fileManager.writeGraphFile(_outputFilename,
-					newGraph, true);
+					outputGraph, true);
             System.out.println("Graph file successfully written to '" + _outputFilename+ "'");
 		} catch(IOException e) {
 			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
 		}
+		
+		//Interrupt the timeout thread and stop it
+		if (_timeout) {
+			timeoutCounter.interrupt();
+		}
+		
+		return;
+		
 	}
 
 	/**
@@ -100,6 +146,7 @@ public class Scheduler {
 	 * @param params Command line arguments
 	 * @throws ParameterLengthException Thrown if less than the required number of parameters is provided
 	 * @throws NumberFormatException Thrown if expected number parameters are not numbers
+	 * 
 	 * @author Sean Oldfield
 	 */
 	private static void readParameters(String[] params)
@@ -116,7 +163,7 @@ public class Scheduler {
 		// Read the additional parameters if there are any
 		for(int i = ParameterType.REQUIRED_PARAMS; i < params.length; i++) {
 			switch (params[i]) {
-			case ParameterType.PARRALISE:
+			case ParameterType.PARALLELISE:
 				_numCores = Integer.parseInt(params[i + 1]);
 				break;
 			case ParameterType.VISUALISE:
@@ -126,6 +173,13 @@ public class Scheduler {
 				try {
 					_outputFilename = params[i + 1];
 				} catch (ArrayIndexOutOfBoundsException e) {}
+				break;
+			case ParameterType.DFS:
+				_astar = false;
+				break;
+			case ParameterType.TIME_OUT:
+				_timeout = true;
+				_timeoutSeconds = Integer.parseInt(params[i + 1]);
 				break;
 			}
 		}
@@ -145,4 +199,22 @@ public class Scheduler {
 	        return filename;
         }
     }
+	
+	/**
+	 * Checks whether the additional features specified when the program is run
+	 * are valid in conjunction with one another.
+	 * @return whether the additional features are valid
+	 * 
+	 * @author Rebekah Berriman
+	 */
+	private static boolean invalidOptional() {
+		if (!_astar && (_visualise || (_numCores !=0))) {
+			System.out.println("To run the algorithm using DFS, visualisation (-v) and parallelisation (-p) of the search are disabled.");
+			return true;
+		} else if (_timeout && (_timeoutSeconds==0)) {
+			System.out.println("An optimal solution cannot be found in 0 seconds.");
+			return true;
+		}
+		return false; 
+	}
 }
