@@ -107,7 +107,7 @@ public class CostFunctionManagerIT {
 	 * 
 	 * @author Holly Hagenson 
 	 */
-	@Test
+	/*@Test
 	public void testCostFunction(){
 		createGraph(); 
 		
@@ -123,7 +123,7 @@ public class CostFunctionManagerIT {
 		int cost = cfm.calculateCostFunction(parentState, _graph1.getNode("2"), testSolution); 
 		
 		assertEquals(cost, 12); 
-	}
+	}*/
 	
 	/**
 	 * Create graphstream graph to use for testing.
