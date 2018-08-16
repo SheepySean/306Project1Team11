@@ -83,9 +83,12 @@ public class Scheduler {
 			return; 
 		}
 		
+		Thread timeOutThread = null;
+		
 		if (_timeout) { //Start a timeout on a new thread
-			TimeOut timeout = new TimeOut(_timeoutSeconds);
-			timeout.start();
+			new Thread(() -> {
+	                new TimeOut(_timeoutSeconds);
+	            }).start();
 		}
 		
 		if(_visualise) { // Start the GUI on an another thread
@@ -131,7 +134,7 @@ public class Scheduler {
 		} catch(IOException e) {
 			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
 		}
-
+		
 		return;
 	}
 
