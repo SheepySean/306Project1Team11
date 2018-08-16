@@ -110,15 +110,6 @@ public class Scheduler {
     		ArrayList<Task> solution = algorithm.buildSolution();
     		outputGraph = algorithm.getGraph(solution); 	
         }
-
-<<<<<<< HEAD
-		//Graph newGraph = solutionSpaceManager.getGraph();
-		Graph newGraph = astar.getGraph(solution);
-        //Graph newGraph = dfs.getGraph(solution);
-		//Graph newGraph = solutionSpaceManager.getGraph();
-		//Graph newGraph = astar.getGraph(solution);*/
-=======
->>>>>>> 3272cd5f95f6b1d2a848a7d7ef1a4181613f065b
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
