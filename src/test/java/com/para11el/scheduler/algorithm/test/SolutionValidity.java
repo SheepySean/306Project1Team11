@@ -47,7 +47,7 @@ public class SolutionValidity {
 		System.out.println("Single Entry Order Test:");
 		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleEntryMultipleExit(),1);
-		_ssManager.initialise();
+		//_ssManager.initialise();
 		TreeMap<String,Integer> solution = new TreeMap<String,Integer>();
 		
 		for (Task t : _ssManager.getOptimal()) {
@@ -111,7 +111,7 @@ public class SolutionValidity {
 		System.out.println("Single Exit Order Test:");
 		_ssManager = new DFSAlgorithm(
 				new TestGraphManager().createSingleExitMultipleEntry(),1);
-		_ssManager.initialise();
+		//_ssManager.initialise();
 		TreeMap<String,Integer> solution = new TreeMap<String,Integer>();
 		
 		for (Task t : _ssManager.getOptimal()) {

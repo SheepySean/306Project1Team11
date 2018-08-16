@@ -205,5 +205,25 @@ public abstract class Algorithm {
 		
 		return available;
 	}
+	
+	/**
+	 * Return the latest finish time of a schedule
+	 * @param schedule ArrayList of scheduled tasks
+	 * @return int of the latest finish time
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public int getScheduleFinishTime(ArrayList<Task> schedule) {
+		int finishTime = 0;
+		int taskFinish;
+		
+		for (Task task : schedule)  {
+			taskFinish = task.getFinishTime();
+			if (taskFinish > finishTime) {
+				finishTime = taskFinish;
+			}
+		}
+		return finishTime;
+	}
 
 }
