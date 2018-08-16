@@ -1,6 +1,7 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Queue;
 
 /**
@@ -10,6 +11,8 @@ import java.util.Queue;
  *
  */
 public class PruningManager {
+	
+	private int _makespan;
 	
 	public PruningManager(){}
 
@@ -22,61 +25,118 @@ public class PruningManager {
 	 * @author Holly Hagenson, Jessica Alcantara
 	 */
 	public Boolean doPrune(State newState, Queue<State> states) {
+		ArrayList<Task> newSchedule = newState.getSchedule();
+		_makespan = getScheduleFinishTime(newSchedule);
+		
 		// Check new state against all states in queue
 		for (State state : states){
-			Boolean duplicate = compareStatesProcessors(state, newState);
-			Boolean makespan = compareMakespan(state, newState); 
-			if (duplicate && makespan){
-				return true;
+			ArrayList<Task> queuedSchedule = state.getSchedule();
+			// Check if same number of tasks
+			if (sameNumberOfTasks(newSchedule, queuedSchedule)) {
+				// Check if makespans are the same
+				if (compareMakespan(queuedSchedule)) {
+					// Check if allocation is the same
+					if (compareOrder(newSchedule,queuedSchedule)) {
+						// Check if order is the same
+						if (compareAllocation(newSchedule,queuedSchedule)) {
+							return true;
+						}
+					}
+				}
 			}
 		}
 		return false;
 	}
 	
 	/**
-	 * Compare states to see if all the same tasks have been put on the same processors in 
-	 * the same order regardless of the processor number
-	 * @param newState State to be added to list of states
-	 * @param stateInQueue State already in queue
-	 * @return Boolean duplicate 
+	 * Compares the partial schedules if they have the same order of tasks.
+	 * @param newSchedule Partial schedule to be added to queue
+	 * @param queuedSchedule Partial schedule already in queue
+	 * @return Boolean true if same order
 	 * 
-	 * @author Holly Hagenson
+	 * @author Jessica Alcantara
 	 */
-	public Boolean compareStatesProcessors(State newState, State stateInQueue){
+	public Boolean compareOrder(ArrayList<Task> newSchedule, ArrayList<Task> queuedSchedule) {
+		for (Task task : newSchedule) {
+			if (!queuedSchedule.contains(task)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Compares the partial schedules if they have the same number of tasks.
+	 * @param newSchedule Partial schedule to be added to queue
+	 * @param queuedSchedule Partial schedule already in queue
+	 * @return Boolean true if same number
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public Boolean sameNumberOfTasks(ArrayList<Task> newSchedule, ArrayList<Task> queuedSchedule) {
+		if (newSchedule.size() == queuedSchedule.size()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Compare schedules to see if all the same tasks have been put on the same processors 
+	 * regardless of the processor number
+	 * @param newSchedule Partial schedule to be added to list of states
+	 * @param queuedSchedule Partial schedule already in queue
+	 * @return Boolean true if same allocation
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public Boolean compareAllocation(ArrayList<Task> newSchedule, ArrayList<Task> queuedSchedule){
 		//TODO: Check order and dont care about processor (Use hash code which 
 		// tell if task is the same -> task is the same if same node id and start time)
 		// compare hashcodes by task.hashCode() == task.hashCode()
-		ArrayList<Task> newSchedule = newState.getSchedule();
-		ArrayList<Task> scheduleInQueue = stateInQueue.getSchedule(); 
 		
-		// For all tasks in both schedule, compare task allocation
-		for (Task newTask : newSchedule){
-			for (Task queuedTask : scheduleInQueue){
-				if (newTask.getNode().getId().equals(queuedTask.getNode().getId())
-						&& newTask.getProcessor() != queuedTask.getProcessor()){
-					return false; 
+		HashMap<Integer,ArrayList<Task>> allocations = new HashMap<Integer,ArrayList<Task>>();
+		
+		// Map each task to a processor in the new schedule
+		for (Task task : newSchedule) {
+			if (allocations.containsKey(task.getProcessor())) {
+				ArrayList<Task> tasks = allocations.get(task.getProcessor());
+				tasks.add(task);
+				allocations.put(task.getProcessor(), tasks);
+			} else {
+				ArrayList<Task> tasks = new ArrayList<Task>();
+				tasks.add(task);
+				allocations.put(task.getProcessor(), tasks);
+			}
+		}
+		
+		for (ArrayList<Task> newTasks : allocations.values()) {
+			int processor = 0;
+			for (Task queuedTask : queuedSchedule) {
+				// Check if equal tasks are contained in the same processor
+				if (newTasks.contains(queuedTask)) {
+					if (queuedTask.getProcessor() != processor && processor != 0) {
+						return false;
+					}
+					processor = queuedTask.getProcessor();
 				}
 			}
 		}
+		
 		return true; 
 	}
 	
 	/**
-	 * Compare the makespans of states to see if they are equal
-	 * @param newState State to be added to list of states
-	 * @param stateInQueue State already in queue
-	 * @return Boolean whether the makespans are equal
+	 * Compare the makespans of schedules to see if they are equal
+	 * @param queuedSchedule Partial schedule already in queue
+	 * @return Boolean true if makespans are equal
 	 * 
 	 * @author Holly Hagenson
 	 */
-	public Boolean compareMakespan(State newState, State stateInQueue){
-		ArrayList<Task> newSchedule = newState.getSchedule();
-		ArrayList<Task> scheduleInQueue = stateInQueue.getSchedule(); 
+	public Boolean compareMakespan(ArrayList<Task> queuedSchedule){
+		int queuedMakespan = getScheduleFinishTime(queuedSchedule); 
 		
-		int newMakespan = getScheduleFinishTime(newSchedule);
-		int queuedMakespan = getScheduleFinishTime(scheduleInQueue); 
-		
-		if (newMakespan == queuedMakespan){
+		if (_makespan == queuedMakespan){
 			return true;
 		}
 		return false;		
@@ -100,5 +160,15 @@ public class PruningManager {
 			}
 		}
 		return finishTime;
+	}
+	
+	/**
+	 * Sets the makespan
+	 * @param makespan Makespan of the current state
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public void setMakespan(int makespan) {
+		_makespan = makespan;
 	}
 }
