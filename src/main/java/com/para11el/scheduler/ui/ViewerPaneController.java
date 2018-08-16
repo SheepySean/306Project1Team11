@@ -32,7 +32,9 @@ public class ViewerPaneController {
     private static FxViewer _viewer;
     private static Camera _camera;
     private FxDefaultView viewPanel;
+
     private static AnimationTimer _timer;
+
     private static String _inputFile;
     private static String _outputFile;
     private static String _processors;
@@ -63,35 +65,24 @@ public class ViewerPaneController {
      */
     @FXML
     public void initialize() {
-/*        ViewPanel graphViewPanel = _viewer.addDefaultView(false);
-        _viewer.enableAutoLayout();
-        View view = _viewer.getDefaultView();
-        //view.getCamera().setViewPercent(0.5);
-        //view.getCamera().setViewCenter(0, 0, 0);
-        graphViewPanel.setPreferredSize(new Dimension(200, 200));
-        graphPanel = new JPanel();
-        graphPanel.add(graphViewPanel);*/
-        //view.display((GraphicGraph)_inGraph, true);
-        //createAndSetSwingContent(inGraph, graphPanel);
-
+        // Embed GraphStream graph into the GUI
         _viewer.addDefaultView(false, _viewer.newDefaultGraphRenderer());
         _viewer.enableAutoLayout();
-
         viewPanel = (FxDefaultView) _viewer.getDefaultView();
-        viewPanel.setFocusTraversable(true);
-        viewPanel.setMaxHeight(357);
+        viewPanel.setFocusTraversable(true); // Allow the keyboard shortcuts
+        viewPanel.setMaxHeight(357); // So it fits
         viewPanel.setMinWidth(800);
         viewPanel.requireFocus();
         _camera = _viewer.getDefaultView().getCamera();
-        graphContainer.getChildren().add(viewPanel);
+        graphContainer.getChildren().add(viewPanel); // Add it to its container
 
         inputFileText.setText(_inputFile);
         coresText.setText(_cores);
         processorsText.setText(_processors);
         outputFileText.setText(_outputFile);
 
-        //long startTime = System.currentTimeMillis();
 
+        // Set the timer for elapsing the program run time
         _timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -104,44 +95,17 @@ public class ViewerPaneController {
             }
         };
 
-        ViewerPaneController.toggleTimer(true);
-/*        Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(
-                new KeyFrame(Duration.seconds(151),
-                        new KeyValue(15, 0)));
-        timeline.playFromStart();*/
-
+        toggleTimer(true); // Start the timer
     }
 
     public static void setViewer(FxViewer viewer) {
         _viewer = viewer;
     }
 
-/*
-    private void createAndSetSwingContent(final SwingNode swingNode, JComponent content) {
-            SwingUtilities.invokeLater(() -> {
-
-                ViewPanel graphViewPanel = _viewer.addDefaultView(false);
-                Layout layout = new SpringBox();
-                layout.setQuality(1);
-                _viewer.enableAutoLayout(layout);
-                View view = _viewer.getDefaultView();
-                System.out.println(view.getCamera().getViewCenter());
-                //view.getCamera().setViewPercent(0.9D);
-
-                //view.getCamera().setViewCenter(2, 3, 4);
-*//*            view.getCamera().setViewPercent(0.5);
-            view.getCamera().setViewCenter(0, 0, 0);*//*
-                graphViewPanel.setPreferredSize(new Dimension(1200, 520));
-                graphPanel = new JPanel();
-                graphPanel.add(graphViewPanel);
-                swingNode.setContent(graphPanel);
-            });
-    }*/
-
     /**
-     * Action tied to the menuButton. On "Menu" Click, go to the IntroPane
+     * Zoom out on the graph view
      * @param event
+     * @Author Sean Oldfield
      */
     @FXML
     private void zoomInAction(ActionEvent event) {
@@ -151,6 +115,11 @@ public class ViewerPaneController {
         });
     }
 
+    /**
+     * Zoom out on the graph view
+     * @param event
+     * @Author Sean Oldfield
+     */
     @FXML
     private void zoomOutAction(ActionEvent event) {
         Platform.runLater(() -> {
@@ -158,7 +127,11 @@ public class ViewerPaneController {
         });
     }
 
-
+    /**
+     * Recenter the camera to default on the graph view
+     * @param event
+     * @Author Sean Oldfield
+     */
     @FXML
     private void resetViewAction(ActionEvent event) {
         Platform.runLater(() -> {
@@ -166,6 +139,11 @@ public class ViewerPaneController {
         });
     }
 
+    /**
+     * Pan the camera on the graph view up
+     * @param event
+     * @Author Sean Oldfield
+     */
     @FXML
     private void panUpAction(ActionEvent event) {
         Platform.runLater(() -> {
@@ -176,7 +154,11 @@ public class ViewerPaneController {
         });
     }
 
-
+    /**
+     * Pan the camera on the graph view down
+     * @param event
+     * @Author Sean Oldfield
+     */
     @FXML
     private void panDownAction(ActionEvent event) {
         Platform.runLater(() -> {
@@ -187,6 +169,11 @@ public class ViewerPaneController {
         });
     }
 
+    /**
+     * Pan the camera on the graph view right
+     * @param event
+     * @Author Sean Oldfield
+     */
     @FXML
     private void panRightAction(ActionEvent event) {
         Platform.runLater(() -> {
@@ -197,6 +184,11 @@ public class ViewerPaneController {
         });
     }
 
+    /**
+     * Pan the camera on the graph view left
+     * @param event
+     * @Author Sean Oldfield
+     */
     @FXML
     private void panLeftAction(ActionEvent event) {
         Platform.runLater(() -> {
@@ -207,29 +199,54 @@ public class ViewerPaneController {
         });
     }
 
+    /**
+     * Set the graph to be have a hierarchical layout
+     * @param event
+     * @Author Sean Oldfield
+     */
     @FXML
     void setHierarchicalLayout(ActionEvent event) {
         _viewer.disableAutoLayout();
         _viewer.enableAutoLayout(new HierarchicalLayout());
     }
 
+    /**
+     * Set the graph to be have a linear logarithm layout
+     * @param event
+     * @Author Sean Oldfield
+     */
     @FXML
     void setLinLogLayout(ActionEvent event) {
         _viewer.disableAutoLayout();
         _viewer.enableAutoLayout(new LinLog());
     }
 
+    /**
+     * Set the graph to be have a spring box layout
+     * @param event
+     * @Author Sean Oldfield
+     */
     @FXML
     void setSpringBoxLayout(ActionEvent event) {
         _viewer.disableAutoLayout();
         _viewer.enableAutoLayout(new SpringBox());
     }
 
+    /**
+     * Give graph view focus when clicked on i.e. allow it to be accessed by keyboard shortcuts
+     * @param event
+     * @Author Sean Oldfield
+     */
     @FXML
     void giveGraphFocus(MouseEvent event) {
         viewPanel.requestFocus();
     }
 
+    /**
+     * Set useful parameters for viewing and manipulating in the GUI
+     * @param parameters String list of parameters
+     * @Author Sean Oldfield
+     */
     public static void setParameters(List<String> parameters) {
         _inputFile = parameters.get(0);
         _processors = parameters.get(1);
@@ -243,6 +260,11 @@ public class ViewerPaneController {
 
     }
 
+    /**
+     * Calculate delta offset for zoom functions in the GUI
+     * @return The delta offset
+     * @Author Sean Oldfield
+     */
     private double calculateDelta() {
         return  _camera.getViewPercent() * _camera.getGraphDimension() * 0.1f;
     }
@@ -250,6 +272,7 @@ public class ViewerPaneController {
     /**
      * Start or stop the program timer
      * @param enable True if the timer is to be started, false to stop it
+     * @Author Sean Oldfield
      */
     public static void toggleTimer(boolean enable) {
         if(enable) {
