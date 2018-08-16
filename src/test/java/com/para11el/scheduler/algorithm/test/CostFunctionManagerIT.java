@@ -26,7 +26,7 @@ public class CostFunctionManagerIT {
 	 * 
 	 * @author Jessica Alcantara
 	 */
-	/**@Test
+	@Test
 	public void testCalculateIdleTime() {
 		int processors = 3;
 		CostFunctionManager cfm = new CostFunctionManager(11, processors);
@@ -40,14 +40,14 @@ public class CostFunctionManagerIT {
 		
 		int idleTime = cfm.calculateIdleTime(testSolution);
 		assertEquals(3,idleTime);
-	}**/
+	}
 	
 	/**
 	 * Unit test for calculating the total bounded time in a schedule
 	 * 
 	 * @author Jessica Alcantara
 	 */
-	/**@Test
+	@Test
 	public void testCalculateBoundTime() {
 		int processors = 3;
 		CostFunctionManager cfm = new CostFunctionManager(11, processors);
@@ -61,14 +61,14 @@ public class CostFunctionManagerIT {
 		
 		int boundedTime = cfm.calculateBoundedTime(testSolution);
 		assertEquals(4,boundedTime);
-	}**/
+	}
 	
 	/**
 	 * Unit test to calculate the critical path estimate of a graph.
 	 * 
 	 * @author Holly Hagenson
 	 */
-	/**@Test
+	@Test
 	public void testCalculateCriticalPathEstimate(){
 		createGraph();
 		
@@ -85,14 +85,14 @@ public class CostFunctionManagerIT {
 		int criticalPathEstimate = cfm.calculateCriticalPathEstimate(lastTask, testSolution);
 		
 		assertEquals(criticalPathEstimate, 12);
-	}**/
+	}
 	
 	/**
 	 * Unit test to calculate bottom level path of given node.
 	 * 
 	 * @author Holly Hagenson
 	 */
-	/**@Test
+	@Test
 	public void testCalculateBottomLevel(){
 		createGraph(); 
 		int processors = 2; 
@@ -100,7 +100,7 @@ public class CostFunctionManagerIT {
 		
 		int bottomLevel = cfm.bottomLevel(_graph1.getNode("2"));
 		assertEquals(9, bottomLevel); 
-	}**/
+	}
 	
 	/**
 	 * Unit test to calculate cost function of a state.

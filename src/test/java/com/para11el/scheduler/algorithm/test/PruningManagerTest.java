@@ -68,8 +68,8 @@ public class PruningManagerTest {
 	}
 	
 	/**
-	 * Unit test to check that the get method will return the correct object if 
-	 * the tasks are equal.
+	 * Unit test to check that schedules with tasks allocated to the 
+	 * same processor are duplicates.
 	 * 
 	 * @author
 	 */
@@ -103,6 +103,30 @@ public class PruningManagerTest {
 		
 		PruningManager pm = new PruningManager();
 		assertTrue(pm.compareAllocation(tasksA, tasksB));
+	}
+	
+	/**
+	 * Unit test to check that schedules with tasks allocated to the 
+	 * same processor are duplicates.
+	 */
+	@Test
+	public void testCompareMakespan() {	
+		MockNode nodeA = new MockNode(null,"A",5);
+		MockNode nodeB = new MockNode(null,"B",5);
+		MockNode nodeC = new MockNode(null,"C",5);
+		
+		Task taskA = new Task(nodeA,0,1);
+		Task taskB = new Task(nodeB,5,1);
+		Task taskC = new Task(nodeC,4,2);
+
+		ArrayList<Task> tasksA = new ArrayList<Task>();
+		tasksA.add(taskA);
+		tasksA.add(taskB);
+		tasksA.add(taskC);
+		
+		PruningManager pm = new PruningManager();
+		pm.setMakespan(9);
+		assertTrue(pm.compareMakespan(tasksA));
 	}
 
 }

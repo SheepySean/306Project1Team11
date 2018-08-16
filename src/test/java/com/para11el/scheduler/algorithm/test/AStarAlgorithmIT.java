@@ -182,7 +182,7 @@ public class AStarAlgorithmIT {
 			}
 		}
 		
-		assertEquals(maxFinish, 14); 
+		assertEquals(maxFinish, 15); 
 	}
 	
 	/**

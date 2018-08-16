@@ -161,4 +161,14 @@ public class PruningManager {
 		}
 		return finishTime;
 	}
+	
+	/**
+	 * Sets the makespan
+	 * @param makespan Makespan of the current state
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public void setMakespan(int makespan) {
+		_makespan = makespan;
+	}
 }

@@ -114,7 +114,6 @@ public class Scheduler {
     		ArrayList<Task> solution = algorithm.buildSolution();
     		outputGraph = algorithm.getGraph(solution); 	
         }
-
 		
 		// For viewing the Graph
 		GraphViewManager viewManager = new GraphViewManager(_inGraph);
