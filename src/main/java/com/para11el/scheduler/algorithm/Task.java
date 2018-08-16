@@ -28,6 +28,11 @@ public class Task {
 		_processor = processor;
 	}
 
+	/**
+	 * @return Node from Task object
+	 * 
+	 * @author Tina Chen
+	 */
 	public Node getNode() {
 		return _node;
 	}

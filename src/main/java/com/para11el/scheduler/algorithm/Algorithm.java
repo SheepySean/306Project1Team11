@@ -77,8 +77,8 @@ public abstract class Algorithm {
 	 * @author Holly Hagenson, Rebekah Berriman
 	 */
 	public int getEarliestStartTime(Node node, ArrayList<Task> schedule, int processor) {
-		int processorFinish; 
-		int startTime = 0;
+		int processorFinishTime; 
+		int nodeStartTime = 0;
 		int parentLatestFinish = 0;
 
 		// Get the latest finish time of the parents
@@ -93,18 +93,18 @@ public abstract class Algorithm {
 						.getAttribute("Weight")).intValue();
 				parentLatestFinish = task.getStartTime() + nodeWeight + edgeWeight;  
 			}
-			if (parentLatestFinish > startTime){
-				startTime = parentLatestFinish; 
+			if (parentLatestFinish > nodeStartTime){
+				nodeStartTime = parentLatestFinish; 
 			}
 		}
 		
 		// Get the latest finish time of the current processor
-		processorFinish = getProcessorFinishTime(schedule, processor);
-		if (processorFinish > startTime) {
-			startTime = processorFinish;
+		processorFinishTime = getProcessorFinishTime(schedule, processor);
+		if (processorFinishTime > nodeStartTime) {
+			nodeStartTime = processorFinishTime;
 		}
 
-		return startTime;
+		return nodeStartTime;
 	}
 	
 	/**
@@ -116,18 +116,18 @@ public abstract class Algorithm {
 	 * @author Rebekah Berriman
 	 */
 	public int getProcessorFinishTime(ArrayList<Task> schedule, int processor) {
-		int finishTime = 0;
-		int processorFinish;
+		int processorFinishTime = 0;
+		int taskFinishTime;
 
 		for (Task task : schedule) {
 			if (task.getProcessor() == processor) {
-				processorFinish = task.getFinishTime();
-				if (finishTime < processorFinish) {
-					finishTime = processorFinish;
+				taskFinishTime = task.getFinishTime();
+				if (processorFinishTime < taskFinishTime) {
+					processorFinishTime = taskFinishTime;
 				}
 			}	
 		}
-		return finishTime;
+		return processorFinishTime;
 	}
 	
 	/**

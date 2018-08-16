@@ -13,23 +13,48 @@ import org.graphstream.graph.Node;
 public class DFSAlgorithm extends Algorithm {
 
 	private int _minimumTime;
-	private ArrayList<Task> _optimalSolution = new ArrayList<Task>();
+	private ArrayList<Task> _optimalSchedule = new ArrayList<Task>();
 
+	/**
+	 * Default constructor for DFS Algorithm
+	 * 
+	 * @author Tina Chen
+	 */
 	public DFSAlgorithm() {
 		super();
 	}
-	
+	/**
+	 * Constructor for DFS Algorithm for sequential solution
+	 * @param graph of tasks to be scheduled
+	 * @param processor number to schedule tasks on
+	 * 
+	 * @author Tina Chen
+	 */
 	public DFSAlgorithm(Graph graph, int processor) {
 		super(graph, processor);
 	}
 
+	/**
+	 * Constructor for DFS Algorithm for parallel solution
+	 * @param graph of tasks to be scheduled
+	 * @param processor number to schedule tasks on
+	 * @param cores to parallelise
+	 * 
+	 * @author Tina Chen
+	 */
 	public DFSAlgorithm(Graph graph, int processor, int cores) {
 		super(graph, processor, cores);
 	}
 	
+	/**
+	 * Calls initialise to begin the recursive DFS
+	 * @return an array list of type task with the optimal schedule
+	 * 
+	 * @author Rebekah Berriman
+	 */
 	public ArrayList<Task> buildSolution() {
 		initialise();
-		return _optimalSolution;
+		return _optimalSchedule;
 	}
 
 	/**
@@ -127,7 +152,7 @@ public class DFSAlgorithm extends Algorithm {
 			// Update minimal time and optimal solution
 			if (_minimumTime >= solutionTime) {
 				_minimumTime = solutionTime;
-				_optimalSolution = newSolution;
+				_optimalSchedule = newSolution;
 			}
 		}
 	}
@@ -139,7 +164,7 @@ public class DFSAlgorithm extends Algorithm {
 	 * @author Rebekah Berriman
 	 */
 	public ArrayList<Task> getOptimal() {
-		return _optimalSolution;
+		return _optimalSchedule;
 	}
 	
 	/**

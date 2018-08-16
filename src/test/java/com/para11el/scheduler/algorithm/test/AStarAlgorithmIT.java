@@ -18,7 +18,7 @@ import com.para11el.scheduler.algorithm.State;
 import com.para11el.scheduler.algorithm.Task;
 
 /**
- * Junit test to test the validity and optimality of the A* Algorithm.
+ * JUnit test to test the validity and optimality of the A* Algorithm.
  * 
  * @author Jessica Alcantara
  *
@@ -28,6 +28,7 @@ public class AStarAlgorithmIT {
 	
 	/**
 	 * Unit test for the ascending ordering of the state comparator.
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
@@ -54,6 +55,7 @@ public class AStarAlgorithmIT {
 	
 	/**
 	 * Unit test for calculating the total weight of nodes in a graph.
+	 * 
 	 * @author Holly Hagenson
 	 */
 	@Test
@@ -74,6 +76,7 @@ public class AStarAlgorithmIT {
 	
 	/**
 	 * Unit test for getting the earliest start time of a node. 
+	 * 
 	 * @author Holly Hagenson
 	 */
 	@Test
@@ -94,6 +97,7 @@ public class AStarAlgorithmIT {
 	
 	/**
 	 * Unit test to check for duplicate states within priority queue.
+	 * 
 	 * @author Holly Hagenson
 	 */
 	@Test
@@ -128,6 +132,7 @@ public class AStarAlgorithmIT {
 	/**
 	 * Unit test to check finish time of valid, optimal solution when multiple 
 	 * processors are used.
+	 * 
 	 * @author Holly Hagenson
 	 */
 	@Test 
@@ -155,6 +160,7 @@ public class AStarAlgorithmIT {
 	/**
 	 * Unit test to check finish time of valid, optimal solution when a single 
 	 * processor is used.
+	 * 
 	 * @author Holly Hagenson
 	 */
 	@Test 
@@ -181,6 +187,7 @@ public class AStarAlgorithmIT {
 	
 	/**
 	 * Unit test for checking attributes of nodes on output graph.
+	 * 
 	 * @author Holly Hagenson
 	 */
 	@Test
@@ -206,8 +213,10 @@ public class AStarAlgorithmIT {
 			
 	}
 	
-	/*
+	/**
 	 * Method to create a GraphStream graph to use for testing purposes
+	 * 
+	 * @author Holly Hagenson
 	 */
 	public void createGraph(){
 		_graph1 = new SingleGraph("graphWithMultipleProcessors");
@@ -230,6 +239,4 @@ public class AStarAlgorithmIT {
 		_graph1.getEdge("2 -> 4").setAttribute("Weight", 3.0);
 		_graph1.getEdge("2 -> 5").setAttribute("Weight", 5.0);
 	}
-	
-
 }

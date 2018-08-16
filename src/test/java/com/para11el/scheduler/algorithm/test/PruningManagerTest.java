@@ -1,20 +1,23 @@
 package com.para11el.scheduler.algorithm.test;
 
 import static org.junit.Assert.*;
-
 import java.util.ArrayList;
-
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.para11el.scheduler.algorithm.PruningManager;
 import com.para11el.scheduler.algorithm.Task;
 
+/**
+ * 
+ * @author 
+ */
 public class PruningManagerTest {
 	
 	/**
 	 * Unit test to check that tasks with the same node id and start time are 
 	 * given the same hashcode.
+	 * 
+	 * @author 
 	 */
 	@Test
 	public void testTaskHashCodeEquality() {
@@ -28,6 +31,8 @@ public class PruningManagerTest {
 	/**
 	 * Unit test to check that tasks with the same node id and start time are 
 	 * equal.
+	 * 
+	 * @author 
 	 */
 	@Test
 	public void testTaskObjectEquality() {
@@ -41,6 +46,8 @@ public class PruningManagerTest {
 	/**
 	 * Unit test to check that the contains method will return true if the tasks
 	 * are equal.
+	 * 
+	 * @author 
 	 */
 	@Test
 	public void testListContainsTask() {
@@ -63,6 +70,8 @@ public class PruningManagerTest {
 	/**
 	 * Unit test to check that schedules with tasks allocated to the 
 	 * same processor are duplicates.
+	 * 
+	 * @author
 	 */
 	@Test
 	public void testCompareAllocations() {

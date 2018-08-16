@@ -30,6 +30,7 @@ public class SolutionValidity {
 	/**
 	 * Unit test for no overlap in the schedule of a single entry multiple exit graph
 	 * with one processor.
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
@@ -44,6 +45,7 @@ public class SolutionValidity {
 	/**
 	 * Unit test for the correct schedule order of a single entry multiple exit graph
 	 * with one processor.
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
@@ -68,6 +70,7 @@ public class SolutionValidity {
 	/**
 	 * Unit test for the optimality of a single entry multiple exit graph
 	 * with one processor.
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
@@ -92,6 +95,7 @@ public class SolutionValidity {
 	/**
 	 * Unit test for no overlap in the schedule of a single exit multiple entry graph
 	 * with one processor.
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
@@ -107,6 +111,7 @@ public class SolutionValidity {
 	/**
 	 * Unit test for the correct schedule order of a single exit multiple entry graph
 	 * with one processor.
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
@@ -129,6 +134,7 @@ public class SolutionValidity {
 	/**
 	 * Unit test for the optimality of a single exit multiple entry graph
 	 * with one processor.
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
@@ -154,6 +160,7 @@ public class SolutionValidity {
 	 * @param taskA start time of taskA
 	 * @param taskB start time of taskB
 	 * @return Boolean true taskA starts before taskB
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	private Boolean isBefore(int taskA, int taskB) {	
@@ -169,6 +176,7 @@ public class SolutionValidity {
 	 * Checks if tasks times overlap
 	 * @param schedule list representing a schedule
 	 * @return Boolean true if no task time overlap
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	private Boolean noSingleProcessorOverlap(ArrayList<Task> schedule) {

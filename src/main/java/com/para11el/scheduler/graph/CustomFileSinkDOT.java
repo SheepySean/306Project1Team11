@@ -25,6 +25,8 @@ public class CustomFileSinkDOT extends FileSinkDOT {
 	 * @see FileSinkDOT
 	 * @param digraph True if graph is a digraph
 	 * @param graphName Name of the output graph
+	 * 
+	 * @author Sean Oldfield
 	 */
 	public CustomFileSinkDOT(boolean digraph, String graphName) {
 		_graphName = graphName;
