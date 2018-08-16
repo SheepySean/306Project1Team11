@@ -29,6 +29,8 @@ public class DFSAlgorithmIT {
 	
 	/**
 	 * Create multiple graphs to test output.
+	 * 
+	 * @author Holly Hagenson
 	 */
 	@BeforeClass
 	public static void initialise(){
@@ -37,6 +39,7 @@ public class DFSAlgorithmIT {
 	
 	/**
 	 * Test output is correct for multiple processors
+	 * 
 	 * @author Rebekah Berriman, Holly Hagenson
 	 */
 	@Test
@@ -73,6 +76,7 @@ public class DFSAlgorithmIT {
 	
 	/**
 	 * Test output is correct for graph with multiple entry nodes on a single processor.
+	 * 
 	 * @author Rebekah Berriman
 	 */
 	@Test
@@ -106,6 +110,7 @@ public class DFSAlgorithmIT {
 	
 	/**
 	 * Test output is correct for graph with multiple entry nodes on two processors.
+	 * 
 	 * @author Rebekah Berriman
 	 */
 	@Test
@@ -141,6 +146,7 @@ public class DFSAlgorithmIT {
 	
 	/**
 	 * Test output is correct for graph with multiple exit nodes on a single processor
+	 * 
 	 * @author Rebekah Berriman
 	 */
 	@Test
@@ -173,6 +179,7 @@ public class DFSAlgorithmIT {
 	
 	/**
 	 * Test output is correct for graph with multiple exit nodes on multiple processors
+	 * 
 	 * @author Rebekah Berriman
 	 */
 	@Test
@@ -209,6 +216,7 @@ public class DFSAlgorithmIT {
 	/**
 	 * Test that the finish time of a sequential graph on a single processor is the 
 	 * actual finish time of the optimal solution.
+	 * 
 	 *  @author Rebekah Berriman
 	 */
 	@Test 
@@ -231,6 +239,7 @@ public class DFSAlgorithmIT {
 	/**
 	 * Test that the finish time of a sequential graph on multiple processors is the 
 	 * actual finish time of the optimal solution.
+	 * 
 	 *  @author Rebekah Berriman
 	 */
 	@Test 
@@ -256,6 +265,7 @@ public class DFSAlgorithmIT {
 	 *  - Processor
 	 *  and that the output graph only has one label for each edge:
 	 *  - Weight
+	 *  
 	 *  @author Rebekah Berriman
 	 */
 	@Test 
@@ -331,6 +341,7 @@ public class DFSAlgorithmIT {
 	
 	/**
 	 * Graphs to use for testing
+	 * 
 	 * @author Holly Hagenson
 	 */
 	public static void createGraphs(){

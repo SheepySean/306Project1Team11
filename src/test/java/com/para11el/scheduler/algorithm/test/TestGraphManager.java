@@ -14,6 +14,7 @@ public class TestGraphManager {
 	
 	/**
 	 * Create example graph with a single exit and exit.
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	public Graph createSingleEntrySingleExit() {
@@ -35,6 +36,7 @@ public class TestGraphManager {
 	
 	/**
 	 * Create example graph with a single entry and multiple exits.
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	public Graph createSingleEntryMultipleExit() {
@@ -59,6 +61,7 @@ public class TestGraphManager {
 	
 	/**
 	 * Create example graph with a single exit and multiple entries.
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	public Graph createSingleExitMultipleEntry() {

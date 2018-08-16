@@ -21,6 +21,8 @@ import java.util.ArrayList;
 
 /**
  * Main runner class of the program
+ * 
+ * @author Sean Oldfield
  */
 public class Scheduler {
 
@@ -37,6 +39,8 @@ public class Scheduler {
 	/**
 	 * Entry point for the program
 	 * @param args Command line arguments
+	 * 
+	 * @author Sean Oldfield
 	 */
 	public static void main(String[] args) {
         System.setProperty("org.graphstream.ui", "javafx"); // Use JavaFx for GUI
@@ -148,7 +152,7 @@ public class Scheduler {
 	 * @throws ParameterLengthException Thrown if less than the required number of parameters is provided
 	 * @throws NumberFormatException Thrown if expected number parameters are not numbers
 	 * 
-	 * @author Sean Oldfield
+	 * @author Sean Oldfield, Tina Chen, Rebekah Berriman
 	 */
 	private static void readParameters(String[] params)
 			throws ParameterLengthException, NumberFormatException, ArrayIndexOutOfBoundsException {

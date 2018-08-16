@@ -18,6 +18,8 @@ public enum GraphConstants {
     /**
      * Return a corresponding string representing a value for a different Graph constant
      * @return String
+     * 
+     * @author Sean Oldfield
      */
     public String getValue() {
         return _value;

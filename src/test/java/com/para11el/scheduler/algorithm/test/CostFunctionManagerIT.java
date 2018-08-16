@@ -10,11 +10,10 @@ import com.para11el.scheduler.algorithm.State;
 import com.para11el.scheduler.algorithm.Task;
 
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 /**
- * Junit test to test the correctness of the Cost Function Manager.
+ * JUnit test to test the correctness of the Cost Function Manager.
  * 
  * @author Jessica Alcantara
  *
@@ -24,6 +23,7 @@ public class CostFunctionManagerIT {
 
 	/**
 	 * Unit test for calculating the total idle time in a schedule
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	/**@Test
@@ -44,6 +44,7 @@ public class CostFunctionManagerIT {
 	
 	/**
 	 * Unit test for calculating the total bounded time in a schedule
+	 * 
 	 * @author Jessica Alcantara
 	 */
 	/**@Test
@@ -64,6 +65,7 @@ public class CostFunctionManagerIT {
 	
 	/**
 	 * Unit test to calculate the critical path estimate of a graph.
+	 * 
 	 * @author Holly Hagenson
 	 */
 	/**@Test
@@ -87,6 +89,7 @@ public class CostFunctionManagerIT {
 	
 	/**
 	 * Unit test to calculate bottom level path of given node.
+	 * 
 	 * @author Holly Hagenson
 	 */
 	/**@Test
@@ -101,6 +104,7 @@ public class CostFunctionManagerIT {
 	
 	/**
 	 * Unit test to calculate cost function of a state.
+	 * 
 	 * @author Holly Hagenson 
 	 */
 	@Test
@@ -123,6 +127,7 @@ public class CostFunctionManagerIT {
 	
 	/**
 	 * Create graphstream graph to use for testing.
+	 * 
 	 * @author Holly Hagenson
 	 */
 	public static void createGraph(){
@@ -146,7 +151,5 @@ public class CostFunctionManagerIT {
 		_graph1.getEdge("2 -> 4").setAttribute("Weight", 3.0);
 		_graph1.getEdge("2 -> 5").setAttribute("Weight", 5.0);
 		
-	}
-	
-	
+	}	
 }
