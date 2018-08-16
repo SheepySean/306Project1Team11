@@ -32,6 +32,7 @@ public class AStarAlgorithm extends Algorithm{
 	};
 
 	private Queue<State> _states = new PriorityQueue<State>(_stateComparator);
+	private NodeManager _nm;
 	private CostFunctionManager _cfm;
 	private PruningManager _pm;
 
@@ -41,13 +42,15 @@ public class AStarAlgorithm extends Algorithm{
 
 	public AStarAlgorithm(Graph graph, int processor) {
 		super(graph, processor);
-		_cfm = new CostFunctionManager(calculateTotalWeight(graph.nodes()), processor);
+		_nm = new NodeManager(graph);
+		_cfm = new CostFunctionManager(_nm, calculateTotalWeight(graph.nodes()), processor);
 		_pm = new PruningManager();
 	}
 
 	public AStarAlgorithm(Graph graph, int processor, int cores) {
 		super(graph, processor, cores);
-		_cfm = new CostFunctionManager(calculateTotalWeight(graph.nodes()), processor);
+		_nm = new NodeManager(graph);
+		_cfm = new CostFunctionManager(_nm, calculateTotalWeight(graph.nodes()), processor);
 		_pm = new PruningManager();
 	}
 
