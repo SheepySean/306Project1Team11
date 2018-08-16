@@ -48,9 +48,12 @@ public class Scheduler {
 	 */
 	public static void main(String[] args) {
         System.setProperty("org.graphstream.ui", "javafx"); // Use JavaFx for GUI
-		System.setProperty("gs.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-        long startTime = System.currentTimeMillis();
-        LogManager.getLogManager().reset();
+		System.setProperty("gs.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer"); // CSS Styling
+
+        long startTime = System.currentTimeMillis(); // Start time of the program
+
+        LogManager.getLogManager().reset(); // Prevent GraphStream logging to the command line
+
 		// Read the parameters provided on the command line
 		try {
             readParameters(args);
@@ -88,22 +91,22 @@ public class Scheduler {
 					+ "-output" + GraphConstants.FILE_EXT.getValue();
 		}
 
-		String[] guiArgs = {
-				_filename,
-				Integer.toString(_scheduleProcessors),
-				Integer.toString(_numCores),
-				getFilenameNoDirectory(_outputFilename),
-                Long.toString(startTime)
-		};
 
-        if(_visualise) { // Start the GUI on an another thread
+        if(_visualise) { // If visualisation has been enabled
+            String[] guiArgs = { // Parameters needed by the GUI
+                    _filename,
+                    Integer.toString(_scheduleProcessors),
+                    Integer.toString(_numCores),
+                    getFilenameNoDirectory(_outputFilename),
+                    Long.toString(startTime)
+            };
 
+            // Start the GUI on another thread
 			FxViewer viewer = new FxViewer(_inGraph, FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 			ViewerPaneController.setViewer(viewer);
             new Thread(() -> {
                 Application.launch(Viewer.class, guiArgs);
             }).start();
-
 
 			// For viewing the Graph
 			GraphicGraph viewGraph = viewer.getGraphicGraph();
@@ -112,7 +115,7 @@ public class Scheduler {
 			// Add the css
 			viewGraph.setAttribute("ui.stylesheet", "url('" + url + "')");
 			GraphViewManager viewManager = new GraphViewManager(_inGraph);
-			viewManager.labelGraph();
+			viewManager.labelGraph(); // Label nodes and edges
             //_inGraph.getNode("0").setAttribute("ui.class", "some");
         }
 
@@ -125,10 +128,7 @@ public class Scheduler {
 		
 
 
-
-
 		// Write the output file
-
 		try {
 			fileManager.writeGraphFile(_outputFilename,
 					_inGraph, true);
@@ -191,6 +191,12 @@ public class Scheduler {
         }
     }
 
+    /**
+     * Remove any parent directories from a file path
+     * @param path File path to a file
+     * @return The name of the file without directories
+     * @Author Sean Oldfield
+     */
     private static String getFilenameNoDirectory(String path) {
 		return Paths.get(path).getFileName().toString();
 	}
