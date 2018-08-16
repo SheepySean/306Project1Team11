@@ -1,6 +1,7 @@
 package com.para11el.scheduler.ui;
 
 
+import com.para11el.scheduler.algorithm.Task;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -87,8 +88,6 @@ public class ViewerPaneController {
 
     	scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-
-
     	setCellSize(Integer.parseInt(_processors));
 
     	initialisePane(30);
@@ -101,7 +100,7 @@ public class ViewerPaneController {
 
 		setCell("b2", 4, 7, 7, generateColours());
 
-		setCell("c", 3, 1, 12, generateColours());
+		setCell("c", 3, 18, 12, generateColours());
 
 		setCell("b", 1, 0, 1, generateColours());
 
@@ -119,7 +118,7 @@ public class ViewerPaneController {
         viewPanel = (FxDefaultView) _viewer.getDefaultView();
         viewPanel.setFocusTraversable(true); // Allow the keyboard shortcuts
         viewPanel.setMaxHeight(357); // So it fits
-        viewPanel.setMinWidth(800);
+        viewPanel.setMaxWidth(598);
         viewPanel.requireFocus();
         _camera = _viewer.getDefaultView().getCamera();
         graphContainer.getChildren().add(viewPanel); // Add it to its container
@@ -355,6 +354,12 @@ public class ViewerPaneController {
 		}
 
     }
+
+/*    public void updateSchedule(List<Task> schedule) {
+        for(Task task: schedule) {
+            setCell(task.getNode(), task.getProcessor(), task.getStartTime(), task.);
+        }
+    }*/
 
 
     private void setCell(String label, int processor, int startTime, int length, String colour) {
