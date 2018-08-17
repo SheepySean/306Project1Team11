@@ -1,8 +1,7 @@
 package com.para11el.scheduler.main;
 
-
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
-import com.para11el.scheduler.algorithm.DFSAlgorithm;
+import com.para11el.scheduler.algorithm.DFSInitialiser;
 import com.para11el.scheduler.algorithm.Task;
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
@@ -21,22 +20,27 @@ import java.util.ArrayList;
 
 /**
  * Main runner class of the program
+ * 
+ * @author Sean Oldfield
  */
 public class Scheduler {
 
 	private static Graph _inGraph = null;
 	private static String _filename = null;
 	private static int _scheduleProcessors = 0;
-	private static int _numCores = 0;
+	private static int _numCores = 1;
 	private static String _outputFilename = null;
 	private static boolean _visualise = false;
 	private static boolean _astar = true;
 	private static boolean _timeout = false;
 	private static int _timeoutSeconds = 0;
+	
 
 	/**
 	 * Entry point for the program
 	 * @param args Command line arguments
+	 * 
+	 * @author Sean Oldfield
 	 */
 	public static void main(String[] args) {
         System.setProperty("org.graphstream.ui", "javafx"); // Use JavaFx for GUI
@@ -78,6 +82,7 @@ public class Scheduler {
 			return; 
 		}
 		
+		
 		//Initialise a timeoutCounter for use if there is a timeout specified
 		Thread timeoutCounter = null;
 		
@@ -98,17 +103,23 @@ public class Scheduler {
 		//Initialise the output graph
 		Graph outputGraph;
 		
+		//Start timer
+		long start = System.currentTimeMillis();
+		
         if(_astar) {
         	//Searches with A Star Algorithm (default)
         	AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
     		ArrayList<Task> solution = algorithm.buildSolution(); 
     		outputGraph = algorithm.getGraph(solution);
-        	
         } else {
         	//Searches with DFS Algorithm
-    		DFSAlgorithm algorithm = new DFSAlgorithm(_inGraph, _scheduleProcessors);
+        	DFSInitialiser dfs = new DFSInitialiser(_inGraph, _scheduleProcessors, _numCores);
+        	ArrayList<Task> solution = dfs.buildSolution();
+        	outputGraph = dfs.getGraph(solution); 
+        	
+        	/*DFSAlgorithm algorithm = new DFSAlgorithm(_inGraph, _scheduleProcessors);
     		ArrayList<Task> solution = algorithm.buildSolution();
-    		outputGraph = algorithm.getGraph(solution); 	
+    		outputGraph = algorithm.getGraph(solution); 	*/
         }
 		
 		// For viewing the Graph
@@ -116,6 +127,9 @@ public class Scheduler {
 		/*viewManager.labelGraph();
 		viewManager.unlabelGraph();*/
 		
+		//Print the duration
+		long duration = System.currentTimeMillis() - start;
+		System.out.println("Run time in milliseconds: " + duration);
 		
 		// Name the file if no specific output name was provided
 		if(_outputFilename == null) {
@@ -147,7 +161,7 @@ public class Scheduler {
 	 * @throws ParameterLengthException Thrown if less than the required number of parameters is provided
 	 * @throws NumberFormatException Thrown if expected number parameters are not numbers
 	 * 
-	 * @author Sean Oldfield
+	 * @author Sean Oldfield, Tina Chen, Rebekah Berriman
 	 */
 	private static void readParameters(String[] params)
 			throws ParameterLengthException, NumberFormatException, ArrayIndexOutOfBoundsException {
@@ -208,8 +222,8 @@ public class Scheduler {
 	 * @author Rebekah Berriman
 	 */
 	private static boolean invalidOptional() {
-		if (!_astar && (_visualise || (_numCores !=0))) {
-			System.out.println("To run the algorithm using DFS, visualisation (-v) and parallelisation (-p) of the search are disabled.");
+		if (!_astar && _visualise) {
+			System.out.println("To run the algorithm using DFS, visualisation (-v) of the search is disabled.");
 			return true;
 		} else if (_timeout && (_timeoutSeconds==0)) {
 			System.out.println("An optimal solution cannot be found in 0 seconds.");

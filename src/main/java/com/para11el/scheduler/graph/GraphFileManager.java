@@ -15,6 +15,8 @@ public class GraphFileManager {
 
     /**
      * Constructor for GraphFileManager
+     * 
+     * @author Sean Oldfield
      */
     public GraphFileManager(){
     }
@@ -25,6 +27,7 @@ public class GraphFileManager {
      * @param graphID Name of the generated graph for titling purposes
      * @return Graph made from the file
      * @throws IOException Thrown if the graph file cannot be read
+     * 
      * @author Sean Oldfield
      */
     public Graph readGraphFile(String filename, String graphID) throws IOException {
@@ -42,6 +45,7 @@ public class GraphFileManager {
      * @param graph The graph to be written to the output file
      * @param isDigraph True if the graph is a _digraph, false otherwise
      * @throws IOException Thrown if the graph file cannot be written
+     * 
      * @author Sean Oldfield
      */
     public void writeGraphFile(String filename, Graph graph, boolean isDigraph) throws IOException {
