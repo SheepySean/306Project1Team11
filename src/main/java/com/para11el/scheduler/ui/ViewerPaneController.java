@@ -37,10 +37,10 @@ import java.util.Random;
 
 public class ViewerPaneController {
     private static FxViewer _viewer;
-    private static Camera _camera;
+    private Camera _camera;
     private FxDefaultView viewPanel;
 
-    private static AnimationTimer _timer;
+    private AnimationTimer _timer;
 
     private static String _inputFile;
     private static String _outputFile;
@@ -51,6 +51,7 @@ public class ViewerPaneController {
     private int _cellWidth;
     private int _cellHeight = 20;
 
+    private static ViewerPaneController _instance = null;
     @FXML
     private AnchorPane graphContainer;
 
@@ -79,7 +80,7 @@ public class ViewerPaneController {
     @FXML
     private ScrollPane scrollPane;
 
-
+    public ViewerPaneController() {}
     /**
      * Initialize some of the GUI's components to initial states
      */
@@ -94,7 +95,7 @@ public class ViewerPaneController {
     	initialiseLabel(30);
 
 
-		// set cell: processor, start time, length of time, colour (string)
+/*		// set cell: processor, start time, length of time, colour (string)
 		setCell("a", 2, 3, 2, generateColours());
 		setCell("b", 4, 0, 7, generateColours());
 
@@ -106,7 +107,7 @@ public class ViewerPaneController {
 
 		setCell("b", 1, 1, 1, generateColours());
 
-		setCell("b", 1, 7, 4, generateColours());
+		setCell("b", 1, 7, 4, generateColours());*/
 
 
 		// testing more processors
@@ -142,10 +143,10 @@ public class ViewerPaneController {
             }
         };
 
-        toggleTimer(true); // Start the timer
+        this.toggleTimer(true); // Start the timer
     }
 
-    public static void setViewer(FxViewer viewer) {
+    public void setViewer(FxViewer viewer) {
         _viewer = viewer;
     }
 
@@ -294,7 +295,7 @@ public class ViewerPaneController {
      * @param parameters String list of parameters
      * @Author Sean Oldfield
      */
-    public static void setParameters(List<String> parameters) {
+    public void setParameters(List<String> parameters) {
         _inputFile = parameters.get(0);
         _processors = parameters.get(1);
         if(parameters.get(2).equals("0")) {
@@ -321,7 +322,7 @@ public class ViewerPaneController {
      * @param enable True if the timer is to be started, false to stop it
      * @Author Sean Oldfield
      */
-    public static void toggleTimer(boolean enable) {
+    public void toggleTimer(boolean enable) {
         if(enable) {
             _timer.start();
         } else {
@@ -355,11 +356,15 @@ public class ViewerPaneController {
 
     }
 
-/*    public void updateSchedule(List<Task> schedule) {
+    public void updateSchedule(List<Task> schedule) {
         for(Task task: schedule) {
-            setCell(task.getNode(), task.getProcessor(), task.getStartTime(), task.);
+            setCell(task.getNode().getId(),
+                    task.getProcessor(),
+                    task.getStartTime(),
+                    task.getWeight(),
+                    generateColours());
         }
-    }*/
+    }
 
 
     private void setCell(String label, int processor, int startTime, int length, String colour) {
@@ -405,5 +410,12 @@ public class ViewerPaneController {
 		int gapSize = (processors - 1)*2;
 		_cellWidth = (int)(Math.floor((300 - gapSize)/processors));
 	}
+
+	public static ViewerPaneController getInstance() {
+        if(_instance == null) {
+            _instance = new ViewerPaneController();
+        }
+        return _instance;
+    }
 }
 
