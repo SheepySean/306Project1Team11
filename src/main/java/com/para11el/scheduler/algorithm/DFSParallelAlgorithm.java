@@ -1,6 +1,7 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
+import java.util.concurrent.RecursiveAction;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -11,7 +12,7 @@ import org.graphstream.graph.Node;
  * 
  * @author Rebekah Berriman, Tina Chen
  */
-public class DFSParallelAlgorithm {
+public class DFSParallelAlgorithm extends RecursiveAction {
 	
 	protected Graph _graph;
 	protected int _processors;
@@ -65,6 +66,13 @@ public class DFSParallelAlgorithm {
 		initialise();
 		return _optimalSchedule;
 	}
+	
+	@Override
+	protected void compute() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 
 	/**
 	 * Initialises the root nodes in a schedule for each available processor
@@ -84,6 +92,8 @@ public class DFSParallelAlgorithm {
 			}
 		});
 	}
+	
+	
 	
 	/**
 	 * Sets the absolute maximum time to complete all tasks (sequentially on a single 
@@ -324,5 +334,6 @@ public class DFSParallelAlgorithm {
 
 		return nodeStartTime;
 	}
+	
 	
 }
