@@ -236,16 +236,13 @@ public class DFSForkJoin extends RecursiveAction {
 					solutionTime = solutionFinishTime;
 				}
 			}
-			
-			System.out.println("Solution finish time is...." + solutionTime);
 
 			// Update minimal time and optimal solution
 			if (_minimumTime >= solutionTime) {
-				System.out.println("Add new solution!");
-				//System.out.println("newSolution is:" + newSolution);
-				System.out.println("Has a time of: " + _minimumTime);
 				_minimumTime = solutionTime;
 				_optimalSchedule = newSolution;
+				OptimalDFSSchedule preserveOptimal = OptimalDFSSchedule.getInstance();
+				preserveOptimal.setOptimal(newSolution, solutionTime);
 			}
 		}
 	}

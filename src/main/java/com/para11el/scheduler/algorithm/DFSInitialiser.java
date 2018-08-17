@@ -11,6 +11,7 @@ public class DFSInitialiser {
 	protected Graph _graph;
 	protected int _processors;
 	protected int _cores;
+	//private ForkJoinPool forkJoinPool ;
 
 	private int _minimumTime;
 	
@@ -50,13 +51,28 @@ public class DFSInitialiser {
 		_graph = graph;
 		_processors = processor;
 		_cores = cores;
-
+		
 		initialise();
+		
 	}
 
 	public void initialise() {
 		setMaximumTime();
+		OptimalDFSSchedule preserveOptimal = OptimalDFSSchedule.getInstance();
+		preserveOptimal.initialise(_minimumTime);
+		
 
+		ForkJoinPool forkJoinPool = new ForkJoinPool(_cores);
+		
+		int nodeCount=0;
+		int countingLoops = 0;
+		
+		_graph.nodes().forEach((node) -> {
+			if (node.getInDegree() == 0) {
+			//	nodeCount++;
+			}
+		});
+		
 		_graph.nodes().forEach((node) -> {
 			if (node.getInDegree() == 0) {
 				Task t = new Task(node, 0, 1);
@@ -65,7 +81,7 @@ public class DFSInitialiser {
 
 				// add the fork join stuff here
 
-				ForkJoinPool forkJoinPool = new ForkJoinPool(_cores);
+				
 
 				DFSForkJoin dfsForkJoin = new DFSForkJoin(_graph, _processors,
 						_cores, _minimumTime, solutionPart);
@@ -74,14 +90,28 @@ public class DFSInitialiser {
 				
 				ArrayList<Task> sub = dfsForkJoin.getSolution();
 				_optimal.add(sub);
+				
+				//countingLoops++;
 			}
 		});
+		
+		
+		
+		while (!forkJoinPool.isQuiescent()) {
+			//Make sure it does not leave until it is done!
+		}
+	
 	}
 	
 	public ArrayList<Task> buildSolution() {
 		
-		getOptimal();
-		return _solution;
+		
+		
+		OptimalDFSSchedule preserveOptimal = OptimalDFSSchedule.getInstance();
+		System.out.println(preserveOptimal.getOptimalSchedule());
+		return preserveOptimal.getOptimalSchedule();
+		//getOptimal();
+		//return _solution;
 	}
 
 	/**

@@ -128,6 +128,7 @@ public class Scheduler {
         	
         	DFSInitialiser dfs = new DFSInitialiser(_inGraph, _scheduleProcessors, _numCores);
         	ArrayList<Task> solution = dfs.buildSolution();
+        	System.out.println("hello");
         	outputGraph = dfs.getGraph(solution); 	
         	
         	// CHANGE THIS LATER!!!!!
