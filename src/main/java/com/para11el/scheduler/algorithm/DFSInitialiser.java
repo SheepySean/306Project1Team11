@@ -50,6 +50,8 @@ public class DFSInitialiser {
 	}
 
 	/**
+	 * Begin the DFS algorithm using parallelisation for 
+	 * each of the root nodes
 	 * 
 	 * @author Tina Chen
 	 */
@@ -66,6 +68,7 @@ public class DFSInitialiser {
 				ArrayList<Task> solutionPart = new ArrayList<Task>();
 				solutionPart.add(t);
 
+				// create new parallelisation class DFSForkJoin
 				DFSForkJoin dfsForkJoin = new DFSForkJoin(_graph, _processors,
 						_cores, _minimumTime, solutionPart);
 

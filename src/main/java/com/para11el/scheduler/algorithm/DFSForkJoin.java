@@ -26,7 +26,7 @@ public class DFSForkJoin extends RecursiveAction {
 	protected ArrayList<Task> _solutionList;
 
 	/**
-	 * 
+	 * Contructor for DFSForkJoin
 	 * @param graph
 	 * @param processors
 	 * @param cores
@@ -45,6 +45,8 @@ public class DFSForkJoin extends RecursiveAction {
 	}
 
 	/**
+	 * Computes the optimal solution for DFS using parallelisation,
+	 * utilising subtasks on each thread
 	 * 
 	 * @author Tina Chen
 	 */
@@ -75,22 +77,16 @@ public class DFSForkJoin extends RecursiveAction {
 						subtasks.add(subtask);
 					}
 				}
-			 
 		            for(RecursiveAction subtask : subtasks){
 		                subtask.fork();
-		            }
-		            			
-			// ----------------------------------------------------------------------		
-			
+		            }				
 		} else {
 			// Add schedule to solution space if there are no more available nodes
 			if (private_solutionList.size() == _graph.getNodeCount()) {
-				
 				findOptimal(private_solutionList);
 			}
 		}
 	}
-	
 	
 	/**
 	 * Find the available nodes that can be scheduled given what nodes have already 
@@ -132,7 +128,6 @@ public class DFSForkJoin extends RecursiveAction {
 				}
 			}
 		});
-		
 		return available;
 	}
 	
