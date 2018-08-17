@@ -1,6 +1,5 @@
 package com.para11el.scheduler.ui;
 
-
 import com.para11el.scheduler.algorithm.Task;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -8,7 +7,6 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -36,6 +34,7 @@ import java.util.Random;
 
 
 public class ViewerPaneController {
+	
 	private static FxViewer _viewer;
 	private static Camera _camera;
 	private FxDefaultView viewPanel;
@@ -78,7 +77,6 @@ public class ViewerPaneController {
 	@FXML
 	private ScrollPane scrollPane;
 
-
 	/**
 	 * Initialize some of the GUI's components to initial states
 	 */
@@ -94,10 +92,12 @@ public class ViewerPaneController {
 
 
 		// set cell: processor, start time, length of time, colour (string)
+		// underneath is all for testing, should be deleted after
+		
 		setCell("a", 2, 3, 2, generateColours());
-		setCell("b", 4, 0, 7, generateColours());
+		//setCell("b", 4, 0, 7, generateColours());
 
-		setCell("b2", 4, 7, 7, generateColours());
+		//setCell("b2", 4, 7, 7, generateColours());
 
 		setCell("c", 3, 18, 12, generateColours());
 
@@ -106,6 +106,10 @@ public class ViewerPaneController {
 		setCell("b", 1, 1, 1, generateColours());
 
 		setCell("b", 1, 7, 4, generateColours());
+		
+		//setCell("d", 7, 1, 1, generateColours());
+
+		//setCell("e", 6, 7, 4, generateColours());
 
 
 		// Embed GraphStream graph into the GUI
@@ -148,6 +152,7 @@ public class ViewerPaneController {
 	/**
 	 * Zoom out on the graph view
 	 * @param event
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	@FXML
@@ -161,6 +166,7 @@ public class ViewerPaneController {
 	/**
 	 * Zoom out on the graph view
 	 * @param event
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	@FXML
@@ -173,6 +179,7 @@ public class ViewerPaneController {
 	/**
 	 * Recenter the camera to default on the graph view
 	 * @param event
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	@FXML
@@ -185,6 +192,7 @@ public class ViewerPaneController {
 	/**
 	 * Pan the camera on the graph view up
 	 * @param event
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	@FXML
@@ -200,6 +208,7 @@ public class ViewerPaneController {
 	/**
 	 * Pan the camera on the graph view down
 	 * @param event
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	@FXML
@@ -215,6 +224,7 @@ public class ViewerPaneController {
 	/**
 	 * Pan the camera on the graph view right
 	 * @param event
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	@FXML
@@ -230,6 +240,7 @@ public class ViewerPaneController {
 	/**
 	 * Pan the camera on the graph view left
 	 * @param event
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	@FXML
@@ -245,6 +256,7 @@ public class ViewerPaneController {
 	/**
 	 * Set the graph to be have a hierarchical layout
 	 * @param event
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	@FXML
@@ -256,6 +268,7 @@ public class ViewerPaneController {
 	/**
 	 * Set the graph to be have a linear logarithm layout
 	 * @param event
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	@FXML
@@ -267,6 +280,7 @@ public class ViewerPaneController {
 	/**
 	 * Set the graph to be have a spring box layout
 	 * @param event
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	@FXML
@@ -278,6 +292,7 @@ public class ViewerPaneController {
 	/**
 	 * Give graph view focus when clicked on i.e. allow it to be accessed by keyboard shortcuts
 	 * @param event
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	@FXML
@@ -288,6 +303,7 @@ public class ViewerPaneController {
 	/**
 	 * Set useful parameters for viewing and manipulating in the GUI
 	 * @param parameters String list of parameters
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	public static void setParameters(List<String> parameters) {
@@ -306,6 +322,7 @@ public class ViewerPaneController {
 	/**
 	 * Calculate delta offset for zoom functions in the GUI
 	 * @return The delta offset
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	private double calculateDelta() {
@@ -315,6 +332,7 @@ public class ViewerPaneController {
 	/**
 	 * Start or stop the program timer
 	 * @param enable True if the timer is to be started, false to stop it
+	 * 
 	 * @Author Sean Oldfield
 	 */
 	public static void toggleTimer(boolean enable) {
@@ -324,8 +342,6 @@ public class ViewerPaneController {
 			_timer.stop();
 		}
 	}
-
-	// ====================================
 
 	/**
 	 * Sets the cell width in the Schedule view
