@@ -10,13 +10,27 @@ import com.para11el.scheduler.graph.GraphViewManager;
 import com.para11el.scheduler.ui.Viewer;
 import com.para11el.scheduler.ui.ViewerPaneController;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
+import org.graphstream.graph.Node;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.LogManager;
 import java.util.ArrayList;
 
@@ -26,7 +40,7 @@ import java.util.ArrayList;
  *
  * @author Sean Oldfield
  */
-public class Scheduler {
+public class Scheduler extends Application {
 
 	private static Graph _inGraph = null;
 	private static String _filename = null;
@@ -106,22 +120,45 @@ public class Scheduler {
 			timeoutCounter.start();
 		}
 
+		int critLength = 0;
+        Iterator<Node> nodes = _inGraph.nodes().iterator();
+        while(nodes.hasNext()) {
+            critLength += ((Number) nodes.next().getAttribute("Weight")).intValue();
+        }
 		if(_visualise) { // Start the GUI on an another thread
 			String[] guiArgs = { // Parameters needed by the GUI
 					_filename,
 					Integer.toString(_scheduleProcessors),
 					Integer.toString(_numCores),
 					getFilenameNoDirectory(_outputFilename),
-					Long.toString(startTime)
+					Long.toString(startTime),
+                    Integer.toString(critLength)
 			};
 
 			// Start the GUI on another thread
 			FxViewer viewer = new FxViewer(_inGraph, FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-			ViewerPaneController.setViewer(viewer);
+			ViewerPaneController.getInstance().setViewer(viewer);
 
-			new Thread(() -> {
-                Application.launch(Viewer.class, guiArgs);
-            }).start();
+			Thread t = new Thread(() -> {
+                launch(guiArgs);
+            });
+			t.start();
+/*
+            List<Task> mockTasks = new ArrayList<Task>();
+			for(int i = 0; i < 1000000; i++) {
+                _inGraph.nodes().forEach((node) -> {
+                    mockTasks.add(new Task(node, (int) Math.floor(Math.random() * 30) + 1, (int) Math.floor(Math.random() * 4)));
+
+                });
+                ViewerPaneController.getInstance().setSchedule(mockTasks);
+
+                try{
+                    TimeUnit.MILLISECONDS.sleep(500);
+                } catch(Exception e) {}
+                ViewerPaneController.update();
+                mockTasks.clear();
+            }
+*/
 
 			// For viewing the Graph
 			GraphicGraph viewGraph = viewer.getGraphicGraph();
@@ -132,6 +169,7 @@ public class Scheduler {
 			GraphViewManager viewManager = new GraphViewManager(_inGraph);
 			viewManager.labelGraph(); // Label nodes and edges
             //_inGraph.getNode("0").setAttribute("ui.class", "some");
+
         }
 
 		//Initialise the output graph
@@ -233,7 +271,7 @@ public class Scheduler {
      * Remove any parent directories from a file path
      * @param path File path to a file
      * @return The name of the file without directories
-     * @Author Sean Oldfield
+     * @author Sean Oldfield
      */
     private static String getFilenameNoDirectory(String path) {
 		return Paths.get(path).getFileName().toString();
@@ -256,5 +294,38 @@ public class Scheduler {
 		}
 		return false;
 	}
+
+
+
+    @Override
+    public void start(Stage primaryStage) {
+
+        final Popup popup = new Popup(); popup.setX(300); popup.setY(200);
+        popup.getContent().addAll(new Circle(25, 25, 50, Color.AQUAMARINE));
+        Stage stage = null;
+        try{
+            List<String> params = getParameters().getRaw();
+            ViewerPaneController.getInstance().setParameters(params);
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/ViewerPane.fxml")); // Load the fxml pane
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add("/css/main.css"); // Add the css
+            stage = primaryStage;
+            // Add logo to the GUI
+            stage.getIcons().add(new Image(Viewer.class.getResourceAsStream("/images/logo-icon.png")));
+            stage.setScene(scene);
+            //stage.setResizable(false);
+            stage.setTitle("Para11el | Task Scheduler | " + params.get(0));
+
+            stage.show();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void stop(){
+        Platform.exit();
+        System.exit(0);
+    }
 
 }
