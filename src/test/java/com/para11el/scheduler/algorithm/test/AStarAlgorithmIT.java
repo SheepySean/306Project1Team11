@@ -4,19 +4,17 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.TreeMap;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.SingleGraph;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
-import com.para11el.scheduler.algorithm.AStarAlgorithm;
-import com.para11el.scheduler.algorithm.PruningManager;
 import com.para11el.scheduler.algorithm.State;
 import com.para11el.scheduler.algorithm.Task;
 
@@ -92,9 +90,37 @@ public class AStarAlgorithmIT {
 		assertEquals(totalWeight, 17); 	
 	}
 	
+	/**
+	 * Unit test for expanding state
+	 * @author Jessica Alcantara
+	 */
 	@Test
 	public void testExpandState(){
+		_processors = 2;
+		_aStar = new AStarAlgorithm(_testGraph, _processors);
 		
+		// Create state schedule
+		ArrayList<Task> stateSchedule = new ArrayList<Task>(); 
+		stateSchedule.add(new Task(_testGraph.getNode("1"),0,1));
+		
+		// Create state
+		State state = new State(_testGraph.getNode("1"),null,stateSchedule,0);
+		_aStar.expandState(state);
+		
+		// Map state schedules
+		HashMap<Integer,Task> stateMap = new HashMap<Integer,Task>();
+		Queue<State> states = _aStar.getStates();
+		for (State s : states) {
+			int key = s.getCost();
+			Task addedTask = s.getSchedule().get(1);
+			stateMap.put(key, addedTask);
+		}
+		
+		// Costs of each state are: 7, 10, 12, 13
+		assertEquals(stateMap.get(7).getStartTime(),3);  // Node 3 on Processor 1
+		assertEquals(stateMap.get(10).getStartTime(),5); // Node 3 on Processor 2
+		assertEquals(stateMap.get(12).getStartTime(),3); // Node 5 on Processor 1
+		assertEquals(stateMap.get(13).getStartTime(),4); // Node 5 on Processor 2
 	}
 	
 	/**

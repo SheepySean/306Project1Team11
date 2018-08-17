@@ -5,9 +5,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.SingleGraph;
 import org.junit.*;
 
 import com.para11el.scheduler.algorithm.DFSAlgorithm;

@@ -10,12 +10,10 @@ import org.junit.Test;
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
 import com.para11el.scheduler.algorithm.CostFunctionManager;
 import com.para11el.scheduler.algorithm.NodeManager;
-import com.para11el.scheduler.algorithm.State;
 import com.para11el.scheduler.algorithm.Task;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.SingleGraph;
 
 /**
  * Junit test to test the correctness of the Cost Function Manager.
@@ -30,7 +28,6 @@ public class CostFunctionManagerIT {
 	private static NodeManager _nm; 
 	private static AStarAlgorithm _aStar; 
 	private ArrayList<Task> _tasks;
-	private int _processors; 
 	
 	@BeforeClass
 	public static void initialise(){

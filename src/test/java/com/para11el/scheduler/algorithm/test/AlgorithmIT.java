@@ -88,7 +88,6 @@ public class AlgorithmIT {
 	
 	/**
 	 * Unit test for getting available nodes. 
-	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
@@ -111,7 +110,6 @@ public class AlgorithmIT {
 	
 	/**
 	 * Unit test for getting the task corresponding to the node. 
-	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
@@ -129,7 +127,6 @@ public class AlgorithmIT {
 	
 	/**
 	 * Unit test for getting the parents of a node
-	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
@@ -143,7 +140,6 @@ public class AlgorithmIT {
 	
 	/**
 	 * Unit test for getting the graph labeled with the solution
-	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
@@ -162,5 +158,7 @@ public class AlgorithmIT {
 		assertEquals(_testGraph.getNode("1").getAttributeCount(), 3); 
 		assertEquals(_testGraph.getNode("2").getAttribute("Start"), 3); 
 		assertEquals(_testGraph.getNode("3").getAttribute("Processor"), 1); 
+		
+		_testGraph = _tgManager.returnToOriginal();
 	}
 }
