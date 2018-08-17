@@ -223,7 +223,7 @@ public class Scheduler {
 	 */
 	private static boolean invalidOptional() {
 		if (!_astar && _visualise) {
-			System.out.println("To run the algorithm using DFS, visualisation (-v) and parallelisation (-p) of the search are disabled.");
+			System.out.println("To run the algorithm using DFS, visualisation (-v) of the search is disabled.");
 			return true;
 		} else if (_timeout && (_timeoutSeconds==0)) {
 			System.out.println("An optimal solution cannot be found in 0 seconds.");

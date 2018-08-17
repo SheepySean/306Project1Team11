@@ -7,10 +7,15 @@ import java.util.concurrent.RecursiveAction;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
+/**
+ * 
+ * @author Tina Chen
+ *
+ */
 public class DFSForkJoin extends RecursiveAction {
 
 	/**
-	 * 
+	 * Protected variables
 	 */
 	private static final long serialVersionUID = 1L;
 	protected Graph _graph;
@@ -18,9 +23,18 @@ public class DFSForkJoin extends RecursiveAction {
 	protected int _cores;
 	protected int _minimumTime; 
 	protected ArrayList<Task> _optimalSchedule = new ArrayList<Task>();
-
 	protected ArrayList<Task> _solutionList;
 
+	/**
+	 * 
+	 * @param graph
+	 * @param processors
+	 * @param cores
+	 * @param minimumTime
+	 * @param solutionList
+	 * 
+	 * @author Tina Chen
+	 */
 	public DFSForkJoin(Graph graph, int processors, int cores, 
 			int minimumTime, ArrayList<Task> solutionList) {
 		_graph = graph;
@@ -30,10 +44,13 @@ public class DFSForkJoin extends RecursiveAction {
 		_solutionList = solutionList;
 	}
 
+	/**
+	 * 
+	 * @author Tina Chen
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void compute() {
-
 		// Finding available nodes to add
 		ArrayList<Node> availableNodes = availableNode(_solutionList);
 		ArrayList<Task> private_solutionList = (ArrayList<Task>)_solutionList.clone();
@@ -181,7 +198,7 @@ public class DFSForkJoin extends RecursiveAction {
 	 * @param processor Processor to schedule the node on
 	 * @return int of the earliest start time
 	 * 
-	 * @author Holly Hagenson, Rebekah Berriman
+	 * @author Rebekah Berriman
 	 */
 	public int getEarliestStartTime(Node node, ArrayList<Task> schedule, int processor) {
 		int processorFinishTime; 
@@ -243,14 +260,10 @@ public class DFSForkJoin extends RecursiveAction {
 			if (_minimumTime >= solutionTime) {
 				_minimumTime = solutionTime;
 				_optimalSchedule = newSolution;
-				OptimalDFSSchedule preserveOptimal = OptimalDFSSchedule.getInstance();
+				OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 				preserveOptimal.setOptimal(newSolution, solutionTime);
 			}
 		}
 	}
-	
-/*	public ArrayList<Task> getSolution(){
-		return _optimalSchedule;
-	}*/
 
 }

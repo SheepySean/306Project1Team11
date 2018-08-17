@@ -33,8 +33,6 @@ public class DFSInitialiser {
 		_graph = graph;
 		_processors = processor;
 		_cores = 1;
-		
-		initialise();
 	}
 
 	/**
@@ -49,13 +47,15 @@ public class DFSInitialiser {
 		_graph = graph;
 		_processors = processor;
 		_cores = cores;
-		
-		initialise();
 	}
 
+	/**
+	 * 
+	 * @author Tina Chen
+	 */
 	public void initialise() {
 		setMaximumTime();
-		OptimalDFSSchedule preserveOptimal = OptimalDFSSchedule.getInstance();
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		preserveOptimal.initialise(_minimumTime);
 		
 		ForkJoinPool forkJoinPool = new ForkJoinPool(_cores);
@@ -74,13 +74,23 @@ public class DFSInitialiser {
 		});
 		
 		while (!forkJoinPool.isQuiescent()) {
-			//Make sure it does not leave until it is done!
+			//Make all threads have completed before
+			//leaving the function
 		}	
 	}
 	
+	/**
+	 * 
+	 * @return the optimal schedule
+	 * 
+	 * @author Tina Chen
+	 */
 	public ArrayList<Task> buildSolution() {
+		//Build the solution recursively
+		initialise();
+		
 		//Gets the schedule from the instance
-		OptimalDFSSchedule preserveOptimal = OptimalDFSSchedule.getInstance();
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		return preserveOptimal.getOptimalSchedule();
 	}
 

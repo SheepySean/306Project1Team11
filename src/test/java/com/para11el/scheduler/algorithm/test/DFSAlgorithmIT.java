@@ -1,15 +1,12 @@
 package com.para11el.scheduler.algorithm.test;
 
 import static org.junit.Assert.*;
-
 import java.util.ArrayList;
-
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.SingleGraph;
 import org.junit.*;
 
-import com.para11el.scheduler.algorithm.DFSAlgorithm;
+import com.para11el.scheduler.algorithm.DFSInitialiser;
+import com.para11el.scheduler.algorithm.OptimalSchedule;
 import com.para11el.scheduler.algorithm.Task;
 
 /**
@@ -19,11 +16,13 @@ import com.para11el.scheduler.algorithm.Task;
  *
  */
 public class DFSAlgorithmIT {
-	private DFSAlgorithm _ssManager; 
+	private DFSInitialiser _dfsScheduler; 
 	private static TestGraphManager _tgManager; 
 	private static Graph _testGraph; 
 	private int _processors;
+	private int _cores = 1;
 	private ArrayList<Task> _tasks = new ArrayList<Task>();
+	
 	
 	/**
 	 * Create multiple graphs to test output.
@@ -45,11 +44,13 @@ public class DFSAlgorithmIT {
 	public void testMultipleProcessors(){
 		_processors = 2; 
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
+		_dfsScheduler = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsScheduler.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		//Check finish time of optimal schedule meets the true optimal
-		assertEquals(12, _ssManager.getOptimalFinishTime());
+		assertEquals(12, preserveOptimal.getOptimalTime());
 		
 	}
 	
@@ -65,11 +66,13 @@ public class DFSAlgorithmIT {
 		_tgManager.addNode("6", 3, _testGraph);
 		_tgManager.addEdge("6 -> 3", "6", "3", 3, _testGraph);
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
+		_dfsScheduler = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsScheduler.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		//Check finish time of optimal schedule
-		assertEquals(18, _ssManager.getOptimalFinishTime());
+		assertEquals(18, preserveOptimal.getOptimalTime());
 		
 		//Iterate through the tasks in the schedule
 		for (Task task : _tasks){
@@ -93,11 +96,13 @@ public class DFSAlgorithmIT {
 		_tgManager.addNode("6", 3, _testGraph);
 		_tgManager.addEdge("6 -> 3", "6", "3", 3, _testGraph);
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
+		_dfsScheduler = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsScheduler.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		//Ensure that the optimal finish time is met
-		assertEquals(12, _ssManager.getOptimalFinishTime());
+		assertEquals(12, preserveOptimal.getOptimalTime());
 		
 		_tgManager.deleteNode("6", _testGraph);
 		_tgManager.deleteEdge("6 -> 3", _testGraph);
@@ -112,10 +117,12 @@ public class DFSAlgorithmIT {
 	public void testMultipleExitNodes(){
 		_processors = 1; 
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
+		_dfsScheduler = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsScheduler.buildSolution();
 		
-		assertEquals(15, _ssManager.getOptimalFinishTime());
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
+		
+		assertEquals(15, preserveOptimal.getOptimalTime());
 		
 	}
 	
@@ -128,11 +135,13 @@ public class DFSAlgorithmIT {
 	public void testMultipleExitNodesMultiProcessor(){
 		_processors = 2; 
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
+		_dfsScheduler = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsScheduler.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		//Check finish time of optimal schedule is accurate
-		assertEquals(12, _ssManager.getOptimalFinishTime());
+		assertEquals(12, preserveOptimal.getOptimalTime());
 		
 	}
 	
@@ -146,11 +155,13 @@ public class DFSAlgorithmIT {
 	public void testSequentialGraphSingle(){
 		_processors = 1;
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
+		_dfsScheduler = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsScheduler.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		//Check finish time is optimal
-		assertEquals(15, _ssManager.getOptimalFinishTime());
+		assertEquals(15, preserveOptimal.getOptimalTime());
 		
 		//Checks all tasks are scheduled on the correct processor
 		for (Task task : _tasks) {
@@ -174,12 +185,13 @@ public class DFSAlgorithmIT {
 		_tgManager.deleteNode("3", _testGraph);
 		_tgManager.deleteEdge("1 -> 3", _testGraph);
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = new ArrayList<Task>(); 
-		_tasks = _ssManager.buildSolution();
+		_dfsScheduler = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsScheduler.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		//Check finish time is optimal
-		assertEquals(8, _ssManager.getOptimalFinishTime());
+		assertEquals(8, preserveOptimal.getOptimalTime());
 		
 		//Check all tasks are scheduled on the first processor
 		for (Task task : _tasks) {
@@ -206,9 +218,10 @@ public class DFSAlgorithmIT {
 	public void testOutputGraph(){
 		_processors = 1;
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
-		Graph outputGraph = _ssManager.getGraph(_tasks);
+		_dfsScheduler = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsScheduler.buildSolution();
+		
+		Graph outputGraph = _dfsScheduler.getGraph(_tasks);
 
 		outputGraph.nodes().forEach((node) -> {
 			//Each node should have three attributes
@@ -246,9 +259,10 @@ public class DFSAlgorithmIT {
 	public void testOutputGraphMultipleProcessors(){
 		_processors = 3;
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
-		Graph outputGraph = _ssManager.getGraph(_tasks);
+		_dfsScheduler = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsScheduler.buildSolution();
+		
+		Graph outputGraph = _dfsScheduler.getGraph(_tasks);
 
 		//Iterate through the node set of the output graph
 		outputGraph.nodes().forEach((node) -> {
