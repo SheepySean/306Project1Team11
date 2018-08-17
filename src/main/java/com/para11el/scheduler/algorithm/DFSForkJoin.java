@@ -66,6 +66,7 @@ public class DFSForkJoin extends RecursiveAction {
 		} else {
 			// Add schedule to solution space if there are no more available nodes
 			if (private_solutionList.size() == _graph.getNodeCount()) {
+				
 				findOptimal(private_solutionList);
 			}
 		}
@@ -223,7 +224,7 @@ public class DFSForkJoin extends RecursiveAction {
 		if (solution != null) {
 			int solutionTime = 0; 
 			ArrayList<Task> newSolution = (ArrayList<Task>)solution.clone();
-
+			
 			for (int processor=1; processor <= _processors; processor++) {
 				int solutionFinishTime = getProcessorFinishTime(newSolution, processor);
 				
@@ -235,9 +236,14 @@ public class DFSForkJoin extends RecursiveAction {
 					solutionTime = solutionFinishTime;
 				}
 			}
+			
+			System.out.println("Solution finish time is...." + solutionTime);
 
 			// Update minimal time and optimal solution
 			if (_minimumTime >= solutionTime) {
+				System.out.println("Add new solution!");
+				//System.out.println("newSolution is:" + newSolution);
+				System.out.println("Has a time of: " + _minimumTime);
 				_minimumTime = solutionTime;
 				_optimalSchedule = newSolution;
 			}
