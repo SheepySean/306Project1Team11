@@ -22,15 +22,15 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchor" prefHeight="640.0" prefWidth="1024.0" style="-fx-background-color: #2b2b2b;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.para11el.scheduler.ui.ViewerPaneController">
+<AnchorPane fx:id="anchor" prefHeight="640.0" prefWidth="1024.0" style="-fx-background-color: #2b2b2b;" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.para11el.scheduler.ui.ViewerPaneController">
    <children>
       <BorderPane minWidth="-Infinity" prefHeight="640.0" prefWidth="1024.0">
          <center>
             <SplitPane dividerPositions="0.41193737769080235" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: #555555;" BorderPane.alignment="CENTER">
               <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-border-color: #282828; -fx-border-width: 1;">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="417.0" style="-fx-border-color: #282828; -fx-border-width: 1;">
                      <children>
-                        <BorderPane prefHeight="538.0" prefWidth="418.0">
+                        <BorderPane prefHeight="539.0" prefWidth="418.0">
                            <top>
                               <Label text="Schedule" textFill="WHITE" BorderPane.alignment="CENTER">
                                  <BorderPane.margin>
@@ -44,22 +44,22 @@
                                  </padding></Label>
                            </top>
                            <center>
-                              <ScrollPane fx:id="scrollPane" minHeight="540.0" prefHeight="560.0" prefWidth="418.0" BorderPane.alignment="CENTER">
+                              <ScrollPane fx:id="scrollPane" minHeight="284.0" prefHeight="536.0" prefWidth="418.0" BorderPane.alignment="CENTER">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="542.0" prefWidth="418.0">
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="418.0">
                                        <children>
-                                          <BorderPane prefHeight="542.0" prefWidth="418.0">
+                                          <BorderPane prefWidth="418.0">
                                              <left>
-                                                <TilePane fx:id="colLabelTile" prefHeight="540.0" prefWidth="30.0" BorderPane.alignment="CENTER">
+                                                <TilePane fx:id="colLabelTile" maxWidth="30.0" prefWidth="30.0" BorderPane.alignment="CENTER">
                                                    <BorderPane.margin>
-                                                      <Insets bottom="20.0" left="20.0" top="10.0" />
+                                                      <Insets bottom="10.0" left="20.0" top="10.0" />
                                                    </BorderPane.margin>
                                                 </TilePane>
                                              </left>
                                              <center>
                                                 <TilePane fx:id="tile" hgap="2.0" maxWidth="300.0" minWidth="300.0" BorderPane.alignment="CENTER">
                                                    <BorderPane.margin>
-                                                      <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
+                                                      <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                                                    </BorderPane.margin>
                                                 </TilePane>
                                              </center>

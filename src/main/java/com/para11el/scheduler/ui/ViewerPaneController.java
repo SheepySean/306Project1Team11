@@ -1,6 +1,5 @@
 package com.para11el.scheduler.ui;
 
-
 import com.para11el.scheduler.algorithm.Task;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -8,9 +7,10 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -21,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import org.graphstream.graph.Graph;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.geom.Point3;
@@ -30,55 +31,61 @@ import org.graphstream.ui.layout.springbox.implementations.LinLog;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.camera.Camera;
 
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class ViewerPaneController {
     private static FxViewer _viewer;
+    private static List<Task> _schedule;
     private Camera _camera;
     private FxDefaultView viewPanel;
 
-    private AnimationTimer _timer;
+    private static AnimationTimer _timer;
 
     private static String _inputFile;
     private static String _outputFile;
     private static String _processors;
     private static String _cores;
     private static long _startTime;
+    private static int _criticalLength;
 
-    private int _cellWidth;
-    private int _cellHeight = 20;
+
+	private static int _cellWidth;
+	private static int _cellHeight = 20;
 
     private static ViewerPaneController _instance = null;
+
+    private static AtomicBoolean _hasLoaded = new AtomicBoolean(false);
     @FXML
     private AnchorPane graphContainer;
 
+	@FXML
+	private Label timerLabel;
 
-    @FXML
-    private Label timerLabel;
+	@FXML
+	private Text inputFileText;
 
-    @FXML
-    private Text inputFileText;
+	@FXML
+	private Text processorsText;
 
-    @FXML
-    private Text processorsText;
+	@FXML
+	private Text coresText;
 
-    @FXML
-    private Text coresText;
+	@FXML
+	private Text outputFileText;
 
-    @FXML
-    private Text outputFileText;
+	@FXML
+	private TilePane colLabelTile;
 
-    @FXML
-    private TilePane colLabelTile;
+	@FXML
+	private TilePane tile;
 
-    @FXML
-    private TilePane tile;
-
-    @FXML
-    private ScrollPane scrollPane;
+	private static TilePane _tile;
+    private static TilePane _colLabelTile;
+	@FXML
+	private ScrollPane scrollPane;
 
     public ViewerPaneController() {}
     /**
@@ -86,17 +93,23 @@ public class ViewerPaneController {
      */
     @FXML
     public void initialize() {
+        _instance = getInstance();
+		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-    	scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		// This is a little hacky but allows static reference to the tile pane
+        _tile = tile;
+        _colLabelTile = colLabelTile;
 
-    	setCellSize(Integer.parseInt(_processors));
+		setCellSize(Integer.parseInt(_processors));
 
-    	initialisePane(30);
-    	initialiseLabel(30);
+        initialisePane(_criticalLength);
+        initialiseLabel(_criticalLength);
 
 
-/*		// set cell: processor, start time, length of time, colour (string)
-		setCell("a", 2, 3, 2, generateColours());
+        this.updateSchedule(_schedule);
+
+		// set cell: processor, start time, length of time, colour (string)
+/*		setCell("a", 2, 3, 2, generateColours());
 		setCell("b", 4, 0, 7, generateColours());
 
 		setCell("b2", 4, 7, 7, generateColours());
@@ -109,8 +122,7 @@ public class ViewerPaneController {
 
 		setCell("b", 1, 7, 4, generateColours());*/
 
-
-		// testing more processors
+		//setCell("e", 6, 7, 4, generateColours());
 
 
         // Embed GraphStream graph into the GUI
@@ -144,6 +156,7 @@ public class ViewerPaneController {
         };
 
         this.toggleTimer(true); // Start the timer
+        _hasLoaded.set(true);
     }
 
     public void setViewer(FxViewer viewer) {
@@ -153,7 +166,7 @@ public class ViewerPaneController {
     /**
      * Zoom out on the graph view
      * @param event
-     * @Author Sean Oldfield
+     * @author Sean Oldfield
      */
     @FXML
     private void zoomInAction(ActionEvent event) {
@@ -166,7 +179,7 @@ public class ViewerPaneController {
     /**
      * Zoom out on the graph view
      * @param event
-     * @Author Sean Oldfield
+     * @author Sean Oldfield
      */
     @FXML
     private void zoomOutAction(ActionEvent event) {
@@ -178,7 +191,7 @@ public class ViewerPaneController {
     /**
      * Recenter the camera to default on the graph view
      * @param event
-     * @Author Sean Oldfield
+     * @author Sean Oldfield
      */
     @FXML
     private void resetViewAction(ActionEvent event) {
@@ -187,113 +200,121 @@ public class ViewerPaneController {
         });
     }
 
-    /**
-     * Pan the camera on the graph view up
-     * @param event
-     * @Author Sean Oldfield
-     */
-    @FXML
-    private void panUpAction(ActionEvent event) {
-        Platform.runLater(() -> {
-            double delta = calculateDelta();
+	/**
+	 * Pan the camera on the graph view up
+	 * @param event
+	 *
+	 * @author Sean Oldfield
+	 */
+	@FXML
+	private void panUpAction(ActionEvent event) {
+		Platform.runLater(() -> {
+			double delta = calculateDelta();
 
-            Point3 p = _camera.getViewCenter();
-            _camera.setViewCenter(p.x, p.y + delta, 0);
-        });
-    }
+			Point3 p = _camera.getViewCenter();
+			_camera.setViewCenter(p.x, p.y + delta, 0);
+		});
+	}
 
-    /**
-     * Pan the camera on the graph view down
-     * @param event
-     * @Author Sean Oldfield
-     */
-    @FXML
-    private void panDownAction(ActionEvent event) {
-        Platform.runLater(() -> {
-            double delta = calculateDelta();
+	/**
+	 * Pan the camera on the graph view down
+	 * @param event
+	 *
+	 * @author Sean Oldfield
+	 */
+	@FXML
+	private void panDownAction(ActionEvent event) {
+		Platform.runLater(() -> {
+			double delta = calculateDelta();
 
-            Point3 p = _camera.getViewCenter();
-            _camera.setViewCenter(p.x, p.y - delta, 0);
-        });
-    }
+			Point3 p = _camera.getViewCenter();
+			_camera.setViewCenter(p.x, p.y - delta, 0);
+		});
+	}
 
-    /**
-     * Pan the camera on the graph view right
-     * @param event
-     * @Author Sean Oldfield
-     */
-    @FXML
-    private void panRightAction(ActionEvent event) {
-        Platform.runLater(() -> {
-            double delta = calculateDelta();
+	/**
+	 * Pan the camera on the graph view right
+	 * @param event
+	 *
+	 * @author Sean Oldfield
+	 */
+	@FXML
+	private void panRightAction(ActionEvent event) {
+		Platform.runLater(() -> {
+			double delta = calculateDelta();
 
-            Point3 p = _camera.getViewCenter();
-            _camera.setViewCenter(p.x + delta, p.y, 0);
-        });
-    }
+			Point3 p = _camera.getViewCenter();
+			_camera.setViewCenter(p.x + delta, p.y, 0);
+		});
+	}
 
-    /**
-     * Pan the camera on the graph view left
-     * @param event
-     * @Author Sean Oldfield
-     */
-    @FXML
-    private void panLeftAction(ActionEvent event) {
-        Platform.runLater(() -> {
-            double delta = calculateDelta();
+	/**
+	 * Pan the camera on the graph view left
+	 * @param event
+	 *
+	 * @author Sean Oldfield
+	 */
+	@FXML
+	private void panLeftAction(ActionEvent event) {
+		Platform.runLater(() -> {
+			double delta = calculateDelta();
 
-            Point3 p = _camera.getViewCenter();
-            _camera.setViewCenter(p.x - delta, p.y, 0);
-        });
-    }
+			Point3 p = _camera.getViewCenter();
+			_camera.setViewCenter(p.x - delta, p.y, 0);
+		});
+	}
 
-    /**
-     * Set the graph to be have a hierarchical layout
-     * @param event
-     * @Author Sean Oldfield
-     */
-    @FXML
-    void setHierarchicalLayout(ActionEvent event) {
-        _viewer.disableAutoLayout();
-        _viewer.enableAutoLayout(new HierarchicalLayout());
-    }
+	/**
+	 * Set the graph to be have a hierarchical layout
+	 * @param event
+	 *
+	 * @author Sean Oldfield
+	 */
+	@FXML
+	void setHierarchicalLayout(ActionEvent event) {
+		_viewer.disableAutoLayout();
+		_viewer.enableAutoLayout(new HierarchicalLayout());
+	}
 
-    /**
-     * Set the graph to be have a linear logarithm layout
-     * @param event
-     * @Author Sean Oldfield
-     */
-    @FXML
-    void setLinLogLayout(ActionEvent event) {
-        _viewer.disableAutoLayout();
-        _viewer.enableAutoLayout(new LinLog());
-    }
+	/**
+	 * Set the graph to be have a linear logarithm layout
+	 * @param event
+	 *
+	 * @author Sean Oldfield
+	 */
+	@FXML
+	void setLinLogLayout(ActionEvent event) {
+		_viewer.disableAutoLayout();
+		_viewer.enableAutoLayout(new LinLog());
+	}
 
-    /**
-     * Set the graph to be have a spring box layout
-     * @param event
-     * @Author Sean Oldfield
-     */
-    @FXML
-    void setSpringBoxLayout(ActionEvent event) {
-        _viewer.disableAutoLayout();
-        _viewer.enableAutoLayout(new SpringBox());
-    }
+	/**
+	 * Set the graph to be have a spring box layout
+	 * @param event
+	 *
+	 * @author Sean Oldfield
+	 */
+	@FXML
+	void setSpringBoxLayout(ActionEvent event) {
+		_viewer.disableAutoLayout();
+		_viewer.enableAutoLayout(new SpringBox());
+	}
 
-    /**
-     * Give graph view focus when clicked on i.e. allow it to be accessed by keyboard shortcuts
-     * @param event
-     * @Author Sean Oldfield
-     */
-    @FXML
-    void giveGraphFocus(MouseEvent event) {
-        viewPanel.requestFocus();
-    }
+	/**
+	 * Give graph view focus when clicked on i.e. allow it to be accessed by keyboard shortcuts
+	 * @param event
+	 *
+	 * @author Sean Oldfield
+	 */
+	@FXML
+	void giveGraphFocus(MouseEvent event) {
+		viewPanel.requestFocus();
+	}
 
     /**
      * Set useful parameters for viewing and manipulating in the GUI
      * @param parameters String list of parameters
-     * @Author Sean Oldfield
+     * @author Sean Oldfield
      */
     public void setParameters(List<String> parameters) {
         _inputFile = parameters.get(0);
@@ -305,24 +326,27 @@ public class ViewerPaneController {
         }
         _outputFile = parameters.get(3);
         _startTime = Long.parseLong(parameters.get(4));
+        _criticalLength = Integer.parseInt(parameters.get(5));
+
 
     }
 
-    /**
-     * Calculate delta offset for zoom functions in the GUI
-     * @return The delta offset
-     * @Author Sean Oldfield
-     */
-    private double calculateDelta() {
-        return  _camera.getViewPercent() * _camera.getGraphDimension() * 0.1f;
-    }
+	/**
+	 * Calculate delta offset for zoom functions in the GUI
+	 * @return The delta offset
+	 *
+	 * @author Sean Oldfield
+	 */
+	private double calculateDelta() {
+		return  _camera.getViewPercent() * _camera.getGraphDimension() * 0.1f;
+	}
 
     /**
      * Start or stop the program timer
      * @param enable True if the timer is to be started, false to stop it
-     * @Author Sean Oldfield
+     * @author Sean Oldfield
      */
-    public void toggleTimer(boolean enable) {
+    public static void toggleTimer(boolean enable) {
         if(enable) {
             _timer.start();
         } else {
@@ -330,63 +354,156 @@ public class ViewerPaneController {
         }
     }
 
-    // ====================================
+	/**
+	 * Sets the cell width in the Schedule view
+	 * @param processors The number of processors
+	 *
+	 * @author Tina Chen
+	 */
+	private void setCellSize(int processors) {
 
-    private void initialisePane(int num) {
+		int gapSize = (processors - 1)*2;
+		_cellWidth = (int)(Math.floor((300 - gapSize)/processors));
+	}
 
-		for (int i = 0; i < num*Integer.parseInt(_processors); i++) {
+	/**
+	 * Initialise the tile pane with the number of processors
+	 * and the critical path length of a sequential schedule
+	 * @param num The time taken for a sequential schedule
+	 *
+	 * @author Tina Chen, Sean Oldfield
+	 */
+	private static void initialisePane(int num) {
+
+		Text processorLabel;
+		int processorNum = Integer.parseInt(_processors);
+
+		// label the processor columns
+		for (int i = 0; i < processorNum; i++) {
+
+			// only label with processor number if over 11 processors due to lack of space
+			if (processorNum < 11) {
+				processorLabel = new Text("P" + Integer.toString(i+1));
+			} else {
+				processorLabel = new Text(Integer.toString(i+1));
+			}
+
+			_tile.getChildren().add(processorLabel);
+		}
+
+		// initialise the tile panes with initial grey colour
+		for (int i = 0; i < (num)*processorNum; i++) {
 			Pane p = new Pane();
 			p.setPrefSize(_cellWidth, _cellHeight);
 			p.setStyle("-fx-background-color: #D3D3D3");
-			tile.getChildren().add(p);
+			_tile.getChildren().add(p);
 		}
 	}
 
-    private void initialiseLabel(int num) {
+	/**
+	 * Initialise the row labels to represent the time a task is
+	 * scheduled based on the critical path length of a sequential schedule
+	 *
+	 * @param num The time taken for a sequential schedule
+	 *
+	 * @author Tina Chen
+	 */
+	private static void initialiseLabel(int num) {
 
-    	for (int i = 1; i < num+1; i++) {
+        Label rowLabel;
 
-    		Label colLabel = new Label(Integer.toString(i));
-    		colLabel.setPrefSize(30, _cellHeight);
-    		colLabel.setAlignment(Pos.CENTER_RIGHT);
+        for (int i = 0; i < num + 1; i++) {
 
-    		colLabelTile.getChildren().add(colLabel);
+            // set blank row label for first row
+            if (i == 0) {
+                rowLabel = new Label("");
+            } else {
+                rowLabel = new Label(Integer.toString(i - 1));
+            }
 
-		}
+            rowLabel.setPrefSize(30, _cellHeight);
+            rowLabel.setAlignment(Pos.CENTER_RIGHT);
 
-    }
-
-    public void updateSchedule(List<Task> schedule) {
-        for(Task task: schedule) {
-            setCell(task.getNode().getId(),
-                    task.getProcessor(),
-                    task.getStartTime(),
-                    task.getWeight(),
-                    generateColours());
+            _colLabelTile.getChildren().add(rowLabel);
         }
     }
 
+    /**
+     * Update the schedule shown in the viewer
+     * @param schedule A list of tasks representing a schedule
+     *
+     * @author Sean Oldfield
+     */
+    public static void updateSchedule(List<Task> schedule) {
+        if(_schedule != null) {
+            List<Node> children = _tile.getChildren();
 
-    private void setCell(String label, int processor, int startTime, int length, String colour) {
+            // Reset the pane to defaults
+            for (Node n : children) {
+                n.setStyle("-fx-background-color: #D3D3D3");
+                if (n instanceof Label) {
+                    ((Label) n).setText("");
+                }
+            }
 
-		int cell = (processor + Integer.parseInt(_processors) * startTime) -1;
+            // Add the tasks to the view
+            for (Task task : schedule) {
+                setCell(task.getNode().getId(),
+                        task.getProcessor(),
+                        task.getStartTime(),
+                        task.getWeight(),
+                        generateColours());
+            }
+        }
 
+
+    }
+
+
+	/**
+	 * Sets a cell with a colour and label to represent a
+	 * scheduled task
+	 * @param label Task label
+	 * @param processor The processor the task is scheduled on
+	 * @param startTime Start time of the task
+	 * @param length The length of the task
+	 * @param colour The colour to render the cell
+	 *
+	 * @author Tina Chen, Sean Oldfield
+	 */
+	private static void setCell(String label, int processor, int startTime, int length, String colour) {
+
+		int processorNum = Integer.parseInt(_processors);
+		int cell = (processor + processorNum * startTime) - 1 + processorNum;
 		for (int i = 0; i < length; i++) {
+		   // Node node =
+            if (i == 0) {  // if first cell for task, set the task label for it
 
-			if (i == 0) {
+                // If this cell has been labelled in the past then there is no point relabelling it
+                if(_tile.getChildren().get(cell) instanceof Label) {
+                    ((Label) _tile.getChildren().get(cell)).setText(label);
+                } else {
+                    Label nodeLabel = new Label(label);
+                    nodeLabel.setPrefSize(_cellWidth, _cellHeight);
+                    nodeLabel.setAlignment(Pos.CENTER);
+                    _tile.getChildren().set(cell, nodeLabel);
+                }
 
-				Label nodeLabel = new Label(label);
-				nodeLabel.setPrefSize(_cellWidth, _cellHeight);
-				nodeLabel.setAlignment(Pos.CENTER);
-				tile.getChildren().set(cell, nodeLabel);
-				tile.getChildren().get(cell).setStyle(colour);
+				_tile.getChildren().get(cell).setStyle(colour);
 			}
-			tile.getChildren().get(cell).setStyle("-fx-background-color: " + colour);
-			cell = cell + Integer.parseInt(_processors);
+
+			_tile.getChildren().get(cell).setStyle("-fx-background-color: " + colour);
+			cell = cell + processorNum;
 		}
 	}
 
-	private String generateColours() {
+	/**
+	 * Random colour generator for Schedule view
+	 * @return String value representing random hex value
+	 *
+	 * @author Tina Chen
+	 */
+	private static String generateColours() {
 
 		Random rand = new Random();
 
@@ -405,17 +522,23 @@ public class ViewerPaneController {
 		return hex;
 	}
 
-	private void setCellSize(int processors) {
-
-		int gapSize = (processors - 1)*2;
-		_cellWidth = (int)(Math.floor((300 - gapSize)/processors));
-	}
-
 	public static ViewerPaneController getInstance() {
         if(_instance == null) {
             _instance = new ViewerPaneController();
         }
         return _instance;
+    }
+
+    public void setSchedule(List<Task> schedule) {
+	    _schedule = schedule;
+    }
+
+    public static void update() {
+	    if(_hasLoaded.get() ) {
+            Platform.runLater(() -> {
+                updateSchedule(_schedule);
+            });
+        }
     }
 }
 

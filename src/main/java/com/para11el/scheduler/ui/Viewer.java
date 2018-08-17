@@ -23,7 +23,10 @@ public class Viewer extends Application {
         launch(args);
     }
 
-    @Override
+    public void start(Stage primaryStage) {
+
+    }
+/*    @Override
     public void start(Stage primaryStage) {
 
         final Popup popup = new Popup(); popup.setX(300); popup.setY(200);
@@ -31,10 +34,9 @@ public class Viewer extends Application {
         Stage stage = null;
         try{
             List<String> params = getParameters().getRaw();
-            ViewerPaneController.setParameters(params);
+            ViewerPaneController.getInstance().setParameters(params);
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/ViewerPane.fxml")); // Load the fxml pane
             Scene scene = new Scene(root);
-
             scene.getStylesheets().add("/css/main.css"); // Add the css
             stage = primaryStage;
             // Add logo to the GUI
@@ -47,7 +49,7 @@ public class Viewer extends Application {
         } catch(Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Override
     public void stop(){
