@@ -142,4 +142,14 @@ public class AStarAlgorithm extends Algorithm{
 	public Comparator<State> getStateComparator() {
 		return _stateComparator;
 	}
+	
+	/**
+	 * Returns the states stored in the priority queue
+	 * @return Queue of states
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public Queue<State> getStates() {
+		return _states;
+	}
 }
