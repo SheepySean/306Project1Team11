@@ -3,6 +3,7 @@ package com.para11el.scheduler.main;
 
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
 import com.para11el.scheduler.algorithm.DFSAlgorithm;
+import com.para11el.scheduler.algorithm.DFSRecursiveAction;
 import com.para11el.scheduler.algorithm.Task;
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
@@ -17,6 +18,7 @@ import org.graphstream.ui.fx_viewer.FxViewer;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.concurrent.ForkJoinPool;
 
 
 /**
@@ -35,6 +37,7 @@ public class Scheduler {
 	private static boolean _astar = true;
 	private static boolean _timeout = false;
 	private static int _timeoutSeconds = 0;
+	private static ForkJoinPool forkJoinPool;
 
 	/**
 	 * Entry point for the program
@@ -81,6 +84,21 @@ public class Scheduler {
 			//Exit if options are invalid
 			return; 
 		}
+		
+		
+		
+		
+		if (_numCores == 0) {
+			forkJoinPool = new ForkJoinPool(1);
+			System.out.println("Set to one core");
+		} else {
+			forkJoinPool = new ForkJoinPool(_numCores);
+			System.out.println("Set to cores " + _numCores);
+		}
+		
+		DFSRecursiveAction dfsRecursiveAction = new DFSRecursiveAction("I don't know!");
+		forkJoinPool.execute(dfsRecursiveAction);
+		dfsRecursiveAction.join();
 		
 		//Initialise a timeoutCounter for use if there is a timeout specified
 		Thread timeoutCounter = null;
