@@ -58,27 +58,6 @@ public class CostFunctionManager {
 	}
 	
 	/**
-	 * Returns the task with the latest finish time
-	 * @param schedule Partial schedule of tasks
-	 * @return Task with the latest finish time
-	 * 
-	 * @author Holly Hagenson
-	 */
-	public Task getLastTask(ArrayList<Task> schedule) {
-		int latestFinish = 0;
-		Task lastTask = null;
-		
-		for(Task task : schedule){
-			int taskFinish = task.getFinishTime();
-			if (taskFinish > latestFinish){
-				latestFinish = taskFinish; 
-				lastTask = task; 
-			}
-		}
-		return lastTask;
-	}
-	
-	/**
 	 * Calculates the critical path estimate based on:
 	 * 		Cpe(S) = startTime(nlast) + bottomLevel(nlast)}
 	 * @param solution Task schedule for current solution
