@@ -7,11 +7,9 @@ import com.para11el.scheduler.algorithm.Task;
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
-import com.para11el.scheduler.ui.Viewer;
 import com.para11el.scheduler.ui.ViewerPaneController;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -30,7 +28,6 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.LogManager;
 import java.util.ArrayList;
 
@@ -311,7 +308,7 @@ public class Scheduler extends Application {
             scene.getStylesheets().add("/css/main.css"); // Add the css
             stage = primaryStage;
             // Add logo to the GUI
-            stage.getIcons().add(new Image(Viewer.class.getResourceAsStream("/images/logo-icon.png")));
+            stage.getIcons().add(new Image(Scheduler.class.getResourceAsStream("/images/logo-icon.png")));
             stage.setScene(scene);
             //stage.setResizable(false);
             stage.setTitle("Para11el | Task Scheduler | " + params.get(0));
