@@ -332,17 +332,25 @@ public class ViewerPaneController {
 	 // ====================================
 
 	 private void initialisePane(int num) {
+		 
+		 Label processorLabel;
+		 int processorNum = Integer.parseInt(_processors);
 
-		 for (int i = 0; i < Integer.parseInt(_processors); i++) {
+		 for (int i = 0; i < processorNum; i++) {
+			 
+			 if (processorNum < 11) {
+				 processorLabel = new Label("P" + Integer.toString(i+1));
+			 } else {
+				 processorLabel = new Label(Integer.toString(i+1));
+			 }
 
-			 Label processorLabel = new Label("P" + Integer.toString(i+1));
 			 processorLabel.setPrefSize(_cellWidth, _cellHeight);
 			 processorLabel.setAlignment(Pos.CENTER);
 
 			 tile.getChildren().add(processorLabel);
 		 }
 
-		 for (int i = 0; i < (num)*Integer.parseInt(_processors); i++) {
+		 for (int i = 0; i < (num)*processorNum; i++) {
 			 Pane p = new Pane();
 			 p.setPrefSize(_cellWidth, _cellHeight);
 			 p.setStyle("-fx-background-color: #D3D3D3");
