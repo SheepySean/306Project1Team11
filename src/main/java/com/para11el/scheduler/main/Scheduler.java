@@ -311,7 +311,7 @@ public class Scheduler extends Application {
             stage.getIcons().add(new Image(Scheduler.class.getResourceAsStream("/images/logo-icon.png")));
             stage.setScene(scene);
             //stage.setResizable(false);
-            stage.setTitle("Para11el | Task Scheduler | " + params.get(0));
+            stage.setTitle("Para11el | Task Scheduler | " + _filename);
 
             stage.show();
         } catch(Exception e) {
