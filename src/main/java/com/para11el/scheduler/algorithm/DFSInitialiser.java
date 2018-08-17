@@ -70,7 +70,7 @@ public class DFSInitialiser {
 
 				// create new parallelisation class DFSForkJoin
 				DFSForkJoin dfsForkJoin = new DFSForkJoin(_graph, _processors,
-						_cores, _minimumTime, solutionPart);
+						_cores, solutionPart);
 
 				forkJoinPool.invoke(dfsForkJoin);	
 			}
