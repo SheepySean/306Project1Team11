@@ -102,6 +102,8 @@ public class Scheduler {
 		//Initialise the output graph
 		Graph outputGraph;
 		
+		long start = System.currentTimeMillis();
+		
         if(_astar) {
         	//Searches with A Star Algorithm (default)
         	AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
@@ -112,6 +114,7 @@ public class Scheduler {
         	//Searches with DFS Algorithm
     		DFSAlgorithm algorithm = new DFSAlgorithm(_inGraph, _scheduleProcessors);
     		ArrayList<Task> solution = algorithm.buildSolution();
+    		System.out.println(algorithm.getOptimalFinishTime());
     		outputGraph = algorithm.getGraph(solution); 	
         }
 		
@@ -120,6 +123,9 @@ public class Scheduler {
 		/*viewManager.labelGraph();
 		viewManager.unlabelGraph();*/
 		
+		//Print the duration
+		long duration = System.currentTimeMillis() - start;
+		System.out.println("Run time in milliseconds: " + duration);
 		
 		// Name the file if no specific output name was provided
 		if(_outputFilename == null) {
