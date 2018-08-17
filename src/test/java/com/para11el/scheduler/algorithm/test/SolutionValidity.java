@@ -18,7 +18,7 @@ import com.para11el.scheduler.algorithm.Task;
 /**
  * Helper methods to test the validity of a solution.
  * 
- * @author Jessica Alcantara
+ * @author Jessica Alcantara, Holly Hagenson
  *
  */
 public class SolutionValidity {
@@ -88,7 +88,6 @@ public class SolutionValidity {
 				sameProcessorTasks.add(t);
 			}
 		}
-		
 		return sameProcessorTasks; 
 	}
 	
@@ -126,7 +125,6 @@ public class SolutionValidity {
 				maxFinish = finishTime; 
 			}
 		}
-		
 		return maxFinish; 
 	}
 

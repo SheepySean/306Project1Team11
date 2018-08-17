@@ -13,6 +13,12 @@ import org.junit.Test;
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
 import com.para11el.scheduler.algorithm.Task;
 
+/**
+ * JUnit test class to test the behaviour of the Algorithm class.
+ * 
+ * @author Holly Hagenson, Jessica Alcantara
+ *
+ */
 public class AlgorithmIT {
 	
 	private static TestGraphManager _tgManager;  

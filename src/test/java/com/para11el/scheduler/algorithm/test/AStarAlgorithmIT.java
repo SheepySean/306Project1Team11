@@ -21,9 +21,12 @@ import com.para11el.scheduler.algorithm.State;
 import com.para11el.scheduler.algorithm.Task;
 
 /**
- * Junit test to test the validity and optimality of the A* Algorithm.
+ * Junit test class to test the behaviour of the A* Algorithm.
+ * Output is correct if the finish time of the schedule is optimal,
+ * tasks do not overlap each other and tasks are correctly ordered
+ * according to their respective dependencies.
  * 
- * @author Jessica Alcantara
+ * @author Jessica Alcantara, Holly Hagenson
  *
  */
 public class AStarAlgorithmIT {
