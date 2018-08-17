@@ -14,7 +14,7 @@ public class DFSInitialiser {
 
 	private int _minimumTime;
 	
-	private ArrayList<ArrayList<Task>> _optimal;
+	private ArrayList<ArrayList<Task>> _optimal = new ArrayList<ArrayList<Task>>();
 	private ArrayList<Task> _solution;
 
 	/**
@@ -65,7 +65,7 @@ public class DFSInitialiser {
 
 				// add the fork join stuff here
 
-				ForkJoinPool forkJoinPool = new ForkJoinPool(4);
+				ForkJoinPool forkJoinPool = new ForkJoinPool(_cores);
 
 				DFSForkJoin dfsForkJoin = new DFSForkJoin(_graph, _processors,
 						_cores, _minimumTime, solutionPart);
@@ -79,6 +79,7 @@ public class DFSInitialiser {
 	}
 	
 	public ArrayList<Task> buildSolution() {
+		
 		getOptimal();
 		return _solution;
 	}
@@ -160,6 +161,7 @@ public class DFSInitialiser {
 	 * @author Rebekah Berriman
 	 */
 	public Graph getGraph(ArrayList<Task> solution) {
+		System.out.println("solution size = " + solution.size());
 		for (Task task : solution) {
 			Node node = task.getNode();
 			node.setAttribute("Start", task.getStartTime());

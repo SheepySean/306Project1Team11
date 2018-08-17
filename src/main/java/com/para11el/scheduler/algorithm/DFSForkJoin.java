@@ -13,7 +13,7 @@ public class DFSForkJoin extends RecursiveAction {
 	protected int _processors;
 	protected int _cores;
 	protected int _minimumTime; 
-	protected ArrayList<Task> _optimalSchedule;
+	protected ArrayList<Task> _optimalSchedule = new ArrayList<Task>();
 
 	protected ArrayList<Task> _solutionList;
 
