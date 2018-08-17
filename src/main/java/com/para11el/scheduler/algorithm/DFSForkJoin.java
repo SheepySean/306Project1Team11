@@ -9,6 +9,10 @@ import org.graphstream.graph.Node;
 
 public class DFSForkJoin extends RecursiveAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected Graph _graph;
 	protected int _processors;
 	protected int _cores;
@@ -36,9 +40,7 @@ public class DFSForkJoin extends RecursiveAction {
 
 		if (availableNodes.size() != 0) {
 			
-			
 			 List<DFSForkJoin> subtasks = new ArrayList<DFSForkJoin>();
-			 
 			 
 			 for (Node node : availableNodes) {
 					// For each available processor add available node to possible schedule
@@ -247,8 +249,8 @@ public class DFSForkJoin extends RecursiveAction {
 		}
 	}
 	
-	public ArrayList<Task> getSolution(){
+/*	public ArrayList<Task> getSolution(){
 		return _optimalSchedule;
-	}
+	}*/
 
 }

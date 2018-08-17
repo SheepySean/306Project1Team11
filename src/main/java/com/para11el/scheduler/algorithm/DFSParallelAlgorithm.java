@@ -14,6 +14,10 @@ import org.graphstream.graph.Node;
  */
 public class DFSParallelAlgorithm extends RecursiveAction {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected Graph _graph;
 	protected int _processors;
 	protected int _cores;

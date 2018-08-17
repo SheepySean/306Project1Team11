@@ -1,8 +1,6 @@
 package com.para11el.scheduler.main;
 
-
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
-import com.para11el.scheduler.algorithm.DFSAlgorithm;
 import com.para11el.scheduler.algorithm.DFSInitialiser;
 import com.para11el.scheduler.algorithm.Task;
 import com.para11el.scheduler.graph.GraphConstants;
@@ -18,7 +16,6 @@ import org.graphstream.ui.fx_viewer.FxViewer;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.concurrent.ForkJoinPool;
 
 
 /**
@@ -31,7 +28,7 @@ public class Scheduler {
 	private static Graph _inGraph = null;
 	private static String _filename = null;
 	private static int _scheduleProcessors = 0;
-	private static int _numCores = 0;
+	private static int _numCores = 1;
 	private static String _outputFilename = null;
 	private static boolean _visualise = false;
 	private static boolean _astar = true;
@@ -86,23 +83,6 @@ public class Scheduler {
 		}
 		
 		
-		/*
-		
-		if (_numCores == 0) {
-			forkJoinPool = new ForkJoinPool(1);
-			System.out.println("Set to one core");
-		} else {
-			forkJoinPool = new ForkJoinPool(_numCores);
-			System.out.println("Set to cores " + _numCores);
-		}
-		
-		DFSRecursiveAction dfsRecursiveAction = new DFSRecursiveAction("I don't know!");
-		forkJoinPool.execute(dfsRecursiveAction);
-		dfsRecursiveAction.join();
-		
-		
-		*/
-		
 		//Initialise a timeoutCounter for use if there is a timeout specified
 		Thread timeoutCounter = null;
 		
@@ -123,26 +103,23 @@ public class Scheduler {
 		//Initialise the output graph
 		Graph outputGraph;
 		
+		//Start timer
+		long start = System.currentTimeMillis();
+		
         if(_astar) {
         	//Searches with A Star Algorithm (default)
-        	
-        	DFSInitialiser dfs = new DFSInitialiser(_inGraph, _scheduleProcessors, _numCores);
-        	ArrayList<Task> solution = dfs.buildSolution();
-        	System.out.println("hello");
-        	outputGraph = dfs.getGraph(solution); 	
-        	
-        	// CHANGE THIS LATER!!!!!
-        	/*
         	AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
     		ArrayList<Task> solution = algorithm.buildSolution(); 
     		outputGraph = algorithm.getGraph(solution);
-    		*/
-        	
         } else {
         	//Searches with DFS Algorithm
-    		DFSAlgorithm algorithm = new DFSAlgorithm(_inGraph, _scheduleProcessors);
+        	DFSInitialiser dfs = new DFSInitialiser(_inGraph, _scheduleProcessors, _numCores);
+        	ArrayList<Task> solution = dfs.buildSolution();
+        	outputGraph = dfs.getGraph(solution); 
+        	
+        	/*DFSAlgorithm algorithm = new DFSAlgorithm(_inGraph, _scheduleProcessors);
     		ArrayList<Task> solution = algorithm.buildSolution();
-    		outputGraph = algorithm.getGraph(solution); 	
+    		outputGraph = algorithm.getGraph(solution); 	*/
         }
 		
 		// For viewing the Graph
@@ -150,6 +127,9 @@ public class Scheduler {
 		/*viewManager.labelGraph();
 		viewManager.unlabelGraph();*/
 		
+		//Print the duration
+		long duration = System.currentTimeMillis() - start;
+		System.out.println("Run time in milliseconds: " + duration);
 		
 		// Name the file if no specific output name was provided
 		if(_outputFilename == null) {
@@ -242,7 +222,7 @@ public class Scheduler {
 	 * @author Rebekah Berriman
 	 */
 	private static boolean invalidOptional() {
-		if (!_astar && (_visualise || (_numCores !=0))) {
+		if (!_astar && _visualise) {
 			System.out.println("To run the algorithm using DFS, visualisation (-v) and parallelisation (-p) of the search are disabled.");
 			return true;
 		} else if (_timeout && (_timeoutSeconds==0)) {

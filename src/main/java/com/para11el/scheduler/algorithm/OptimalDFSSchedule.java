@@ -14,8 +14,7 @@ public class OptimalDFSSchedule {
     public static synchronized OptimalDFSSchedule getInstance(){
         if (instance ==  null) {
         	instance = new OptimalDFSSchedule();
-        }
-        
+        } 
         return instance;
     }
     
@@ -25,21 +24,18 @@ public class OptimalDFSSchedule {
     
     public synchronized void setOptimal(ArrayList<Task> schedule, int time) {
     	if (scheduleTime >= time) {
-    		System.out.println("Storing! " + time);
     		optimalSchedule = schedule;
     		scheduleTime = time;
     	}
-    	
     }
     
     public ArrayList<Task> getOptimalSchedule() {
-    	System.out.println("Optimal Schedule: " + optimalSchedule);
+    	System.out.println("Schedule time: " + scheduleTime);
     	return optimalSchedule;
     }
     
     public int getOptimalTime() {
-    	return scheduleTime;
-    	
+    	return scheduleTime;	
     }
 
 }
