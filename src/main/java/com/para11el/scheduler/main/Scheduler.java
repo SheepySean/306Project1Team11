@@ -37,7 +37,7 @@ public class Scheduler {
 	private static boolean _astar = true;
 	private static boolean _timeout = false;
 	private static int _timeoutSeconds = 0;
-	private static ForkJoinPool forkJoinPool;
+	
 
 	/**
 	 * Entry point for the program
@@ -86,7 +86,7 @@ public class Scheduler {
 		}
 		
 		
-		
+		/*
 		
 		if (_numCores == 0) {
 			forkJoinPool = new ForkJoinPool(1);
@@ -99,6 +99,9 @@ public class Scheduler {
 		DFSRecursiveAction dfsRecursiveAction = new DFSRecursiveAction("I don't know!");
 		forkJoinPool.execute(dfsRecursiveAction);
 		dfsRecursiveAction.join();
+		
+		
+		*/
 		
 		//Initialise a timeoutCounter for use if there is a timeout specified
 		Thread timeoutCounter = null;
