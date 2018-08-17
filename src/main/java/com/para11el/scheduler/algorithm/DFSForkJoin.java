@@ -25,7 +25,7 @@ public class DFSForkJoin extends RecursiveAction {
 	protected ArrayList<Task> _solutionList;
 
 	/**
-	 * Contructor for DFSForkJoin
+	 * Constructor for DFSForkJoin
 	 * @param graph
 	 * @param processors
 	 * @param cores
@@ -43,7 +43,7 @@ public class DFSForkJoin extends RecursiveAction {
 
 	/**
 	 * Computes the optimal solution for DFS using parallelisation,
-	 * utilising subtasks on each thread
+	 * utilising subtasks on the input number of threads
 	 * 
 	 * @author Tina Chen
 	 */
@@ -56,10 +56,12 @@ public class DFSForkJoin extends RecursiveAction {
 
 		if (availableNodes.size() != 0) {
 			
+			// Create a list of DFSForkJoin classes for subtasking
 			 List<DFSForkJoin> subtasks = new ArrayList<DFSForkJoin>();
 			 
 			 for (Node node : availableNodes) {
 				 	OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
+				 	
 					// For each available processor add available node to possible schedule
 					for (int i = 1; i <= _processors; i++) {
 						private_solutionList = (ArrayList<Task>) _solutionList.clone();		
@@ -68,18 +70,19 @@ public class DFSForkJoin extends RecursiveAction {
 							break;
 						}
 						Task task = new Task(node, startTime, i);
-						private_solutionList.add(task);			
+						private_solutionList.add(task);	
+						
+						// Create a new subtask using new DFSForkJoin class
 						DFSForkJoin subtask = new DFSForkJoin(_graph, _processors,
 								_cores, private_solutionList);
 						
 						subtasks.add(subtask);
 					}
 			 }
-		            
+		     // Fork each subtask
 			 for(RecursiveAction subtask : subtasks){
 				 subtask.fork();
 			 }	
-			 
 		} else {
 			// Add schedule to solution space if there are no more available nodes
 			if (private_solutionList.size() == _graph.getNodeCount()) {

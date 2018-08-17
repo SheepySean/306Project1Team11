@@ -65,12 +65,12 @@ public class DFSInitialiser {
 		_graph.nodes().forEach((node) -> {
 			if (node.getInDegree() == 0) {
 				Task t = new Task(node, 0, 1);
-				ArrayList<Task> solutionPart = new ArrayList<Task>();
-				solutionPart.add(t);
+				ArrayList<Task> rootNodeSchedule = new ArrayList<Task>();
+				rootNodeSchedule.add(t);
 
 				// create new parallelisation class DFSForkJoin
 				DFSForkJoin dfsForkJoin = new DFSForkJoin(_graph, _processors,
-						_cores, solutionPart);
+						_cores, rootNodeSchedule);
 
 				forkJoinPool.invoke(dfsForkJoin);	
 			}
