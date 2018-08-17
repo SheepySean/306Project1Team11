@@ -1,6 +1,7 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.RecursiveAction;
 
 import org.graphstream.graph.Graph;
@@ -25,6 +26,7 @@ public class DFSForkJoin extends RecursiveAction {
 		_solutionList = solutionList;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void compute() {
 
@@ -33,19 +35,34 @@ public class DFSForkJoin extends RecursiveAction {
 		ArrayList<Task> private_solutionList = (ArrayList<Task>)_solutionList.clone();
 
 		if (availableNodes.size() != 0) {
-			for (Node node : availableNodes) {
-				// For each available processor add available node to possible schedule
-				for (int i = 1; i <= _processors; i++) {
-					private_solutionList = (ArrayList<Task>) _solutionList.clone();		
-					int startTime = getEarliestStartTime(node, private_solutionList, i);
-					if (startTime > _minimumTime) {
-						break;
+			
+			
+			 List<DFSForkJoin> subtasks = new ArrayList<DFSForkJoin>();
+			 
+			 
+			 for (Node node : availableNodes) {
+					// For each available processor add available node to possible schedule
+					for (int i = 1; i <= _processors; i++) {
+						private_solutionList = (ArrayList<Task>) _solutionList.clone();		
+						int startTime = getEarliestStartTime(node, private_solutionList, i);
+						if (startTime > _minimumTime) {
+							break;
+						}
+						Task task = new Task(node, startTime, i);
+						private_solutionList.add(task);			
+						DFSForkJoin subtask = new DFSForkJoin(_graph, _processors,
+								_cores, _minimumTime, private_solutionList);
+						
+						subtasks.add(subtask);
 					}
-					Task task = new Task(node, startTime, i);
-					private_solutionList.add(task);			
-					buildRecursiveSolution(private_solutionList);	
 				}
-			}
+			 
+		            for(RecursiveAction subtask : subtasks){
+		                subtask.fork();
+		            }
+		            			
+			// ----------------------------------------------------------------------		
+			
 		} else {
 			// Add schedule to solution space if there are no more available nodes
 			if (private_solutionList.size() == _graph.getNodeCount()) {
@@ -53,6 +70,7 @@ public class DFSForkJoin extends RecursiveAction {
 			}
 		}
 	}
+	
 	
 	/**
 	 * Find the available nodes that can be scheduled given what nodes have already 
