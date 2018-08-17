@@ -52,14 +52,14 @@
                                              <left>
                                                 <TilePane fx:id="colLabelTile" maxWidth="30.0" prefWidth="30.0" BorderPane.alignment="CENTER">
                                                    <BorderPane.margin>
-                                                      <Insets bottom="20.0" left="20.0" top="10.0" />
+                                                      <Insets bottom="10.0" left="20.0" top="10.0" />
                                                    </BorderPane.margin>
                                                 </TilePane>
                                              </left>
                                              <center>
                                                 <TilePane fx:id="tile" hgap="2.0" maxWidth="300.0" minWidth="300.0" BorderPane.alignment="CENTER">
                                                    <BorderPane.margin>
-                                                      <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
+                                                      <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                                                    </BorderPane.margin>
                                                 </TilePane>
                                              </center>
