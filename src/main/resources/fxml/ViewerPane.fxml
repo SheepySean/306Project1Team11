@@ -28,9 +28,9 @@
          <center>
             <SplitPane dividerPositions="0.41193737769080235" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: #555555;" BorderPane.alignment="CENTER">
               <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-border-color: #282828; -fx-border-width: 1;">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="417.0" style="-fx-border-color: #282828; -fx-border-width: 1;">
                      <children>
-                        <BorderPane prefHeight="538.0" prefWidth="418.0">
+                        <BorderPane prefHeight="539.0" prefWidth="418.0">
                            <top>
                               <Label text="Schedule" textFill="WHITE" BorderPane.alignment="CENTER">
                                  <BorderPane.margin>
@@ -44,13 +44,13 @@
                                  </padding></Label>
                            </top>
                            <center>
-                              <ScrollPane fx:id="scrollPane" minHeight="473.0" prefHeight="473.0" prefWidth="418.0" BorderPane.alignment="CENTER">
+                              <ScrollPane fx:id="scrollPane" minHeight="284.0" prefHeight="536.0" prefWidth="418.0" BorderPane.alignment="CENTER">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="542.0" prefWidth="418.0">
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="418.0">
                                        <children>
-                                          <BorderPane prefHeight="542.0" prefWidth="418.0">
+                                          <BorderPane prefWidth="418.0">
                                              <left>
-                                                <TilePane fx:id="colLabelTile" prefHeight="540.0" prefWidth="30.0" BorderPane.alignment="CENTER">
+                                                <TilePane fx:id="colLabelTile" maxWidth="30.0" prefWidth="30.0" BorderPane.alignment="CENTER">
                                                    <BorderPane.margin>
                                                       <Insets bottom="20.0" left="20.0" top="10.0" />
                                                    </BorderPane.margin>
