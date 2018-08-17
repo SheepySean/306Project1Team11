@@ -56,6 +56,8 @@ public class DFSInitialiser {
 				ArrayList<Task> solutionPart = new ArrayList<Task>();
 				solutionPart.add(t);
 				
+				// add the fork join stuff here
+				
 				//buildRecursiveSolution(solutionPart);
 				
 			}
