@@ -6,7 +6,6 @@ import org.graphstream.graph.Graph;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.para11el.scheduler.algorithm.CostFunctionManager;
 import com.para11el.scheduler.algorithm.NodeManager;
 
 /**

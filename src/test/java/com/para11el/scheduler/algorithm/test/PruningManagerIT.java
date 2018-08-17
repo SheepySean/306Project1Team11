@@ -3,14 +3,9 @@ package com.para11el.scheduler.algorithm.test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.stream.Stream;
-
-import org.graphstream.graph.Node;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.para11el.scheduler.algorithm.PruningManager;
-import com.para11el.scheduler.algorithm.State;
 import com.para11el.scheduler.algorithm.Task;
 
 /**

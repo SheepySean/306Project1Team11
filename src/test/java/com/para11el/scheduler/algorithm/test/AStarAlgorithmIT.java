@@ -11,13 +11,10 @@ import java.util.TreeMap;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.SingleGraph;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
-import com.para11el.scheduler.algorithm.AStarAlgorithm;
-import com.para11el.scheduler.algorithm.PruningManager;
 import com.para11el.scheduler.algorithm.State;
 import com.para11el.scheduler.algorithm.Task;
 
