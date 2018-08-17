@@ -243,5 +243,9 @@ public class DFSForkJoin extends RecursiveAction {
 			}
 		}
 	}
+	
+	public ArrayList<Task> getSolution(){
+		return _optimalSchedule;
+	}
 
 }

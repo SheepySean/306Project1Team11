@@ -3,6 +3,7 @@ package com.para11el.scheduler.main;
 
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
 import com.para11el.scheduler.algorithm.DFSAlgorithm;
+import com.para11el.scheduler.algorithm.DFSInitialiser;
 import com.para11el.scheduler.algorithm.DFSRecursiveAction;
 import com.para11el.scheduler.algorithm.Task;
 import com.para11el.scheduler.graph.GraphConstants;
@@ -125,9 +126,17 @@ public class Scheduler {
 		
         if(_astar) {
         	//Searches with A Star Algorithm (default)
+        	
+        	DFSInitialiser dfs = new DFSInitialiser(_inGraph, _scheduleProcessors, _numCores);
+        	ArrayList<Task> solution = dfs.buildSolution();
+        	outputGraph = dfs.getGraph(solution); 	
+        	
+        	// CHANGE THIS LATER!!!!!
+        	/*
         	AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
     		ArrayList<Task> solution = algorithm.buildSolution(); 
     		outputGraph = algorithm.getGraph(solution);
+    		*/
         	
         } else {
         	//Searches with DFS Algorithm
