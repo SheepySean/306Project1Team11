@@ -108,5 +108,26 @@ public class SolutionValidity {
 		
 		return mappedNodes; 
 	}
+	
+	/**
+	 * Returns the optimal finish time of a solution schedule.
+	 * @param solution to find finish time of
+	 * @return int optimal finish time
+	 * 
+	 * @author Holly Hagenson 
+	 */
+	public int getOptimalFinishTime(ArrayList<Task> solution){
+		int maxFinish = 0;
+		
+		for (Task t : solution){
+			int finishTime = t.getFinishTime();
+			
+			if (finishTime > maxFinish){
+				maxFinish = finishTime; 
+			}
+		}
+		
+		return maxFinish; 
+	}
 
 }
