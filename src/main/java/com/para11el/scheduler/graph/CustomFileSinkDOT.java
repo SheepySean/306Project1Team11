@@ -6,14 +6,10 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Element;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.stream.file.FileSinkBase;
 import org.graphstream.stream.file.FileSinkDOT;
-
-import javax.sound.midi.SysexMessage;
 
 /**
  * Custom Dot Writer that extends GraphStream's FileSinkDOT

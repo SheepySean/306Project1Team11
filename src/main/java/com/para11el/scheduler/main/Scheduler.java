@@ -21,16 +21,13 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
-import org.graphstream.graph.Node;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.LogManager;
-import java.util.ArrayList;
 import java.util.ArrayList;
 
 
@@ -102,13 +99,10 @@ public class Scheduler extends Application {
 					+ "-output" + GraphConstants.FILE_EXT.getValue();
 		}
 
-		/*
-		//Check if any of the optional parameters are invalid
 		if (invalidOptional()) {
-			//Exit if options are invalid
+			//Exit if any optional parameters are invalid
 			return;
 		}
-		 */
 
 		//Initialise a timeoutCounter for use if there is a timeout specified
 		Thread timeoutCounter = null;
