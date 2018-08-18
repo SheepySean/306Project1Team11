@@ -77,6 +77,7 @@ public class ViewerPaneController {
 	private static TilePane _tile;
     private static TilePane _colLabelTile;
     private static Label _timerLabel;
+    private static boolean _isVisualise = false;
 
 
 	@FXML
@@ -88,6 +89,8 @@ public class ViewerPaneController {
      */
     @FXML
     public void initialize() {
+    	
+    	
         _instance = getInstance();
 		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
@@ -153,6 +156,7 @@ public class ViewerPaneController {
 
         this.toggleTimer(true); // Start the timer
         _hasLoaded.set(true);
+       
     }
 
 
@@ -591,5 +595,26 @@ public class ViewerPaneController {
     public static boolean isRunning() {
         return _hasLoaded.get();
     }
+    
+    /**
+     * Sets visualisation to be true if visualisation
+     * parameter is in input arguments
+     * 
+     * @author Rebekah Berriman, Tina Chen
+     */
+	public static void setVisualise() {
+		_isVisualise = true;
+		
+	}
+	
+	/**
+	 * Returns true if visualisation is enabled
+	 * @return True if visualisation 
+	 * 
+	 * @author Tina Chen, Rebekah Berriman
+	 */
+	public static boolean getVisualise() {
+		return _isVisualise;
+	}
 }
 

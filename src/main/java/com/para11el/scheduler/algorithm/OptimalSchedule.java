@@ -1,6 +1,8 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 import com.para11el.scheduler.ui.ViewerPaneController;
 
 /**
@@ -66,7 +68,11 @@ public class OptimalSchedule {
 
 			// Check if GUI is running and update schedule view if it is
 			ViewerPaneController.getInstance();
-			if (!ViewerPaneController.getTimeout()) {
+			if (!ViewerPaneController.getTimeout() && ViewerPaneController.getVisualise()) {
+				try {
+					TimeUnit.MILLISECONDS.sleep(500);
+				} catch (Exception e) {}
+				
 				ViewerPaneController.getInstance().setSchedule(optimalSchedule);
 				ViewerPaneController.update();
 			}
