@@ -72,7 +72,6 @@ public class OptimalSchedule {
      * @author Rebekah Berriman
      */
     public ArrayList<Task> getOptimalSchedule() {
-    	System.out.println("Schedule time: " + scheduleTime); // for testing
     	return optimalSchedule;
     }
     

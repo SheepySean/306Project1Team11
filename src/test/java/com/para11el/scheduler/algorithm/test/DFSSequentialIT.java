@@ -1,14 +1,13 @@
 package com.para11el.scheduler.algorithm.test;
 
 import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.TreeMap;
-
 import org.graphstream.graph.Graph;
 import org.junit.*;
 
-import com.para11el.scheduler.algorithm.DFSAlgorithm;
+import com.para11el.scheduler.algorithm.DFSInitialiser;
+import com.para11el.scheduler.algorithm.OptimalSchedule;
 import com.para11el.scheduler.algorithm.Task;
 
 /**
@@ -20,12 +19,13 @@ import com.para11el.scheduler.algorithm.Task;
  * @author Holly Hagenson, Rebekah Berriman, Jessica Alcantara
  *
  */
-public class DFSAlgorithmIT {
-	private DFSAlgorithm _ssManager;
+public class DFSSequentialIT {
+	private DFSInitialiser _dfsSchedule;
 	private static SolutionValidity _validity;
 	private static TestGraphManager _tgManager;  
 	private static Graph _testGraph; 
 	private int _processors;
+	private int _cores = 1;
 	private ArrayList<Task> _tasks = new ArrayList<Task>();
 	
 	/**
@@ -48,11 +48,13 @@ public class DFSAlgorithmIT {
 		
 		_testGraph = _tgManager.createMultiEntry(_testGraph);
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		// Check finish time of optimal schedule
-		assertEquals(11, _ssManager.getOptimalFinishTime());
+		assertEquals(11, preserveOptimal.getOptimalTime());
 		
 		// Check that tasks do not overlap
 		assertTrue(_validity.noTaskOverlap(_tasks));
@@ -76,11 +78,13 @@ public class DFSAlgorithmIT {
 		
 		_testGraph = _tgManager.createMultiEntry(_testGraph);
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		// Check finish time of optimal schedule
-		assertEquals(9, _ssManager.getOptimalFinishTime());
+		assertEquals(9, preserveOptimal.getOptimalTime());
 		
 		// Check that tasks do not overlap
 		ArrayList<Task> proc1Tasks = _validity.tasksOnSameProcessor(_tasks, 1);
@@ -107,11 +111,13 @@ public class DFSAlgorithmIT {
 		
 		_testGraph = _tgManager.createMultiExit(_testGraph);
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		// Check finish time of optimal schedule
-		assertEquals(13, _ssManager.getOptimalFinishTime());
+		assertEquals(13, preserveOptimal.getOptimalTime());
 		
 		// Check that tasks do not overlap
 		assertTrue(_validity.noTaskOverlap(_tasks));
@@ -136,11 +142,13 @@ public class DFSAlgorithmIT {
 		
 		_testGraph = _tgManager.createMultiExit(_testGraph);
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		// Check finish time of optimal schedule
-		assertEquals(12, _ssManager.getOptimalFinishTime());
+		assertEquals(12, preserveOptimal.getOptimalTime());
 		
 		// Check that tasks do not overlap
 		ArrayList<Task> proc1Tasks = _validity.tasksOnSameProcessor(_tasks, 1);
@@ -169,11 +177,13 @@ public class DFSAlgorithmIT {
 		
 		_testGraph = _tgManager.createSequential(_testGraph);
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		// Check finish time of optimal schedule
-		assertEquals(8, _ssManager.getOptimalFinishTime());
+		assertEquals(8, preserveOptimal.getOptimalTime());
 		
 		// Check that tasks do not overlap
 		assertTrue(_validity.noTaskOverlap(_tasks));
@@ -198,11 +208,13 @@ public class DFSAlgorithmIT {
 		
 		_testGraph = _tgManager.createSequential(_testGraph);
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors); 
-		_tasks = _ssManager.buildSolution();
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		// Check finish time of optimal schedule
-		assertEquals(8, _ssManager.getOptimalFinishTime());
+		assertEquals(8, preserveOptimal.getOptimalTime());
 
 		// Check that tasks do not overlap
 		assertTrue(_validity.noTaskOverlap(_tasks));
@@ -227,12 +239,12 @@ public class DFSAlgorithmIT {
 	 */
 	@Test 
 	public void testOutputGraph(){
-		_processors = 1
-				;
+		_processors = 1;
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
-		Graph outputGraph = _ssManager.getGraph(_tasks);
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		Graph outputGraph = _dfsSchedule.getGraph(_tasks);
 
 		outputGraph.nodes().forEach((node) -> {
 			//Each node should have three attributes
@@ -270,9 +282,10 @@ public class DFSAlgorithmIT {
 	public void testOutputGraphMultipleProcessors(){
 		_processors = 3;
 		
-		_ssManager = new DFSAlgorithm(_testGraph, _processors);
-		_tasks = _ssManager.buildSolution();
-		Graph outputGraph = _ssManager.getGraph(_tasks);
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		Graph outputGraph = _dfsSchedule.getGraph(_tasks);
 
 		//Iterate through the node set of the output graph
 		outputGraph.nodes().forEach((node) -> {
