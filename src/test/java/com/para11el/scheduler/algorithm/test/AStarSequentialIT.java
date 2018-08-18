@@ -1,21 +1,12 @@
 package com.para11el.scheduler.algorithm.test;
 
 import static org.junit.Assert.*;
-
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.TreeMap;
-
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
-import com.para11el.scheduler.algorithm.State;
 import com.para11el.scheduler.algorithm.Task;
 
 /**
@@ -27,7 +18,7 @@ import com.para11el.scheduler.algorithm.Task;
  * @author Jessica Alcantara, Holly Hagenson
  *
  */
-public class AStarAlgorithmIT {
+public class AStarSequentialIT {
 	private static Graph _testGraph;
 	private AStarAlgorithm _aStar;
 	private static SolutionValidity _validity;
@@ -43,84 +34,6 @@ public class AStarAlgorithmIT {
 		_validity = new SolutionValidity(); 
 		_tgManager = new TestGraphManager(); 
 		_testGraph = _tgManager.createGraph(); 
-	}
-	
-	/**
-	 * Unit test for the ascending ordering of the state comparator.
-	 * @author Jessica Alcantara
-	 */
-	@Test
-	public void testStateComparator() {
-		// Create states and set their costs
-		State stateOne = new State();
-		stateOne.setCost(4);
-		State stateTwo = new State();
-		stateTwo.setCost(12);
-		State stateThree = new State();
-		stateThree.setCost(9);
-		
-		AStarAlgorithm am = new AStarAlgorithm();
-		Queue<State> states = new PriorityQueue<State>(am.getStateComparator());
-		states.add(stateOne);
-		states.add(stateTwo);
-		states.add(stateThree);
-		
-		assertTrue(states.poll().getCost() == 4);
-		assertTrue(states.poll().getCost() == 9);
-		assertTrue(states.poll().getCost() == 12);
-	}
-	
-	/**
-	 * Unit test for calculating the total weight of nodes in a graph.
-	 * @author Holly Hagenson
-	 */
-	@Test
-	public void testCalculateTotalWeight() {
-		// Create collection of nodes to find total weight of
-		Collection<Node> nodes = new ArrayList<Node>(); 
-		nodes.add(new MockNode(null, "A", 2)); 
-		nodes.add(new MockNode(null, "B", 4)); 
-		nodes.add(new MockNode(null, "C", 3)); 
-		nodes.add(new MockNode(null, "D", 5)); 
-		nodes.add(new MockNode(null, "E", 3)); 
-		
-		AStarAlgorithm am = new AStarAlgorithm(); 
-		int totalWeight = am.calculateTotalWeight(nodes.stream()); 
-		
-		assertEquals(totalWeight, 17); 	
-	}
-	
-	/**
-	 * Unit test for expanding state
-	 * @author Jessica Alcantara
-	 */
-	@Test
-	public void testExpandState(){
-		_processors = 2;
-		_aStar = new AStarAlgorithm(_testGraph, _processors);
-		
-		// Create state schedule
-		ArrayList<Task> stateSchedule = new ArrayList<Task>(); 
-		stateSchedule.add(new Task(_testGraph.getNode("1"),0,1));
-		
-		// Create state
-		State state = new State(_testGraph.getNode("1"),null,stateSchedule,0);
-		_aStar.expandState(state);
-		
-		// Map state schedules
-		HashMap<Integer,Task> stateMap = new HashMap<Integer,Task>();
-		Queue<State> states = _aStar.getStates();
-		for (State s : states) {
-			int key = s.getCost();
-			Task addedTask = s.getSchedule().get(1);
-			stateMap.put(key, addedTask);
-		}
-		
-		// Costs of each state are: 7, 10, 12, 13
-		assertEquals(stateMap.get(7).getStartTime(),3);  // Node 3 on Processor 1
-		assertEquals(stateMap.get(10).getStartTime(),5); // Node 3 on Processor 2
-		assertEquals(stateMap.get(12).getStartTime(),3); // Node 5 on Processor 1
-		assertEquals(stateMap.get(13).getStartTime(),4); // Node 5 on Processor 2
 	}
 	
 	/**

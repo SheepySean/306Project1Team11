@@ -7,6 +7,8 @@ import java.util.concurrent.RecursiveAction;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
+import com.para11el.scheduler.ui.ViewerPaneController;
+
 /**
  * 
  * @author Tina Chen
@@ -54,14 +56,18 @@ public class DFSForkJoin extends RecursiveAction {
 		ArrayList<Node> availableNodes = availableNode(_solutionList);
 		ArrayList<Task> private_solutionList = (ArrayList<Task>)_solutionList.clone();
 
-		if (availableNodes.size() != 0) {
-			
-			// Create a list of DFSForkJoin classes for subtasking
-			 List<DFSForkJoin> subtasks = new ArrayList<DFSForkJoin>();
-			 
-			 for (Node node : availableNodes) {
-				 	OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
-				 	
+		// Check if a timeout has occurred
+		ViewerPaneController.getInstance();
+		if (!ViewerPaneController.getTimeout()) {
+
+			if (availableNodes.size() != 0) {
+
+				// Create a list of DFSForkJoin classes for subtasking
+				List<DFSForkJoin> subtasks = new ArrayList<DFSForkJoin>();
+
+				for (Node node : availableNodes) {
+					OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
+
 					// For each available processor add available node to possible schedule
 					for (int i = 1; i <= _processors; i++) {
 						private_solutionList = (ArrayList<Task>) _solutionList.clone();		
@@ -71,26 +77,27 @@ public class DFSForkJoin extends RecursiveAction {
 						}
 						Task task = new Task(node, startTime, i);
 						private_solutionList.add(task);	
-						
+
 						// Create a new subtask using new DFSForkJoin class
 						DFSForkJoin subtask = new DFSForkJoin(_graph, _processors,
 								_cores, private_solutionList);
-						
+
 						subtasks.add(subtask);
 					}
-			 }
-		     // Fork each subtask
-			 for(RecursiveAction subtask : subtasks){
-				 subtask.fork();
-			 }	
-		} else {
-			// Add schedule to solution space if there are no more available nodes
-			if (private_solutionList.size() == _graph.getNodeCount()) {
-				findOptimal(private_solutionList);
+				}
+				// Fork each subtask
+				for(RecursiveAction subtask : subtasks){
+					subtask.fork();
+				}	
+			} else {
+				// Add schedule to solution space if there are no more available nodes
+				if (private_solutionList.size() == _graph.getNodeCount()) {
+					findOptimal(private_solutionList);
+				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Find the available nodes that can be scheduled given what nodes have already 
 	 * been scheduled
@@ -112,11 +119,11 @@ public class DFSForkJoin extends RecursiveAction {
 			// Find nodes that have not been scheduled
 			if (!scheduledNodes.contains(node)) {
 				ArrayList<Node> parents = getParents(node);
-				
+
 				// Add nodes with no parents to available nodes
 				if (parents.size() == 0) {
 					available.add(node);		
-				// Check all the parents of the node have been scheduled
+					// Check all the parents of the node have been scheduled
 				} else {
 					boolean availableNode = true;
 					for (Node parentNode : parents) {
@@ -133,7 +140,7 @@ public class DFSForkJoin extends RecursiveAction {
 		});
 		return available;
 	}
-	
+
 	/**
 	 * Returns a list of parent nodes of a node
 	 * @param node Node to find parents of
@@ -145,10 +152,9 @@ public class DFSForkJoin extends RecursiveAction {
 		node.enteringEdges().forEach((edge) -> {
 			parents.add(edge.getSourceNode());
 		});
-		
 		return parents;
 	}
-	
+
 	/**
 	 * Returns the task corresponding to a node
 	 * @param node From input graph
@@ -165,7 +171,7 @@ public class DFSForkJoin extends RecursiveAction {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns an int of the finishTime of the last task on the processor
 	 * @param schedule ArrayList of the scheduled tasks
@@ -188,7 +194,7 @@ public class DFSForkJoin extends RecursiveAction {
 		}
 		return processorFinishTime;
 	}
-	
+
 	/**
 	 * Finds the earliest start time of a task on a processor with given dependencies
 	 * @param node Node to be scheduled
@@ -219,16 +225,15 @@ public class DFSForkJoin extends RecursiveAction {
 				nodeStartTime = parentLatestFinish; 
 			}
 		}
-		
+
 		// Get the latest finish time of the current processor
 		processorFinishTime = getProcessorFinishTime(schedule, processor);
 		if (processorFinishTime > nodeStartTime) {
 			nodeStartTime = processorFinishTime;
 		}
-
 		return nodeStartTime;
 	}
-	
+
 	/**
 	 * Compares the new solution to the current solution and changes the optimal solution
 	 * to be the schedule with the shortest completion time
@@ -242,10 +247,10 @@ public class DFSForkJoin extends RecursiveAction {
 			int solutionTime = 0; 
 			ArrayList<Task> newSolution = (ArrayList<Task>)solution.clone();
 			OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
-			
+
 			for (int processor=1; processor <= _processors; processor++) {
 				int solutionFinishTime = getProcessorFinishTime(newSolution, processor);
-				
+
 				if (solutionFinishTime > preserveOptimal.getOptimalTime()) {
 					return;
 				}
@@ -254,12 +259,11 @@ public class DFSForkJoin extends RecursiveAction {
 					solutionTime = solutionFinishTime;
 				}
 			}
-
 			// Update minimal time and optimal solution
 			if (preserveOptimal.getOptimalTime() >= solutionTime) {
 				preserveOptimal.setOptimal(newSolution, solutionTime);
 			}
 		}
 	}
-
+	
 }

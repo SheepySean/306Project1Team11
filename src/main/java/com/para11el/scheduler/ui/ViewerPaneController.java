@@ -8,14 +8,11 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -23,12 +20,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
-import org.graphstream.graph.Graph;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.geom.Point3;
-import org.graphstream.ui.layout.Eades84Layout;
 import org.graphstream.ui.layout.HierarchicalLayout;
 import org.graphstream.ui.layout.springbox.implementations.LinLog;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
@@ -37,7 +31,6 @@ import org.graphstream.ui.view.camera.Camera;
 
 import java.awt.Color;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -100,6 +93,7 @@ public class ViewerPaneController {
 	private static TilePane _tile;
     private static TilePane _colLabelTile;
     private static Label _timerLabel;
+    private static boolean _isVisualise = false;
 
 
 	@FXML
@@ -111,6 +105,8 @@ public class ViewerPaneController {
      */
     @FXML
     public void initialize() {
+
+
         _instance = getInstance();
 		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
@@ -175,6 +171,7 @@ public class ViewerPaneController {
 			timerLabel.setText(ViewerPaneController.calculateTimeLabel());
 		}
         _hasLoaded.set(true);
+
     }
 
 
@@ -511,7 +508,7 @@ public class ViewerPaneController {
 		int processorNum = Integer.parseInt(_processors);
 		int cell = (processor + processorNum * startTime) - 1 + processorNum;
 		for (int i = 0; i < length; i++) {
-		   // Node node =
+
             if (i == 0) {  // if first cell for task, set the task label for it
 
                 // If this cell has been labelled in the past then there is no point relabelling it
@@ -525,6 +522,11 @@ public class ViewerPaneController {
                 }
 
 				_tile.getChildren().get(cell).setStyle(colour);
+
+				// If cell background is dark, colour label text white
+				if (isDark(colour)) {
+					((Label)_tile.getChildren().get(cell)).setTextFill(Paint.valueOf("#FFFFFF"));
+				}
 			}
 
 			_tile.getChildren().get(cell).setStyle("-fx-background-color: " + colour);
@@ -555,6 +557,33 @@ public class ViewerPaneController {
 		hex = "#" + hex;
 
 		return hex;
+	}
+
+	/**
+	 * Calculates if a colour is bright or dark
+	 * @param hex A string hex value of a colour
+	 * @return True if input colour is dark
+	 *
+	 * @author Tina Chen
+	 */
+	private static boolean isDark(String hex) {
+
+		String colour = hex.substring(1, hex.length());
+
+		// convert hex string to int
+		int rgb = Integer.parseInt(colour, 16);
+
+		// get hue, saturation, and brightness
+		Color c = new Color(rgb);
+		float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
+
+		float brightness = hsb[2];
+
+		if (brightness < 0.5) {
+		   return true;
+		} else {
+		   return false;
+		}
 	}
 
     /**
@@ -657,5 +686,27 @@ public class ViewerPaneController {
 				((elapsedMillis % 1000) / 10));
 
 	}
+
+
+    /**
+     * Sets visualisation to be true if visualisation
+     * parameter is in input arguments
+     *
+     * @author Rebekah Berriman, Tina Chen
+     */
+    public static void setVisualise() {
+        _isVisualise = true;
+
+    }
+
+    /**
+     * Returns true if visualisation is enabled
+     * @return True if visualisation
+     *
+     * @author Tina Chen, Rebekah Berriman
+     */
+    public static boolean getVisualise() {
+        return _isVisualise;
+    }
 }
 

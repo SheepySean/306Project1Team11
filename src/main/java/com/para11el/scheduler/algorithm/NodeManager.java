@@ -2,7 +2,6 @@ package com.para11el.scheduler.algorithm;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map.Entry;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;

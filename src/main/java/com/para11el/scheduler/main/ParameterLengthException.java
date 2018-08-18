@@ -9,4 +9,9 @@ package com.para11el.scheduler.main;
  */
 class ParameterLengthException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 }
