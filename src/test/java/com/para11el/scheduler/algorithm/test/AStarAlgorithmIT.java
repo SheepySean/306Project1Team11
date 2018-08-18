@@ -111,9 +111,11 @@ public class AStarAlgorithmIT {
 		HashMap<Integer,Task> stateMap = new HashMap<Integer,Task>();
 		Queue<State> states = _aStar.getStates();
 		for (State s : states) {
-			int key = s.getCost();
-			Task addedTask = s.getSchedule().get(1);
-			stateMap.put(key, addedTask);
+			if (s.getSchedule().size()>1) {
+				int key = s.getCost();
+				Task addedTask = s.getSchedule().get(1);
+				stateMap.put(key, addedTask);
+			}
 		}
 		
 		// Costs of each state are: 7, 10, 12, 13
