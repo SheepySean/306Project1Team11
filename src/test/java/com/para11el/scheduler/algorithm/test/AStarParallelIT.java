@@ -89,7 +89,7 @@ public class AStarParallelIT {
 	
 	/**
 	 * Test output is correct for graph with multiple entry nodes on two processors.
-	 * @author Rebekah Berriman, Holly Hagenson
+	 * @author Holly Hagenson
 	 */
 	@Test
 	public void testMultipleEntryNodesMultiProcessor(){
@@ -126,7 +126,7 @@ public class AStarParallelIT {
 	
 	/**
 	 * Test output is correct for graph with multiple exit nodes on a single processor
-	 * @author Rebekah Berriman, Jessica Alcantara, Holly Hagenson
+	 * @author Holly Hagenson
 	 */
 	@Test
 	public void testMultipleExitNodes(){
@@ -160,7 +160,7 @@ public class AStarParallelIT {
 	
 	/**
 	 * Test output is correct for graph with multiple exit nodes on multiple processors
-	 * @author Rebekah Berriman, Holly Hagenson
+	 * @author Holly Hagenson
 	 */
 	@Test
 	public void testMultipleExitNodesMultiProcessor(){
@@ -198,7 +198,7 @@ public class AStarParallelIT {
 	/**
 	 * Test that the finish time of a sequential graph on a single processor is the 
 	 * actual finish time of the optimal solution.
-	 *  @author Rebekah Berriman, Holly Hagenson
+	 *  @author Holly Hagenson
 	 */
 	@Test 
 	public void testSequentialGraphSingle(){
@@ -232,7 +232,7 @@ public class AStarParallelIT {
 	/**
 	 * Test that the finish time of a sequential graph on multiple processors is the 
 	 * actual finish time of the optimal solution.
-	 *  @author Rebekah Berriman, Holly Hagenson
+	 *  @author Holly Hagenson
 	 */
 	@Test 
 	public void testSequentialGraphMulti(){
@@ -270,7 +270,7 @@ public class AStarParallelIT {
 	 *  - Processor
 	 *  and that the output graph only has one label for each edge:
 	 *  - Weight
-	 *  @author Rebekah Berriman, Holly Hagenson
+	 *  @author Holly Hagenson
 	 */
 	@Test 
 	public void testOutputGraph(){
@@ -311,7 +311,7 @@ public class AStarParallelIT {
 	 *  and that the output graph only has one label for each edge:
 	 *  - Weight
 	 *  
-	 *  @author Rebekah Berriman, Holly Hagenson
+	 *  @author Holly Hagenson
 	 */
 	@Test 
 	public void testOutputGraphMultipleProcessors(){
