@@ -38,7 +38,7 @@ public class AStarAlgorithm implements Algorithm{
 	private ForkJoinPool _fjp;
 	private NodeManager _nm;
 	private CostFunctionManager _cfm;
-	private PruningManager _pm;
+	//private PruningManager _pm;
 	private Queue<State> _states = new PriorityQueue<State>(_stateComparator);
 
 	public AStarAlgorithm() {}
@@ -78,7 +78,7 @@ public class AStarAlgorithm implements Algorithm{
 	public void initialise() {
 		_nm = new NodeManager(_graph);
 		_cfm = new CostFunctionManager(_nm, calculateTotalWeight(_graph.nodes()), _processors);
-		_pm = new PruningManager();
+		//_pm = new PruningManager();
 		
 		// Initialize priority queue with entry node initial states
 		_graph.nodes().forEach((node) -> {
@@ -134,7 +134,9 @@ public class AStarAlgorithm implements Algorithm{
 		
 		// Prune duplicate states
 		for (State s : newStates) {
-			if (!_pm.doPrune(s, _states)){
+			PruningManager pm = new PruningManager(s,_states);
+			Boolean duplicate = _fjp.invoke(pm);
+			if (!duplicate){
 				_states.add(s);
 			}
 		}
