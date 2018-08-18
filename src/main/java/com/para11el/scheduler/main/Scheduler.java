@@ -2,7 +2,6 @@ package com.para11el.scheduler.main;
 
 
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
-import com.para11el.scheduler.algorithm.DFSAlgorithm;
 import com.para11el.scheduler.algorithm.DFSInitialiser;
 import com.para11el.scheduler.algorithm.Task;
 import com.para11el.scheduler.graph.GraphConstants;
