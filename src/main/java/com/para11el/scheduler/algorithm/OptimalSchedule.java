@@ -1,8 +1,6 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
 import com.para11el.scheduler.ui.ViewerPaneController;
 
 /**
@@ -70,11 +68,6 @@ public class OptimalSchedule {
 			ViewerPaneController.getInstance();
 			if (!ViewerPaneController.getTimeout()) {
 				ViewerPaneController.getInstance().setSchedule(optimalSchedule);
-
-				try{
-					TimeUnit.MILLISECONDS.sleep(500);
-				} catch(Exception e) {}
-
 				ViewerPaneController.update();
 			}
 		}

@@ -9,7 +9,6 @@ import org.graphstream.graph.Graph;
 import org.junit.*;
 
 import java.awt.*;
-import java.util.Arrays;
 
 /**
  * Simple JUnit test to test the behaviour of the Scheduler.

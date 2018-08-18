@@ -31,11 +31,7 @@ public class DFSParallelIT {
 	private int _sequentialCores = 1;
 	private int _parallelCores = 8;
 	
-	private ArrayList<Task> _sequentialSchedule = new ArrayList<Task>();
 	private ArrayList<Task> _parallelSchedule = new ArrayList<Task>();
-	
-	private long _sequentialTimer;
-	private long _parallelTimer;
 	
 	private int _sequentialScheduleTime;
 	private int _parallelScheduleTime;
@@ -61,29 +57,19 @@ public class DFSParallelIT {
 		
 		_testGraph = _tgManager.createMultiEntry(_testGraph);
 		
-		long start = System.currentTimeMillis();
 		_dfsSequential = new DFSInitialiser(_testGraph, _processors, _sequentialCores);
-		_sequentialSchedule = _dfsSequential.buildSolution();
+		_dfsSequential.buildSolution();
 		OptimalSchedule sequentialOptimal = OptimalSchedule.getInstance();
 		_sequentialScheduleTime = sequentialOptimal.getOptimalTime();
-		_sequentialTimer = System.currentTimeMillis() - start;
-		System.out.println("Sequential time: " + _sequentialTimer);
 		
-		start = System.currentTimeMillis();
 		_dfsParallel = new DFSInitialiser(_testGraph, _processors, _parallelCores);
 		_parallelSchedule = _dfsParallel.buildSolution();
 		OptimalSchedule parallelOptimal = OptimalSchedule.getInstance();
 		_parallelScheduleTime = parallelOptimal.getOptimalTime();
-		_parallelTimer = System.currentTimeMillis() - start;
-		System.out.println("Parallel time: " + _parallelTimer);
-		
 		
 		// Check finish time of optimal schedule
 		assertEquals(11, _sequentialScheduleTime);
 		assertEquals(_parallelScheduleTime, _sequentialScheduleTime);
-		
-		//Check parallel is faster
-		//assertTrue(_parallelTimer > _sequentialTimer);
 		
 		// Check that tasks do not overlap
 		assertTrue(_validity.noTaskOverlap(_parallelSchedule));
@@ -108,29 +94,19 @@ public class DFSParallelIT {
 		
 		_testGraph = _tgManager.createMultiEntry(_testGraph);
 		
-		long start = System.currentTimeMillis();
 		_dfsSequential = new DFSInitialiser(_testGraph, _processors, _sequentialCores);
-		_sequentialSchedule = _dfsSequential.buildSolution();
+		_dfsSequential.buildSolution();
 		OptimalSchedule sequentialOptimal = OptimalSchedule.getInstance();
 		_sequentialScheduleTime = sequentialOptimal.getOptimalTime();
-		_sequentialTimer = System.currentTimeMillis() - start;
-		System.out.println("Sequential time: " + _sequentialTimer);
 		
-		
-		start = System.currentTimeMillis();
 		_dfsParallel = new DFSInitialiser(_testGraph, _processors, _parallelCores);
 		_parallelSchedule = _dfsParallel.buildSolution();
 		OptimalSchedule parallelOptimal = OptimalSchedule.getInstance();
 		_parallelScheduleTime = parallelOptimal.getOptimalTime();
-		_parallelTimer = System.currentTimeMillis() - start;
-		System.out.println("Parallel time: " + _parallelTimer);
 		
 		// Check finish time of optimal schedule
 		assertEquals(9, _sequentialScheduleTime);
 		assertEquals(_sequentialScheduleTime, _parallelScheduleTime);
-		
-		//Check parallel is faster
-		//assertTrue(_parallelTimer <= _sequentialTimer);
 		
 		// Check that tasks do not overlap
 		ArrayList<Task> proc1Tasks = _validity.tasksOnSameProcessor(_parallelSchedule, 1);
@@ -158,29 +134,21 @@ public class DFSParallelIT {
 		
 		_testGraph = _tgManager.createMultiExit(_testGraph);
 		
-		long start = System.currentTimeMillis();
 		_dfsSequential = new DFSInitialiser(_testGraph, _processors, _sequentialCores);
-		_sequentialSchedule = _dfsSequential.buildSolution();
+		_dfsSequential.buildSolution();
 		OptimalSchedule sequentialOptimal = OptimalSchedule.getInstance();
 		_sequentialScheduleTime = sequentialOptimal.getOptimalTime();
-		_sequentialTimer = System.currentTimeMillis() - start;
-		System.out.println("Sequential time: " + _sequentialTimer);
 		
-		
-		start = System.currentTimeMillis();
 		_dfsParallel = new DFSInitialiser(_testGraph, _processors, _parallelCores);
 		_parallelSchedule = _dfsParallel.buildSolution();
 		OptimalSchedule parallelOptimal = OptimalSchedule.getInstance();
 		_parallelScheduleTime = parallelOptimal.getOptimalTime();
-		_parallelTimer = System.currentTimeMillis() - start;
-		System.out.println("Parallel time: " + _parallelTimer);
+
 		
 		// Check finish time of optimal schedule
 		assertEquals(13, _sequentialScheduleTime);
 		assertEquals(_sequentialScheduleTime, _parallelScheduleTime);
-		
-		//assertTrue(_parallelTimer > _sequentialTimer);
-		
+
 		// Check that tasks do not overlap
 		assertTrue(_validity.noTaskOverlap(_parallelSchedule));
 		
@@ -205,29 +173,19 @@ public class DFSParallelIT {
 		
 		_testGraph = _tgManager.createMultiExit(_testGraph);
 		
-		long start = System.currentTimeMillis();
 		_dfsSequential = new DFSInitialiser(_testGraph, _processors, _sequentialCores);
-		_sequentialSchedule = _dfsSequential.buildSolution();
+		_dfsSequential.buildSolution();
 		OptimalSchedule sequentialOptimal = OptimalSchedule.getInstance();
 		_sequentialScheduleTime = sequentialOptimal.getOptimalTime();
-		_sequentialTimer = System.currentTimeMillis() - start;
-		System.out.println("Sequential time: " + _sequentialTimer);
 		
-		
-		start = System.currentTimeMillis();
 		_dfsParallel = new DFSInitialiser(_testGraph, _processors, _parallelCores);
 		_parallelSchedule = _dfsParallel.buildSolution();
 		OptimalSchedule parallelOptimal = OptimalSchedule.getInstance();
 		_parallelScheduleTime = parallelOptimal.getOptimalTime();
-		_parallelTimer = System.currentTimeMillis() - start;
-		System.out.println("Parallel time: " + _parallelTimer);
 		
 		// Check finish time of optimal schedule
 		assertEquals(12, _sequentialScheduleTime);
 		assertEquals(_sequentialScheduleTime, _parallelScheduleTime);
-		
-		//Check parallel is faster
-		//assertTrue(_parallelTimer < _sequentialTimer);
 		
 		// Check that tasks do not overlap
 		ArrayList<Task> proc1Tasks = _validity.tasksOnSameProcessor(_parallelSchedule, 1);
@@ -257,29 +215,19 @@ public class DFSParallelIT {
 		
 		_testGraph = _tgManager.createSequential(_testGraph);
 		
-		long start = System.currentTimeMillis();
 		_dfsSequential = new DFSInitialiser(_testGraph, _processors, _sequentialCores);
-		_sequentialSchedule = _dfsSequential.buildSolution();
+		_dfsSequential.buildSolution();
 		OptimalSchedule sequentialOptimal = OptimalSchedule.getInstance();
 		_sequentialScheduleTime = sequentialOptimal.getOptimalTime();
-		_sequentialTimer = System.currentTimeMillis() - start;
-		System.out.println("Sequential time: " + _sequentialTimer);
 		
-		
-		start = System.currentTimeMillis();
 		_dfsParallel = new DFSInitialiser(_testGraph, _processors, _parallelCores);
 		_parallelSchedule = _dfsParallel.buildSolution();
 		OptimalSchedule parallelOptimal = OptimalSchedule.getInstance();
 		_parallelScheduleTime = parallelOptimal.getOptimalTime();
-		_parallelTimer = System.currentTimeMillis() - start;
-		System.out.println("Parallel time: " + _parallelTimer);
 		
 		// Check finish time of optimal schedule
 		assertEquals(8, _sequentialScheduleTime);
 		assertEquals(_sequentialScheduleTime, _parallelScheduleTime);
-		
-		//Check parallel is faster
-		//assertTrue(_parallelTimer < _sequentialTimer);
 		
 		// Check that tasks do not overlap
 		assertTrue(_validity.noTaskOverlap(_parallelSchedule));
@@ -305,29 +253,19 @@ public class DFSParallelIT {
 		
 		_testGraph = _tgManager.createSequential(_testGraph);
 		
-		long start = System.currentTimeMillis();
 		_dfsSequential = new DFSInitialiser(_testGraph, _processors, _sequentialCores);
-		_sequentialSchedule = _dfsSequential.buildSolution();
+		_dfsSequential.buildSolution();
 		OptimalSchedule sequentialOptimal = OptimalSchedule.getInstance();
 		_sequentialScheduleTime = sequentialOptimal.getOptimalTime();
-		_sequentialTimer = System.currentTimeMillis() - start;
-		System.out.println("Sequential time: " + _sequentialTimer);
 		
-		
-		start = System.currentTimeMillis();
 		_dfsParallel = new DFSInitialiser(_testGraph, _processors, _parallelCores);
 		_parallelSchedule = _dfsParallel.buildSolution();
 		OptimalSchedule parallelOptimal = OptimalSchedule.getInstance();
 		_parallelScheduleTime = parallelOptimal.getOptimalTime();
-		_parallelTimer = System.currentTimeMillis() - start;
-		System.out.println("Parallel time: " + _parallelTimer);
 		
 		// Check finish time of optimal schedule
 		assertEquals(8, _sequentialScheduleTime);
 		assertEquals(_sequentialScheduleTime, _parallelScheduleTime);
-
-		//Check parallel is faster
-		//assertTrue(_parallelTimer > _sequentialTimer);
 
 		// Check that tasks do not overlap
 		assertTrue(_validity.noTaskOverlap(_parallelSchedule));

@@ -6,7 +6,7 @@ import java.util.concurrent.ForkJoinPool;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
-public class DFSInitialiser implements Algorithm{
+public class DFSInitialiser { //implements Algorithm{
 
 	protected Graph _graph;
 	protected int _processors;
@@ -77,7 +77,7 @@ public class DFSInitialiser implements Algorithm{
 		while (!forkJoinPool.isQuiescent()) {
 			//Make all threads have completed before
 			//leaving the function
-		}	
+		}
 	}
 	
 	/**
