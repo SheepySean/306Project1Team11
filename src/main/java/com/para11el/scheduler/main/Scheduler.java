@@ -175,6 +175,10 @@ public class Scheduler extends Application {
             //Searches with A Star Algorithm (default)
             AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
             ArrayList<Task> solution = algorithm.buildSolution();
+            ViewerPaneController.getInstance().setSchedule(solution);
+            if(ViewerPaneController.isRunning()) {
+                ViewerPaneController.update();
+            }
             outputGraph = algorithm.getGraph(solution);
 
         } else {
