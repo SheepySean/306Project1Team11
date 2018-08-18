@@ -7,6 +7,7 @@ import com.para11el.scheduler.algorithm.Task;
 import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
+import com.para11el.scheduler.ui.ExitWindow;
 import com.para11el.scheduler.ui.ViewerPaneController;
 
 import javafx.application.Application;
@@ -91,6 +92,8 @@ public class Scheduler extends Application {
 			_inGraph = fileManager.readGraphFile(_filename,
 					graphName);
 			System.out.println("Found and loaded the graph file '" + _filename + "'");
+            ViewerPaneController.setStatus("Found and loaded the graph file '" + _filename + "'");
+
 		} catch(IOException e) {
 			System.out.println("Cannot find the specified input file '" + _filename + "'");
 			return;
@@ -139,22 +142,6 @@ public class Scheduler extends Application {
                 launch(guiArgs);
             });
 			t.start();
-/*
-            List<Task> mockTasks = new ArrayList<Task>();
-			for(int i = 0; i < 1000000; i++) {
-                _inGraph.nodes().forEach((node) -> {
-                    mockTasks.add(new Task(node, (int) Math.floor(Math.random() * 30) + 1, (int) Math.floor(Math.random() * 4)));
-
-                });
-                ViewerPaneController.getInstance().setSchedule(mockTasks);
-
-                try{
-                    TimeUnit.MILLISECONDS.sleep(500);
-                } catch(Exception e) {}
-                ViewerPaneController.update();
-                mockTasks.clear();
-            }
-*/
 
 			// For viewing the Graph
 			GraphicGraph viewGraph = viewer.getGraphicGraph();
@@ -175,10 +162,7 @@ public class Scheduler extends Application {
             //Searches with A Star Algorithm (default)
             AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
             ArrayList<Task> solution = algorithm.buildSolution();
-            ViewerPaneController.getInstance().setSchedule(solution);
-            if(ViewerPaneController.isRunning()) {
-                ViewerPaneController.update();
-            }
+
             outputGraph = algorithm.getGraph(solution);
 
         } else {
@@ -195,8 +179,10 @@ public class Scheduler extends Application {
 			fileManager.writeGraphFile(_outputFilename,
 					outputGraph, true);
             System.out.println("Graph file successfully written to '" + _outputFilename+ "'");
+            ViewerPaneController.setStatus("Graph file successfully written to '" + _outputFilename+ "'");
 		} catch(IOException e) {
 			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
+            ViewerPaneController.setStatus("Unable to write the graph to the file '" + _outputFilename + "'");
 		}
 
 		//Interrupt the timeout thread and stop it
@@ -302,10 +288,11 @@ public class Scheduler extends Application {
 
         final Popup popup = new Popup(); popup.setX(300); popup.setY(200);
         popup.getContent().addAll(new Circle(25, 25, 50, Color.AQUAMARINE));
-        Stage stage = null;
+        final Stage stage;
         try{
             List<String> params = getParameters().getRaw();
             ViewerPaneController.getInstance().setParameters(params);
+            ViewerPaneController.setHostServices(getHostServices());
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/ViewerPane.fxml")); // Load the fxml pane
             Scene scene = new Scene(root);
             scene.getStylesheets().add("/css/main.css"); // Add the css
@@ -315,6 +302,11 @@ public class Scheduler extends Application {
             stage.setScene(scene);
             //stage.setResizable(false);
             stage.setTitle("Para11el | Task Scheduler | " + _filename);
+            stage.setOnCloseRequest((event) -> {
+                boolean response = ExitWindow.display(stage);
+                if(response) stage.close();
+                event.consume();
+            });
 
             stage.show();
         } catch(Exception e) {

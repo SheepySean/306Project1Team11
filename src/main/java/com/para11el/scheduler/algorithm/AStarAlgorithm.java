@@ -8,8 +8,10 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import com.para11el.scheduler.ui.ViewerPaneController;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
@@ -43,6 +45,7 @@ public class AStarAlgorithm extends Algorithm{
 
 	public AStarAlgorithm() {
 		super();
+
 	}
 
 	public AStarAlgorithm(Graph graph, int processor) {
@@ -70,6 +73,7 @@ public class AStarAlgorithm extends Algorithm{
 	 * @author Jessica Alcantara
 	 */
 	public ArrayList<Task> buildSolution() {
+		ViewerPaneController.setStatus("Started running the A* algorithm");
 		// Initialize priority queue with entry node initial states
 		_graph.nodes().forEach((node) -> {
 			if (node.getInDegree() == 0) {
@@ -84,9 +88,17 @@ public class AStarAlgorithm extends Algorithm{
 		while (_states.size() > 0) {
 			// Pop the most promising state
 			State state = _states.poll();
-
+			ViewerPaneController.setStatus("Using A* to expand states in the schedule");
+			ViewerPaneController.getInstance().setSchedule(state.getSchedule());
+			if(ViewerPaneController.isRunning()) {
+				ViewerPaneController.update();
+			}
+/*			try{
+				TimeUnit.MILLISECONDS.sleep(100);
+			} catch(Exception e) {}*/
 			// Check if solution is complete
 			if (state.isComplete(_graph.nodes())) {
+				ViewerPaneController.toggleTimer(false);
 				return state.getSchedule();
 			}
 
@@ -107,7 +119,6 @@ public class AStarAlgorithm extends Algorithm{
 		ArrayList<Node> freeNodes = availableNode(state.getSchedule());
 		
 		List<State> newStates = new ArrayList<State>();
-		
 		for (Node node : freeNodes) {
 			for (int i=1; i<=_processors; i++) {
 				AStarStateTask aStarStateTask = new AStarStateTask(state,node,i,_cfm);

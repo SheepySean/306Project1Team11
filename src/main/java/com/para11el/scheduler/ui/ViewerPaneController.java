@@ -5,6 +5,8 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.collections.ObservableList;
@@ -32,6 +34,7 @@ import org.graphstream.ui.layout.springbox.implementations.LinLog;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.camera.Camera;
 
+
 import java.awt.Color;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -39,13 +42,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class ViewerPaneController {
+	private static final String WIKI_LINK = "https://github.com/SheepySean/306Project1Team11/wiki/Visualisation";
+
     private static FxViewer _viewer;
     private static List<Task> _schedule;
     private Camera _camera;
     private FxDefaultView viewPanel;
 
     private static AnimationTimer _timer;
+    private static Label _statusLabel;
     private static boolean _timeout = false;
+    private static boolean _noTimer = false;
 
     private static String _inputFile;
     private static String _outputFile;
@@ -58,6 +65,8 @@ public class ViewerPaneController {
 	private static int _cellWidth;
 	private static int _cellHeight = 20;
 
+	private static HostServices _hostServices;
+	private static String _statusMessage;
     private static ViewerPaneController _instance = null;
 
     private static AtomicBoolean _hasLoaded = new AtomicBoolean(false);
@@ -85,6 +94,9 @@ public class ViewerPaneController {
 	@FXML
 	private TilePane tile;
 
+	@FXML
+	private Label statusLabel;
+
 	private static TilePane _tile;
     private static TilePane _colLabelTile;
     private static Label _timerLabel;
@@ -106,7 +118,8 @@ public class ViewerPaneController {
         _tile = tile;
         _colLabelTile = colLabelTile;
         _timerLabel = timerLabel;
-
+        _statusLabel = statusLabel;
+		_statusLabel.setText(_statusMessage);
 		setCellSize(Integer.parseInt(_processors));
 
         initialisePane(_criticalLength);
@@ -153,16 +166,14 @@ public class ViewerPaneController {
         _timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                long elapsedMillis = System.currentTimeMillis() - _startTime ;
-                String timeLabel = String.format("%02d:%02d:%02d",
-                        (elapsedMillis / 60000),
-                        ((elapsedMillis % 60000) / 1000),
-                        ((elapsedMillis % 1000) / 10));
-                timerLabel.setText(timeLabel);
+				timerLabel.setText(ViewerPaneController.calculateTimeLabel());
             }
         };
-
-        this.toggleTimer(true); // Start the timer
+		if(!(_noTimer)) {
+			this.toggleTimer(true); // Start the timer
+		} else {
+			timerLabel.setText(ViewerPaneController.calculateTimeLabel());
+		}
         _hasLoaded.set(true);
     }
 
@@ -309,6 +320,18 @@ public class ViewerPaneController {
 	}
 
 	/**
+	 * Open visualisation wiki
+	 * @param event
+	 * @author Sean Oldfield
+	 */
+	@FXML
+	private void openWikiAction(ActionEvent event) {
+		Platform.runLater(() -> {
+			openBrowser(WIKI_LINK);
+		});
+	}
+
+	/**
 	 * Give graph view focus when clicked on i.e. allow it to be accessed by keyboard shortcuts
 	 * @param event
 	 *
@@ -355,11 +378,15 @@ public class ViewerPaneController {
      * @author Sean Oldfield
      */
     public static void toggleTimer(boolean enable) {
-        if(enable) {
-            _timer.start();
-        } else {
-            _timer.stop();
-        }
+    	if(_timer == null) {
+    		_noTimer = true;
+		} else {
+			if (enable) {
+				_timer.start();
+			} else {
+				_timer.stop();
+			}
+		}
     }
 
 	/**
@@ -602,5 +629,33 @@ public class ViewerPaneController {
     public static boolean isRunning() {
         return _hasLoaded.get();
     }
+
+	public static void setHostServices(HostServices services) {
+    	_hostServices = services;
+	}
+
+	private void openBrowser(final String url) {
+		_hostServices.showDocument(url);
+	}
+
+	public static void setStatus(String statusMessage) {
+    	if(isRunning()) {
+    		Platform.runLater(()->{
+				_statusLabel.setText(statusMessage);
+			});
+
+		} else {
+    		_statusMessage = statusMessage;
+		}
+	}
+
+	private static String calculateTimeLabel() {
+		long elapsedMillis = System.currentTimeMillis() - _startTime ;
+		return String.format("%02d:%02d:%02d",
+				(elapsedMillis / 60000),
+				((elapsedMillis % 60000) / 1000),
+				((elapsedMillis % 1000) / 10));
+
+	}
 }
 
