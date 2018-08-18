@@ -12,13 +12,21 @@ import java.util.concurrent.RecursiveTask;
  *
  */
 public class PruningManager extends RecursiveTask<Boolean>{
-	
+
+	private static final long serialVersionUID = 1L;
 	private int _makespan;
 	private State _newState;
 	private Queue<State> _states;
 	
 	public PruningManager(){}
 
+	/**
+	 * Constructor for Pruning Manager
+	 * @param newState State to be pruned
+	 * @param states States to be compared against
+	 * 
+	 * @author Jessica Alcantara
+	 */
 	public PruningManager(State newState, Queue<State> states) {
 		_newState = newState;
 		_states = states;
