@@ -206,6 +206,11 @@ public class Scheduler extends Application {
 			timeoutCounter.interrupt();
 		}
 
+		// Exit program when finished
+		ViewerPaneController.getInstance();
+		if (!ViewerPaneController.isRunning() || !ViewerPaneController.getVisualise()) {
+			System.exit(1);
+		}
 		return;
 
 	}
