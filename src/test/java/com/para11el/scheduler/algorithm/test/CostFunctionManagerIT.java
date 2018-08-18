@@ -3,33 +3,47 @@ package com.para11el.scheduler.algorithm.test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.para11el.scheduler.algorithm.AStarAlgorithm;
 import com.para11el.scheduler.algorithm.CostFunctionManager;
-import com.para11el.scheduler.algorithm.State;
+import com.para11el.scheduler.algorithm.NodeManager;
 import com.para11el.scheduler.algorithm.Task;
 
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.graph.Node;
 
 /**
- * JUnit test to test the correctness of the Cost Function Manager.
+ * Junit test to test the correctness of the Cost Function Manager.
  * 
  * @author Jessica Alcantara
  *
  */
 public class CostFunctionManagerIT {
-	private static Graph _graph1;
+	private static Graph _testGraph;
+	private static CostFunctionManager _cfm; 
+	private static TestGraphManager _tgManager; 
+	private static NodeManager _nm; 
+	private static AStarAlgorithm _aStar; 
+	private ArrayList<Task> _tasks;
+	
+	@BeforeClass
+	public static void initialise(){
+		_tgManager = new TestGraphManager(); 
+		_testGraph = _tgManager.createGraph();
+		_nm = new NodeManager(_testGraph);  
+	}
 
 	/**
 	 * Unit test for calculating the total idle time in a schedule
-	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
 	public void testCalculateIdleTime() {
 		int processors = 3;
-		CostFunctionManager cfm = new CostFunctionManager(11, processors);
+		CostFunctionManager cfm = new CostFunctionManager(_nm, 11, processors);
 		ArrayList<Task> testSolution = new ArrayList<Task>();
 		testSolution.add(new Task(new MockNode(null,"A",2),0,1));
 		testSolution.add(new Task(new MockNode(null,"B",2),1,2));
@@ -44,13 +58,12 @@ public class CostFunctionManagerIT {
 	
 	/**
 	 * Unit test for calculating the total bounded time in a schedule
-	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Test
 	public void testCalculateBoundTime() {
 		int processors = 3;
-		CostFunctionManager cfm = new CostFunctionManager(11, processors);
+		CostFunctionManager cfm = new CostFunctionManager(_nm, 11, processors);
 		ArrayList<Task> testSolution = new ArrayList<Task>();
 		testSolution.add(new Task(new MockNode(null,"A",2),0,1));
 		testSolution.add(new Task(new MockNode(null,"B",2),1,2));
@@ -64,92 +77,54 @@ public class CostFunctionManagerIT {
 	}
 	
 	/**
+	 * Test that the task of a given node is returned by findNodeTask.
+	 * 
+	 * @author Holly Hagenson
+	 */
+	@Test
+	public void testFindNodeTask(){
+		_aStar = new AStarAlgorithm(_testGraph, 1);
+		
+		_tasks = _aStar.buildSolution();
+		
+		_cfm = new CostFunctionManager(_nm, 15, 1); 
+		
+		assertEquals(_cfm.findNodeTask(_testGraph.getNode("2"), _tasks), _tasks.get(1)); 
+	}
+	
+	/**
 	 * Unit test to calculate the critical path estimate of a graph.
 	 * 
 	 * @author Holly Hagenson
 	 */
 	@Test
 	public void testCalculateCriticalPathEstimate(){
-		createGraph();
+		_aStar = new AStarAlgorithm(_testGraph, 1);
+		_tasks = _aStar.buildSolution();
 		
-		Node nlast = _graph1.getNode("2");
-		nlast.setAttribute("Start", "3");
-		Task lastTask = new Task(nlast, 3, 1);
+		_cfm = new CostFunctionManager(_nm, 15, 2); 
 		
-		CostFunctionManager cfm = new CostFunctionManager(15, 2);
+		Node nlast = _testGraph.getNode("4"); 
+
+		int criticalPathEstimate = _cfm.criticalPathEstimate(_tasks, nlast);
 		
-		ArrayList<Task> testSolution = new ArrayList<Task>();
-		testSolution.add(new Task(_graph1.getNode("1"),0,1));
-		testSolution.add(new Task(_graph1.getNode("2"),3,1));
-		
-		int criticalPathEstimate = cfm.calculateCriticalPathEstimate(lastTask, testSolution);
-		
-		assertEquals(criticalPathEstimate, 12);
+		assertEquals(criticalPathEstimate, 13);
 	}
 	
-	/**
-	 * Unit test to calculate bottom level path of given node.
-	 * 
-	 * @author Holly Hagenson
-	 */
-	@Test
-	public void testCalculateBottomLevel(){
-		createGraph(); 
-		int processors = 2; 
-		CostFunctionManager cfm = new CostFunctionManager(15, processors);
-		
-		int bottomLevel = cfm.bottomLevel(_graph1.getNode("2"));
-		assertEquals(9, bottomLevel); 
-	}
 	
 	/**
-	 * Unit test to calculate cost function of a state.
-	 * 
+	 * Unit test to calculate the overall cost function of a state.
 	 * @author Holly Hagenson 
 	 */
-	/*@Test
+	@Test
 	public void testCostFunction(){
-		createGraph(); 
+		_aStar = new AStarAlgorithm(_testGraph, 1);
+		_tasks = _aStar.buildSolution();
 		
-		State parentState = new State();
-		parentState.setCost(12);
+		_cfm = new CostFunctionManager(_nm, 15, 2);
 		
-		ArrayList<Task> testSolution = new ArrayList<Task>();
-		testSolution.add(new Task(_graph1.getNode("1"),0,1));
-		testSolution.add(new Task(_graph1.getNode("2"),3,1));
+		int cost = _cfm.calculateCostFunction(null, _testGraph.getNode("4"), _tasks); 
+		assertEquals(cost, 13); 
+	}
 		
-		CostFunctionManager cfm = new CostFunctionManager(15, 2);
-		
-		int cost = cfm.calculateCostFunction(parentState, _graph1.getNode("2"), testSolution); 
-		
-		assertEquals(cost, 12); 
-	}*/
-	
-	/**
-	 * Create graphstream graph to use for testing.
-	 * 
-	 * @author Holly Hagenson
-	 */
-	public static void createGraph(){
-		_graph1 = new SingleGraph("graphWithMultipleProcessors");
-		_graph1.addNode("1");
-		_graph1.addNode("2");
-		_graph1.addNode("3");
-		_graph1.addNode("4");
-		_graph1.addNode("5");
-		_graph1.getNode("1").setAttribute("Weight", 3.0);
-		_graph1.getNode("2").setAttribute("Weight", 4.0);
-		_graph1.getNode("3").setAttribute("Weight", 2.0);
-		_graph1.getNode("4").setAttribute("Weight", 1.0);
-		_graph1.getNode("5").setAttribute("Weight", 5.0);
-		_graph1.addEdge("1 -> 2", "1", "2", true);
-		_graph1.addEdge("1 -> 3", "1", "3", true);
-		_graph1.addEdge("2 -> 4", "2", "4", true);
-		_graph1.addEdge("2 -> 5", "2", "5", true);
-		_graph1.getEdge("1 -> 2").setAttribute("Weight", 1.0);
-		_graph1.getEdge("1 -> 3").setAttribute("Weight", 2.0);
-		_graph1.getEdge("2 -> 4").setAttribute("Weight", 3.0);
-		_graph1.getEdge("2 -> 5").setAttribute("Weight", 5.0);
-		
-	}	
 }

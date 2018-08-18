@@ -2,13 +2,12 @@ package com.para11el.scheduler.algorithm.test;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 /**
  * Manager class that creates example Graph objects for testing.
  *
- * @author Jessica Alcantara
+ * @author Holly Hagenson
  */
 public class TestGraphManager {
 	
@@ -51,7 +50,7 @@ public class TestGraphManager {
 	 * 
 	 * @author Holly Hagenson
 	 */
-	public Graph addNode(String nodeId, int nodeWeight, Graph graph){
+	private Graph addNode(String nodeId, int nodeWeight, Graph graph){
 		graph.addNode(nodeId);
 		graph.getNode(nodeId).setAttribute("Weight", nodeWeight);
 		return graph; 
@@ -65,7 +64,7 @@ public class TestGraphManager {
 	 * 
 	 * @author Holly Hagenson
 	 */
-	public Graph deleteNode(String nodeId, Graph graph){
+	private Graph deleteNode(String nodeId, Graph graph){
 		graph.removeNode(nodeId); 
 		return graph; 
 	}
@@ -81,9 +80,7 @@ public class TestGraphManager {
 	 * 
 	 * @author Holly Hagenson
 	 */
-	public Graph addEdge(String edgeId, String fromNode, String toNode, int edgeWeight, Graph graph){
-		
-		
+	private Graph addEdge(String edgeId, String fromNode, String toNode, int edgeWeight, Graph graph){
 		graph.addEdge(edgeId, fromNode, toNode, true);
 		graph.getEdge(edgeId).setAttribute("Weight", edgeWeight);
 		return graph;
@@ -97,74 +94,70 @@ public class TestGraphManager {
 	 * 
 	 * @author Holly Hagenson
 	 */
-	public Graph deleteEdge(String edgeId, Graph graph){
+	private Graph deleteEdge(String edgeId, Graph graph){
 		Edge edge = graph.getEdge(edgeId);
 		graph.removeEdge(edge);
 		return graph; 
 	}
 	
-	
 	/**
-	public Graph createSingleEntrySingleExit() {
-		Graph graph = new SingleGraph("Single");
-		graph.addNode("a").setAttribute("Weight", 2);
-		graph.addNode("b").setAttribute("Weight", 1);
-		graph.addNode("c").setAttribute("Weight", 1); 
-		graph.addNode("d").setAttribute("Weight", 2);
-		graph.addEdge("a -> b", "a", "b", true)
-		.setAttribute("Weight", 4);
-		graph.addEdge("a -> c", "a", "c", true)
-		.setAttribute("Weight", 2);
-		graph.addEdge("b -> d", "b", "d", true)
-		.setAttribute("Weight", 12);
-		graph.addEdge("c -> d", "c", "d", true)
-		.setAttribute("Weight", 24);
-		return graph;
-	}**/
-	
-	/**
-	 * Create example graph with a single entry and multiple exits.
+	 * Modify test graph to have multiple entry nodes and a single exit
+	 * @param graph to modify 
+	 * @return Graph with multiple entries
 	 * 
-	 * @author Jessica Alcantara
+	 * @author Holly Hagenson
 	 */
-	/**public Graph createSingleEntryMultipleExit() {
-		Graph graph = new SingleGraph("Single Entry");
-		graph.addNode("a").setAttribute("Weight", 2);
-		graph.addNode("b").setAttribute("Weight", 1);
-		graph.addNode("c").setAttribute("Weight", 3); 
-		graph.addNode("d").setAttribute("Weight", 2);
-		graph.addNode("e").setAttribute("Weight", 1);
-		graph.addEdge("a -> b", "a", "b", true)
-		.setAttribute("Weight", 4);
-		graph.addEdge("b -> c", "b", "c", true)
-		.setAttribute("Weight", 9);
-		graph.addEdge("c -> d", "c", "d", true)
-		.setAttribute("Weight", 2);
-		graph.addEdge("a -> d", "a", "d", true)
-		.setAttribute("Weight", 5);
-		graph.addEdge("a -> e", "a", "e", true)
-		.setAttribute("Weight", 2);
+	public Graph createMultiEntry(Graph graph){
+		graph = addNode("6", 3, graph);
+		graph = addEdge("6 -> 2", "6", "2", 3, graph);
+		graph = deleteEdge("1 -> 3", graph);
+		graph = deleteEdge("2 -> 5", graph);
+		graph = deleteNode("3", graph);
+		graph = deleteNode("5", graph);
+		
 		return graph;
-	}**/
+	}
 	
 	/**
-	 * Create example graph with a single exit and multiple entries.
+	 * Modify test graph to have multiple exit nodes and a single entry
+	 * @param graph to modify
+	 * @return Graph with multiple exits
 	 * 
-	 * @author Jessica Alcantara
+	 * @author Holly Hagenson
 	 */
-	/**public Graph createSingleExitMultipleEntry() {
-		Graph graph = new SingleGraph("Single Exit");
-		graph.addNode("a").setAttribute("Weight", 2);
-		graph.addNode("b").setAttribute("Weight", 1);
-		graph.addNode("c").setAttribute("Weight", 4); 
-		graph.addNode("d").setAttribute("Weight", 2);
-		graph.addEdge("a -> c", "a", "c", true)
-		.setAttribute("Weight", 2);
-		graph.addEdge("a -> d", "a", "d", true)
-		.setAttribute("Weight", 5);
-		graph.addEdge("b -> c", "b", "c", true)
-		.setAttribute("Weight", 4);
+	public Graph createMultiExit(Graph graph){
+		graph = deleteEdge("1 -> 3", graph);
+		graph = deleteNode("3", graph); 
+		
+		return graph; 
+	}
+	
+	/**
+	 * Modify test graph to create a sequential graph
+	 * @param graph to modify
+	 * @return Graph in sequential form
+	 * 
+	 * @author Holly Hagenson
+	 */
+	public Graph createSequential(Graph graph){
+		graph = deleteEdge("1 -> 3", graph);
+		graph = deleteEdge("2 -> 5", graph);
+		graph = deleteNode("3", graph);
+		graph = deleteNode("5", graph);
+		
 		return graph;
-	}**/
+	}
+	
+	/**
+	 * Return graph to original test graph format
+	 * @return Graph in original format
+	 * 
+	 * @author Holly Hagenson
+	 */
+	public Graph returnToOriginal(){
+		Graph graph = createGraph(); 
+		
+		return graph; 
+	}
 
 }

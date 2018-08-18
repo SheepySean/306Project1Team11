@@ -1,38 +1,31 @@
 package com.para11el.scheduler.algorithm.test;
 
 import static org.junit.Assert.*;
-
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.TreeMap;
-
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
-import com.para11el.scheduler.algorithm.AStarAlgorithm;
-import com.para11el.scheduler.algorithm.State;
+import com.para11el.scheduler.algorithm.DFSInitialiser;
+import com.para11el.scheduler.algorithm.OptimalSchedule;
 import com.para11el.scheduler.algorithm.Task;
 
 /**
- * Junit test class to test the behaviour of the A* Algorithm.
+ * JUnit test class to test the behaviour of the DFSAlgorithm.
  * Output is correct if the finish time of the schedule is optimal,
  * tasks do not overlap each other and tasks are correctly ordered
  * according to their respective dependencies.
  * 
- * @author Jessica Alcantara, Holly Hagenson
+ * @author Holly Hagenson, Rebekah Berriman, Jessica Alcantara
  *
  */
-public class AStarAlgorithmIT {
-	private static Graph _testGraph;
-	private AStarAlgorithm _aStar;
+public class DFSSequentialIT {
+	private DFSInitialiser _dfsSchedule;
 	private static SolutionValidity _validity;
-	private static TestGraphManager _tgManager;
+	private static TestGraphManager _tgManager;  
+	private static Graph _testGraph; 
 	private int _processors;
+	private int _cores = 1;
 	private ArrayList<Task> _tasks = new ArrayList<Task>();
 	
 	/**
@@ -46,86 +39,8 @@ public class AStarAlgorithmIT {
 	}
 	
 	/**
-	 * Unit test for the ascending ordering of the state comparator.
-	 * @author Jessica Alcantara
-	 */
-	@Test
-	public void testStateComparator() {
-		// Create states and set their costs
-		State stateOne = new State();
-		stateOne.setCost(4);
-		State stateTwo = new State();
-		stateTwo.setCost(12);
-		State stateThree = new State();
-		stateThree.setCost(9);
-		
-		AStarAlgorithm am = new AStarAlgorithm();
-		Queue<State> states = new PriorityQueue<State>(am.getStateComparator());
-		states.add(stateOne);
-		states.add(stateTwo);
-		states.add(stateThree);
-		
-		assertTrue(states.poll().getCost() == 4);
-		assertTrue(states.poll().getCost() == 9);
-		assertTrue(states.poll().getCost() == 12);
-	}
-	
-	/**
-	 * Unit test for calculating the total weight of nodes in a graph.
-	 * @author Holly Hagenson
-	 */
-	@Test
-	public void testCalculateTotalWeight() {
-		// Create collection of nodes to find total weight of
-		Collection<Node> nodes = new ArrayList<Node>(); 
-		nodes.add(new MockNode(null, "A", 2)); 
-		nodes.add(new MockNode(null, "B", 4)); 
-		nodes.add(new MockNode(null, "C", 3)); 
-		nodes.add(new MockNode(null, "D", 5)); 
-		nodes.add(new MockNode(null, "E", 3)); 
-		
-		AStarAlgorithm am = new AStarAlgorithm(); 
-		int totalWeight = am.calculateTotalWeight(nodes.stream()); 
-		
-		assertEquals(totalWeight, 17); 	
-	}
-	
-	/**
-	 * Unit test for expanding state
-	 * @author Jessica Alcantara
-	 */
-	@Test
-	public void testExpandState(){
-		_processors = 2;
-		_aStar = new AStarAlgorithm(_testGraph, _processors);
-		
-		// Create state schedule
-		ArrayList<Task> stateSchedule = new ArrayList<Task>(); 
-		stateSchedule.add(new Task(_testGraph.getNode("1"),0,1));
-		
-		// Create state
-		State state = new State(_testGraph.getNode("1"),null,stateSchedule,0);
-		_aStar.expandState(state);
-		
-		// Map state schedules
-		HashMap<Integer,Task> stateMap = new HashMap<Integer,Task>();
-		Queue<State> states = _aStar.getStates();
-		for (State s : states) {
-			int key = s.getCost();
-			Task addedTask = s.getSchedule().get(1);
-			stateMap.put(key, addedTask);
-		}
-		
-		// Costs of each state are: 7, 10, 12, 13
-		assertEquals(stateMap.get(7).getStartTime(),3);  // Node 3 on Processor 1
-		assertEquals(stateMap.get(10).getStartTime(),5); // Node 3 on Processor 2
-		assertEquals(stateMap.get(12).getStartTime(),3); // Node 5 on Processor 1
-		assertEquals(stateMap.get(13).getStartTime(),4); // Node 5 on Processor 2
-	}
-	
-	/**
 	 * Test output is correct for graph with multiple entry nodes on a single processor.
-	 * @author Holly Hagenson
+	 * @author Rebekah Berriman, Jessica Alcantara, Holly Hagenson
 	 */
 	@Test
 	public void testMultipleEntryNodes(){
@@ -133,11 +48,13 @@ public class AStarAlgorithmIT {
 		
 		_testGraph = _tgManager.createMultiEntry(_testGraph);
 		
-		_aStar = new AStarAlgorithm(_testGraph, _processors);
-		_tasks = _aStar.buildSolution();
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		// Check finish time of optimal schedule
-		assertEquals(11, _validity.getOptimalFinishTime(_tasks));
+		assertEquals(11, preserveOptimal.getOptimalTime());
 		
 		// Check that tasks do not overlap
 		assertTrue(_validity.noTaskOverlap(_tasks));
@@ -153,7 +70,7 @@ public class AStarAlgorithmIT {
 	
 	/**
 	 * Test output is correct for graph with multiple entry nodes on two processors.
-	 * @author Holly Hagenson
+	 * @author Rebekah Berriman, Holly Hagenson
 	 */
 	@Test
 	public void testMultipleEntryNodesMultiProcessor(){
@@ -161,11 +78,13 @@ public class AStarAlgorithmIT {
 		
 		_testGraph = _tgManager.createMultiEntry(_testGraph);
 		
-		_aStar = new AStarAlgorithm(_testGraph, _processors);
-		_tasks = _aStar.buildSolution();
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		// Check finish time of optimal schedule
-		assertEquals(9, _validity.getOptimalFinishTime(_tasks));
+		assertEquals(9, preserveOptimal.getOptimalTime());
 		
 		// Check that tasks do not overlap
 		ArrayList<Task> proc1Tasks = _validity.tasksOnSameProcessor(_tasks, 1);
@@ -184,7 +103,7 @@ public class AStarAlgorithmIT {
 	
 	/**
 	 * Test output is correct for graph with multiple exit nodes on a single processor
-	 * @author Holly Hagenson
+	 * @author Rebekah Berriman, Jessica Alcantara, Holly Hagenson
 	 */
 	@Test
 	public void testMultipleExitNodes(){
@@ -192,11 +111,13 @@ public class AStarAlgorithmIT {
 		
 		_testGraph = _tgManager.createMultiExit(_testGraph);
 		
-		_aStar = new AStarAlgorithm(_testGraph, _processors);
-		_tasks = _aStar.buildSolution();
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		// Check finish time of optimal schedule
-		assertEquals(13, _validity.getOptimalFinishTime(_tasks));
+		assertEquals(13, preserveOptimal.getOptimalTime());
 		
 		// Check that tasks do not overlap
 		assertTrue(_validity.noTaskOverlap(_tasks));
@@ -213,7 +134,7 @@ public class AStarAlgorithmIT {
 	
 	/**
 	 * Test output is correct for graph with multiple exit nodes on multiple processors
-	 * @author Holly Hagenson
+	 * @author Rebekah Berriman, Holly Hagenson
 	 */
 	@Test
 	public void testMultipleExitNodesMultiProcessor(){
@@ -221,11 +142,13 @@ public class AStarAlgorithmIT {
 		
 		_testGraph = _tgManager.createMultiExit(_testGraph);
 		
-		_aStar = new AStarAlgorithm(_testGraph, _processors);
-		_tasks = _aStar.buildSolution();
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		// Check finish time of optimal schedule
-		assertEquals(12, _validity.getOptimalFinishTime(_tasks));
+		assertEquals(12, preserveOptimal.getOptimalTime());
 		
 		// Check that tasks do not overlap
 		ArrayList<Task> proc1Tasks = _validity.tasksOnSameProcessor(_tasks, 1);
@@ -246,7 +169,7 @@ public class AStarAlgorithmIT {
 	/**
 	 * Test that the finish time of a sequential graph on a single processor is the 
 	 * actual finish time of the optimal solution.
-	 *  @author Holly Hagenson
+	 *  @author Rebekah Berriman, Holly Hagenson
 	 */
 	@Test 
 	public void testSequentialGraphSingle(){
@@ -254,11 +177,13 @@ public class AStarAlgorithmIT {
 		
 		_testGraph = _tgManager.createSequential(_testGraph);
 		
-		_aStar = new AStarAlgorithm(_testGraph, _processors);
-		_tasks = _aStar.buildSolution();
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		// Check finish time of optimal schedule
-		assertEquals(8, _validity.getOptimalFinishTime(_tasks));
+		assertEquals(8, preserveOptimal.getOptimalTime());
 		
 		// Check that tasks do not overlap
 		assertTrue(_validity.noTaskOverlap(_tasks));
@@ -275,7 +200,7 @@ public class AStarAlgorithmIT {
 	/**
 	 * Test that the finish time of a sequential graph on multiple processors is the 
 	 * actual finish time of the optimal solution.
-	 *  @author Holly Hagenson
+	 *  @author Rebekah Berriman, Holly Hagenson
 	 */
 	@Test 
 	public void testSequentialGraphMulti(){
@@ -283,11 +208,13 @@ public class AStarAlgorithmIT {
 		
 		_testGraph = _tgManager.createSequential(_testGraph);
 		
-		_aStar = new AStarAlgorithm(_testGraph, _processors); 
-		_tasks = _aStar.buildSolution();
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		OptimalSchedule preserveOptimal = OptimalSchedule.getInstance();
 		
 		// Check finish time of optimal schedule
-		assertEquals(8, _validity.getOptimalFinishTime(_tasks));
+		assertEquals(8, preserveOptimal.getOptimalTime());
 
 		// Check that tasks do not overlap
 		assertTrue(_validity.noTaskOverlap(_tasks));
@@ -308,15 +235,16 @@ public class AStarAlgorithmIT {
 	 *  - Processor
 	 *  and that the output graph only has one label for each edge:
 	 *  - Weight
-	 *  @author Holly Hagenson
+	 *  @author Rebekah Berriman, Holly Hagenson
 	 */
 	@Test 
 	public void testOutputGraph(){
 		_processors = 1;
 		
-		_aStar = new AStarAlgorithm(_testGraph, _processors);
-		_tasks = _aStar.buildSolution();
-		Graph outputGraph = _aStar.getGraph(_tasks);
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		Graph outputGraph = _dfsSchedule.getGraph(_tasks);
 
 		outputGraph.nodes().forEach((node) -> {
 			//Each node should have three attributes
@@ -348,15 +276,16 @@ public class AStarAlgorithmIT {
 	 *  and that the output graph only has one label for each edge:
 	 *  - Weight
 	 *  
-	 *  @author Holly Hagenson
+	 *  @author Rebekah Berriman, Holly Hagenson
 	 */
 	@Test 
 	public void testOutputGraphMultipleProcessors(){
 		_processors = 3;
 		
-		_aStar = new AStarAlgorithm(_testGraph, _processors);
-		_tasks = _aStar.buildSolution();
-		Graph outputGraph = _aStar.getGraph(_tasks);
+		_dfsSchedule = new DFSInitialiser(_testGraph, _processors, _cores);
+		_tasks = _dfsSchedule.buildSolution();
+		
+		Graph outputGraph = _dfsSchedule.getGraph(_tasks);
 
 		//Iterate through the node set of the output graph
 		outputGraph.nodes().forEach((node) -> {

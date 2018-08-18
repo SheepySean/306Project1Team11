@@ -66,18 +66,6 @@ public class NodeManager {
 	}
 	
 	/**
-	 * Prints all the critical paths starting from each node in the input
-	 * graph
-	 * 
-	 * @author Jessica_Alcantara
-	 */
-	public void printCriticalPaths() {
-		for (Entry<Node, Integer> e : _bottomLevel.entrySet()) {
-			System.out.println(e.getKey().getId() + " " + e.getValue());
-		}
-	}
-	
-	/**
 	 * Returns the bottom level for a given node
 	 * @param node Node
 	 * 

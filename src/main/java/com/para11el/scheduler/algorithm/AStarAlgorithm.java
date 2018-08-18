@@ -3,8 +3,11 @@ package com.para11el.scheduler.algorithm;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Stream;
 
 import org.graphstream.graph.Graph;
@@ -35,6 +38,8 @@ public class AStarAlgorithm extends Algorithm{
 	private NodeManager _nm;
 	private CostFunctionManager _cfm;
 	private PruningManager _pm;
+	private ForkJoinPool _fjp;
+	private int _cores;
 
 	public AStarAlgorithm() {
 		super();
@@ -45,6 +50,8 @@ public class AStarAlgorithm extends Algorithm{
 		_nm = new NodeManager(graph);
 		_cfm = new CostFunctionManager(_nm, calculateTotalWeight(graph.nodes()), processor);
 		_pm = new PruningManager();
+		_fjp = new ForkJoinPool(1);
+		_cores = 1;
 	}
 
 	public AStarAlgorithm(Graph graph, int processor, int cores) {
@@ -52,6 +59,8 @@ public class AStarAlgorithm extends Algorithm{
 		_nm = new NodeManager(graph);
 		_cfm = new CostFunctionManager(_nm, calculateTotalWeight(graph.nodes()), processor);
 		_pm = new PruningManager();
+		_fjp = new ForkJoinPool(cores); 
+		_cores = cores;
 	}
 
 	/**
@@ -70,7 +79,8 @@ public class AStarAlgorithm extends Algorithm{
 						_cfm.calculateCostFunction(null, node, schedule)));
 			}
 		});
-		
+
+		// A* Algorithm
 		while (_states.size() > 0) {
 			// Pop the most promising state
 			State state = _states.poll();
@@ -80,7 +90,6 @@ public class AStarAlgorithm extends Algorithm{
 				return state.getSchedule();
 			}
 
-			// Expand state into children
 			expandState(state);
 		}
 		return null;
@@ -91,27 +100,26 @@ public class AStarAlgorithm extends Algorithm{
 	 * @param state Parent state
 	 * 
 	 * @author Jessica Alcantara
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
 	 */
 	public void expandState(State state) {
 		ArrayList<Node> freeNodes = availableNode(state.getSchedule());
 		
+		List<State> newStates = new ArrayList<State>();
+		
 		for (Node node : freeNodes) {
-			// Create states from each possible allocation of the task
 			for (int i=1; i<=_processors; i++) {
-				ArrayList<Task> schedule = new ArrayList<Task>(state.getSchedule());
-				
-				// Schedule the node
-				int startTime = getEarliestStartTime(node,schedule,i);
-				schedule.add(new Task(node,startTime,i));
-
-				// Create state from new schedule
-				State newState = new State(node,state,schedule,
-						_cfm.calculateCostFunction(state,node,schedule));
-				
-				// Prune duplicate states
-				if (!_pm.doPrune(newState, _states)){
-					_states.add(newState);
-				}
+				AStarStateTask aStarStateTask = new AStarStateTask(state,node,i,_cfm);
+				State newState = _fjp.invoke(aStarStateTask);
+				newStates.add(newState);
+			}
+		}
+		
+		// Prune duplicate states
+		for (State s : newStates) {
+			if (!_pm.doPrune(s, _states)){
+				_states.add(s);
 			}
 		}
 	}
@@ -129,7 +137,7 @@ public class AStarAlgorithm extends Algorithm{
 		while (i.hasNext()){
 			weightTotal += ((Number)i.next().getAttribute("Weight")).intValue();
 		}
-		
+
 		return weightTotal;
 	}
 
@@ -141,5 +149,15 @@ public class AStarAlgorithm extends Algorithm{
 	 */
 	public Comparator<State> getStateComparator() {
 		return _stateComparator;
+	}
+
+	/**
+	 * Returns the states stored in the priority queue
+	 * @return Queue of states
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public Queue<State> getStates() {
+		return _states;
 	}
 }
