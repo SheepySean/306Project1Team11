@@ -129,6 +129,7 @@ public class Scheduler extends Application {
 			// Start the GUI on another thread
 			FxViewer viewer = new FxViewer(_inGraph, FxViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 			ViewerPaneController.getInstance().setViewer(viewer);
+			ViewerPaneController.setVisualise();
 
 			Thread t = new Thread(() -> {
 				launch(guiArgs);
@@ -178,10 +179,9 @@ public class Scheduler extends Application {
 
 		} else {
 			//Searches with DFS Algorithm
-
 			DFSInitialiser dfs = new DFSInitialiser(_inGraph, _scheduleProcessors, _numCores);
 			ArrayList<Task> solution = dfs.buildSolution();
-			
+
 			// Stop timer when the optimal solution is found
 			ViewerPaneController.getInstance();
 			if (!ViewerPaneController.getTimeout() && 
@@ -191,8 +191,6 @@ public class Scheduler extends Application {
 			}
 			outputGraph = dfs.getGraph(solution);
 		}
-
-
 
 		// Write the output file
 		try {
@@ -208,6 +206,11 @@ public class Scheduler extends Application {
 			timeoutCounter.interrupt();
 		}
 
+		// Exit program when finished
+		ViewerPaneController.getInstance();
+		if (!ViewerPaneController.isRunning() || !ViewerPaneController.getVisualise()) {
+			System.exit(1);
+		}
 		return;
 
 	}
@@ -288,13 +291,13 @@ public class Scheduler extends Application {
 	 *
 	 * @author Rebekah Berriman
 	 */
-    private static boolean invalidOptional() {
-        if (_timeout && (_timeoutSeconds==0)) {
-            System.out.println("An optimal solution cannot be found in 0 seconds.");
-            return true;
-        }
-        return false;
-    }
+	private static boolean invalidOptional() {
+		if (_timeout && (_timeoutSeconds==0)) {
+			System.out.println("An optimal solution cannot be found in 0 seconds.");
+			return true;
+		}
+		return false;
+	}
 
 
 
