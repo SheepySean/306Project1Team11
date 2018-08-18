@@ -23,6 +23,7 @@ import org.graphstream.ui.layout.springbox.implementations.LinLog;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.camera.Camera;
 
+import java.awt.Color;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -477,7 +478,7 @@ public class ViewerPaneController {
 		int processorNum = Integer.parseInt(_processors);
 		int cell = (processor + processorNum * startTime) - 1 + processorNum;
 		for (int i = 0; i < length; i++) {
-		   // Node node =
+		   
             if (i == 0) {  // if first cell for task, set the task label for it
 
                 // If this cell has been labelled in the past then there is no point relabelling it
@@ -491,6 +492,11 @@ public class ViewerPaneController {
                 }
 
 				_tile.getChildren().get(cell).setStyle(colour);
+				
+				// If cell background is dark, colour label text white
+				if (isDark(colour)) {
+					((Label)_tile.getChildren().get(cell)).setTextFill(Paint.valueOf("#FFFFFF"));
+				}
 			}
 
 			_tile.getChildren().get(cell).setStyle("-fx-background-color: " + colour);
@@ -521,6 +527,33 @@ public class ViewerPaneController {
 		hex = "#" + hex;
 
 		return hex;
+	}
+	
+	/**
+	 * Calculates if a colour is bright or dark
+	 * @param hex A string hex value of a colour
+	 * @return True if input colour is dark
+	 * 
+	 * @author Tina Chen
+	 */
+	private static boolean isDark(String hex) {
+		
+		String colour = hex.substring(1, hex.length());
+
+		// convert hex string to int
+		int rgb = Integer.parseInt(colour, 16);
+		
+		// get hue, saturation, and brightness
+		Color c = new Color(rgb);
+		float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
+
+		float brightness = hsb[2];
+
+		if (brightness < 0.5) {
+		   return true;
+		} else {
+		   return false;
+		}
 	}
 
     /**
