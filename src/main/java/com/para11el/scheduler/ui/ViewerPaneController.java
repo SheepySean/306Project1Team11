@@ -19,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.graphstream.graph.Graph;
@@ -31,6 +32,7 @@ import org.graphstream.ui.layout.springbox.implementations.LinLog;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.camera.Camera;
 
+import java.awt.Color;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,6 +45,7 @@ public class ViewerPaneController {
     private FxDefaultView viewPanel;
 
     private static AnimationTimer _timer;
+    private static boolean _timeout = false;
 
     private static String _inputFile;
     private static String _outputFile;
@@ -84,6 +87,9 @@ public class ViewerPaneController {
 
 	private static TilePane _tile;
     private static TilePane _colLabelTile;
+    private static Label _timerLabel;
+
+
 	@FXML
 	private ScrollPane scrollPane;
 
@@ -99,6 +105,7 @@ public class ViewerPaneController {
 		// This is a little hacky but allows static reference to the tile pane
         _tile = tile;
         _colLabelTile = colLabelTile;
+        _timerLabel = timerLabel;
 
 		setCellSize(Integer.parseInt(_processors));
 
@@ -158,6 +165,7 @@ public class ViewerPaneController {
         this.toggleTimer(true); // Start the timer
         _hasLoaded.set(true);
     }
+
 
     public void setViewer(FxViewer viewer) {
         _viewer = viewer;
@@ -553,11 +561,46 @@ public class ViewerPaneController {
     }
 
     /**
+     * Sets the timeout if timeout occurs
+     * @param timeout True if timeout
+     *
+     * @author Tina Chen
+     */
+    public static void setTimeout(boolean timeout) {
+    	_timeout = timeout;
+
+    	// Change colour of timer label
+    	if (_timeout) {
+    		_timerLabel.setTextFill(Paint.valueOf("#e50000"));
+    	}
+    }
+
+    /**
+     * Returns true if a timeout has occurred
+     * @return _timeout True if timeout
+     *
+     * @author Tina Chen
+     */
+    public static boolean getTimeout() {
+    	return _timeout;
+    }
+
+    /**
+     * Sets the timer label green if optimal solution is found
+     *
+     * @author Tina Chen
+     */
+    public static void setLabelFinish() {
+    	_timerLabel.setTextFill(Paint.valueOf("#00e500"));
+    }
+
+
+    /**
      * Return the status of the GUI running or not
      * @return True if the GUI is running
      */
     public static boolean isRunning() {
-	    return _hasLoaded.get();
+        return _hasLoaded.get();
     }
 }
 
