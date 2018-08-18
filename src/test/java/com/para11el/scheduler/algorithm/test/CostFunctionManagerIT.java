@@ -1,4 +1,3 @@
-/*
 package com.para11el.scheduler.algorithm.test;
 
 import static org.junit.Assert.*;
@@ -13,24 +12,20 @@ import com.para11el.scheduler.algorithm.Task;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
 
-*/
 /**
  * JUnit test to test the correctness of the Cost Function Manager.
  * 
  * @author Jessica Alcantara
  *
- *//*
-
+ */
 public class CostFunctionManagerIT {
 	private static Graph _graph1;
 
-	*/
-/**
+	/**
 	 * Unit test for calculating the total idle time in a schedule
 	 * 
 	 * @author Jessica Alcantara
-	 *//*
-
+	 */
 	@Test
 	public void testCalculateIdleTime() {
 		int processors = 3;
@@ -47,13 +42,11 @@ public class CostFunctionManagerIT {
 		assertEquals(3,idleTime);
 	}
 	
-	*/
-/**
+	/**
 	 * Unit test for calculating the total bounded time in a schedule
 	 * 
 	 * @author Jessica Alcantara
-	 *//*
-
+	 */
 	@Test
 	public void testCalculateBoundTime() {
 		int processors = 3;
@@ -70,13 +63,11 @@ public class CostFunctionManagerIT {
 		assertEquals(4,boundedTime);
 	}
 	
-	*/
-/**
+	/**
 	 * Unit test to calculate the critical path estimate of a graph.
 	 * 
 	 * @author Holly Hagenson
-	 *//*
-
+	 */
 	@Test
 	public void testCalculateCriticalPathEstimate(){
 		createGraph();
@@ -96,13 +87,11 @@ public class CostFunctionManagerIT {
 		assertEquals(criticalPathEstimate, 12);
 	}
 	
-	*/
-/**
+	/**
 	 * Unit test to calculate bottom level path of given node.
 	 * 
 	 * @author Holly Hagenson
-	 *//*
-
+	 */
 	@Test
 	public void testCalculateBottomLevel(){
 		createGraph(); 
@@ -113,15 +102,12 @@ public class CostFunctionManagerIT {
 		assertEquals(9, bottomLevel); 
 	}
 	
-	*/
-/**
+	/**
 	 * Unit test to calculate cost function of a state.
 	 * 
 	 * @author Holly Hagenson 
-	 *//*
-
-	*/
-/*@Test
+	 */
+	/*@Test
 	public void testCostFunction(){
 		createGraph(); 
 		
@@ -137,16 +123,13 @@ public class CostFunctionManagerIT {
 		int cost = cfm.calculateCostFunction(parentState, _graph1.getNode("2"), testSolution); 
 		
 		assertEquals(cost, 12); 
-	}*//*
-
+	}*/
 	
-	*/
-/**
+	/**
 	 * Create graphstream graph to use for testing.
 	 * 
 	 * @author Holly Hagenson
-	 *//*
-
+	 */
 	public static void createGraph(){
 		_graph1 = new SingleGraph("graphWithMultipleProcessors");
 		_graph1.addNode("1");
@@ -170,4 +153,3 @@ public class CostFunctionManagerIT {
 		
 	}	
 }
-*/

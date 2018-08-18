@@ -8,6 +8,7 @@ import com.para11el.scheduler.graph.GraphConstants;
 import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
 import com.para11el.scheduler.ui.ViewerPaneController;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +30,7 @@ import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.LogManager;
+import java.util.ArrayList;
 import java.util.ArrayList;
 
 
@@ -166,20 +168,20 @@ public class Scheduler extends Application {
 
         }
 
-		//Initialise the output graph
-		Graph outputGraph;
+        //Initialise the output graph
+        Graph outputGraph;
 
         if(_astar) {
-        	//Searches with A Star Algorithm (default)
-        	AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
-    		ArrayList<Task> solution = algorithm.buildSolution();
-    		outputGraph = algorithm.getGraph(solution);
+            //Searches with A Star Algorithm (default)
+            AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
+            ArrayList<Task> solution = algorithm.buildSolution();
+            outputGraph = algorithm.getGraph(solution);
 
         } else {
-        	//Searches with DFS Algorithm
-    		DFSAlgorithm algorithm = new DFSAlgorithm(_inGraph, _scheduleProcessors);
-    		ArrayList<Task> solution = algorithm.buildSolution();
-    		outputGraph = algorithm.getGraph(solution);
+            //Searches with DFS Algorithm
+            DFSAlgorithm algorithm = new DFSAlgorithm(_inGraph, _scheduleProcessors);
+            ArrayList<Task> solution = algorithm.buildSolution();
+            outputGraph = algorithm.getGraph(solution);
         }
 
 
@@ -271,23 +273,23 @@ public class Scheduler extends Application {
 		return Paths.get(path).getFileName().toString();
 	}
 
-	/**
-	 * Checks whether the additional features specified when the program is run
-	 * are valid in conjunction with one another.
-	 * @return whether the additional features are valid
-	 *
-	 * @author Rebekah Berriman
-	 */
-	private static boolean invalidOptional() {
-		if (!_astar && (_visualise || (_numCores !=0))) {
-			System.out.println("To run the algorithm using DFS, visualisation (-v) and parallelisation (-p) of the search are disabled.");
-			return true;
-		} else if (_timeout && (_timeoutSeconds==0)) {
-			System.out.println("An optimal solution cannot be found in 0 seconds.");
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Checks whether the additional features specified when the program is run
+     * are valid in conjunction with one another.
+     * @return whether the additional features are valid
+     *
+     * @author Rebekah Berriman
+     */
+    private static boolean invalidOptional() {
+        if (!_astar && (_visualise || (_numCores !=0))) {
+            System.out.println("To run the algorithm using DFS, visualisation (-v) and parallelisation (-p) of the search are disabled.");
+            return true;
+        } else if (_timeout && (_timeoutSeconds==0)) {
+            System.out.println("An optimal solution cannot be found in 0 seconds.");
+            return true;
+        }
+        return false;
+    }
 
 
 
