@@ -1,18 +1,9 @@
 package com.para11el.scheduler.algorithm.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import org.graphstream.graph.Graph;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.para11el.scheduler.algorithm.DFSAlgorithm;
-import com.para11el.scheduler.algorithm.test.TestGraphManager;
 import com.para11el.scheduler.algorithm.Task;
 
 /**

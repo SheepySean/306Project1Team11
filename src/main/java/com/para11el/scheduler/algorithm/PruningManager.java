@@ -91,10 +91,6 @@ public class PruningManager {
 	 * @author Jessica Alcantara
 	 */
 	public Boolean compareAllocation(ArrayList<Task> newSchedule, ArrayList<Task> queuedSchedule){
-		//TODO: Check order and dont care about processor (Use hash code which 
-		// tell if task is the same -> task is the same if same node id and start time)
-		// compare hashcodes by task.hashCode() == task.hashCode()
-		
 		HashMap<Integer,ArrayList<Task>> allocations = new HashMap<Integer,ArrayList<Task>>();
 		
 		// Map each task to a processor in the new schedule

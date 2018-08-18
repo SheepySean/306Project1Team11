@@ -6,7 +6,7 @@ import java.util.concurrent.ForkJoinPool;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
-public class DFSInitialiser {
+public class DFSInitialiser implements Algorithm{
 
 	protected Graph _graph;
 	protected int _processors;
@@ -18,9 +18,7 @@ public class DFSInitialiser {
 	 * 
 	 * @author Tina Chen
 	 */
-	public DFSInitialiser() {
-		super();
-	}
+	public DFSInitialiser() {}
 	
 	/**
 	 * Constructor for DFS Algorithm for sequential solution
