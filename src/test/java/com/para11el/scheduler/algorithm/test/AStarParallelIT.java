@@ -2,17 +2,12 @@ package com.para11el.scheduler.algorithm.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.TreeMap;
-
 import org.graphstream.graph.Graph;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
-import com.para11el.scheduler.algorithm.AStarAlgorithm;
-import com.para11el.scheduler.algorithm.OptimalSchedule;
 import com.para11el.scheduler.algorithm.Task;
 
 /**
@@ -30,16 +25,12 @@ public class AStarParallelIT {
 	private static TestGraphManager _tgManager;  
 	private static Graph _testGraph; 
 	private int _processors;
-	
 	private AStarAlgorithm _aStarSequential;
 	private AStarAlgorithm _aStarParallel; 
-	
 	private int _sequentialCores = 1;
-	private int _parallelCores = 8;
-	
+	private int _parallelCores;
 	private ArrayList<Task> _sequentialSchedule = new ArrayList<Task>();
 	private ArrayList<Task> _parallelSchedule = new ArrayList<Task>();
-	
 	private int _sequentialScheduleTime;
 	private int _parallelScheduleTime;
 	
@@ -60,6 +51,7 @@ public class AStarParallelIT {
 	@Test
 	public void testMultipleEntryNodes(){
 		_processors = 1;
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 		
 		_testGraph = _tgManager.createMultiEntry(_testGraph);
 		
@@ -94,6 +86,7 @@ public class AStarParallelIT {
 	@Test
 	public void testMultipleEntryNodesMultiProcessor(){
 		_processors = 2;
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 		
 		_testGraph = _tgManager.createMultiEntry(_testGraph);
 		
@@ -131,6 +124,7 @@ public class AStarParallelIT {
 	@Test
 	public void testMultipleExitNodes(){
 		_processors = 1; 
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 		
 		_testGraph = _tgManager.createMultiExit(_testGraph);
 		
@@ -165,6 +159,7 @@ public class AStarParallelIT {
 	@Test
 	public void testMultipleExitNodesMultiProcessor(){
 		_processors = 2; 
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 		
 		_testGraph = _tgManager.createMultiExit(_testGraph);
 		
@@ -203,6 +198,7 @@ public class AStarParallelIT {
 	@Test 
 	public void testSequentialGraphSingle(){
 		_processors = 1;
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 		
 		_testGraph = _tgManager.createSequential(_testGraph);
 		
@@ -237,6 +233,7 @@ public class AStarParallelIT {
 	@Test 
 	public void testSequentialGraphMulti(){
 		_processors = 3;
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 		
 		_testGraph = _tgManager.createSequential(_testGraph);
 
@@ -275,6 +272,7 @@ public class AStarParallelIT {
 	@Test 
 	public void testOutputGraph(){
 		_processors = 1;
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 
 		_aStarParallel = new AStarAlgorithm(_testGraph, _processors, _parallelCores);
 		_parallelSchedule = _aStarParallel.buildSolution();
@@ -316,6 +314,7 @@ public class AStarParallelIT {
 	@Test 
 	public void testOutputGraphMultipleProcessors(){
 		_processors = 3;
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 		
 		_aStarParallel = new AStarAlgorithm(_testGraph, _processors, _parallelCores);
 		_parallelSchedule = _aStarParallel.buildSolution();

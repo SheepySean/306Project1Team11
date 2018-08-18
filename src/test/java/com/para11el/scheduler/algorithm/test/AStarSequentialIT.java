@@ -1,21 +1,12 @@
 package com.para11el.scheduler.algorithm.test;
 
 import static org.junit.Assert.*;
-
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.TreeMap;
-
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
-import com.para11el.scheduler.algorithm.State;
 import com.para11el.scheduler.algorithm.Task;
 
 /**

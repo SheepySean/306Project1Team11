@@ -29,7 +29,7 @@ public class DFSParallelIT {
 	private DFSInitialiser _dfsParallel;
 	
 	private int _sequentialCores = 1;
-	private int _parallelCores = 8;
+	private int _parallelCores;
 	
 	private ArrayList<Task> _parallelSchedule = new ArrayList<Task>();
 	
@@ -52,8 +52,8 @@ public class DFSParallelIT {
 	 */
 	@Test
 	public void testMultipleEntryNodes(){
-		System.out.println("testMultipleEntryNodes");
 		_processors = 1;
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 		
 		_testGraph = _tgManager.createMultiEntry(_testGraph);
 		
@@ -89,8 +89,8 @@ public class DFSParallelIT {
 	 */
 	@Test
 	public void testMultipleEntryNodesMultiProcessor(){
-		System.out.println("testMultipleEntryNodesMultiProcessor");
 		_processors = 2;
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 		
 		_testGraph = _tgManager.createMultiEntry(_testGraph);
 		
@@ -129,8 +129,8 @@ public class DFSParallelIT {
 	 */
 	@Test
 	public void testMultipleExitNodes(){
-		System.out.println("testMultipleExitNodes");
 		_processors = 1; 
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 		
 		_testGraph = _tgManager.createMultiExit(_testGraph);
 		
@@ -168,9 +168,9 @@ public class DFSParallelIT {
 	 */
 	@Test
 	public void testMultipleExitNodesMultiProcessor(){
-		System.out.println("testMultipleExitNodesMultiProcessor");
 		_processors = 2; 
-		
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
+
 		_testGraph = _tgManager.createMultiExit(_testGraph);
 		
 		_dfsSequential = new DFSInitialiser(_testGraph, _processors, _sequentialCores);
@@ -210,8 +210,8 @@ public class DFSParallelIT {
 	 */
 	@Test 
 	public void testSequentialGraphSingle(){
-		System.out.println("testSequentialGraphSingle");
 		_processors = 1;
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 		
 		_testGraph = _tgManager.createSequential(_testGraph);
 		
@@ -248,8 +248,8 @@ public class DFSParallelIT {
 	 */
 	@Test 
 	public void testSequentialGraphMulti(){
-		System.out.println("testSequentialGraphMulti");
 		_processors = 3;
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 		
 		_testGraph = _tgManager.createSequential(_testGraph);
 		
@@ -291,7 +291,8 @@ public class DFSParallelIT {
 	@Test 
 	public void testOutputGraph(){
 		_processors = 1;
-
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
+		
 		_dfsParallel = new DFSInitialiser(_testGraph, _processors, _parallelCores);
 		_parallelSchedule = _dfsParallel.buildSolution();
 		OptimalSchedule parallelOptimal = OptimalSchedule.getInstance();
@@ -335,6 +336,7 @@ public class DFSParallelIT {
 	@Test 
 	public void testOutputGraphMultipleProcessors(){
 		_processors = 3;
+		_parallelCores = 2 + (int)(Math.random() * ((16 - 2) + 1));
 		
 		_dfsParallel = new DFSInitialiser(_testGraph, _processors, _parallelCores);
 		_parallelSchedule = _dfsParallel.buildSolution();
