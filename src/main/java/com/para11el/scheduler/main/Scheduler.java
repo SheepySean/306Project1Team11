@@ -188,6 +188,7 @@ public class Scheduler extends Application {
 			if (!ViewerPaneController.getInstance().getTimeout() && 
 					ViewerPaneController.isRunning()) {
 				ViewerPaneController.toggleTimer(false);
+				ViewerPaneController.setLabelFinish();
 			}
 			outputGraph = algorithm.getGraph(solution);
 		}

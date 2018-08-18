@@ -574,6 +574,15 @@ public class ViewerPaneController {
     	return _timeout;
     }
     
+    /**
+     * Sets the timer label green if optimal solution is found
+     * 
+     * @author Tina Chen
+     */
+    public static void setLabelFinish() {
+    	_timerLabel.setTextFill(Paint.valueOf("#00e500"));
+    }
+    
     
     // is running method, may conflict with Sean's
 	public static boolean isRunning() {
