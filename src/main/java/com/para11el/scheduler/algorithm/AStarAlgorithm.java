@@ -109,8 +109,7 @@ public class AStarAlgorithm extends Algorithm{
 		List<State> newStates = new ArrayList<State>();
 		
 		for (Node node : freeNodes) {
-			for (int i=1; i<_processors; i++) {
-				ArrayList<Task> schedule = new ArrayList<Task>(state.getSchedule());
+			for (int i=1; i<=_processors; i++) {
 				AStarStateTask aStarStateTask = new AStarStateTask(state,node,i,_cfm);
 				State newState = _fjp.invoke(aStarStateTask);
 				newStates.add(newState);
