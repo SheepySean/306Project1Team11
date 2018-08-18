@@ -117,12 +117,9 @@ public class Scheduler extends Application {
 			timeoutCounter.start();
 		}
 
-		int critLength = 0;
-        Iterator<Node> nodes = _inGraph.nodes().iterator();
-        while(nodes.hasNext()) {
-            critLength += ((Number) nodes.next().getAttribute("Weight")).intValue();
-        }
+
 		if(_visualise) { // Start the GUI on an another thread
+            int critLength = new AStarAlgorithm().calculateTotalWeight(_inGraph.nodes());
 			String[] guiArgs = { // Parameters needed by the GUI
 					_filename,
 					Integer.toString(_scheduleProcessors),
