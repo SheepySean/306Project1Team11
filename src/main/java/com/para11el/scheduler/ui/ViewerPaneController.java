@@ -434,7 +434,7 @@ public class ViewerPaneController {
      *
      * @author Sean Oldfield
      */
-    public static void updateSchedule(List<Task> schedule) {
+    private static void updateSchedule(List<Task> schedule) {
         if(_schedule != null) {
             List<Node> children = _tile.getChildren();
 
@@ -522,6 +522,10 @@ public class ViewerPaneController {
 		return hex;
 	}
 
+    /**
+     * Return an instance of the GUI controller
+     * @return an Instance of the GUI controller
+     */
 	public static ViewerPaneController getInstance() {
         if(_instance == null) {
             _instance = new ViewerPaneController();
@@ -529,16 +533,31 @@ public class ViewerPaneController {
         return _instance;
     }
 
+    /**
+     * Set the schedule to be updated
+     * @param schedule
+     */
     public void setSchedule(List<Task> schedule) {
 	    _schedule = schedule;
     }
 
+    /**
+     * Update the GUI
+     */
     public static void update() {
 	    if(_hasLoaded.get() ) {
             Platform.runLater(() -> {
                 updateSchedule(_schedule);
             });
         }
+    }
+
+    /**
+     * Return the status of the GUI running or not
+     * @return True if the GUI is running
+     */
+    public static boolean isRunning() {
+	    return _hasLoaded.get();
     }
 }
 
