@@ -534,14 +534,6 @@ public class ViewerPaneController {
     public void setSchedule(List<Task> schedule) {
 	    _schedule = schedule;
     }
-    
-    public static void setTimeout(boolean timeout) {
-    	_timeout = timeout;
-    }
-    
-    public static boolean getTimeout() {
-    	return _timeout;
-    }
 
     public static void update() {
 	    if(_hasLoaded.get() ) {
@@ -551,7 +543,28 @@ public class ViewerPaneController {
         }
     }
     
+    /**
+     * Sets the timeout if timeout occurs
+     * @param timeout True if timeout
+     * 
+     * @author Tina Chen
+     */
+    public static void setTimeout(boolean timeout) {
+    	_timeout = timeout;
+    }
     
+    /**
+     * Returns true if a timeout has occurred
+     * @return _timeout True if timeout 
+     * 
+     * @author Tina Chen
+     */
+    public static boolean getTimeout() {
+    	return _timeout;
+    }
+    
+    
+    // is running method, may conflict with Sean's
 	public static boolean isRunning() {
 		
 		return _hasLoaded.get();

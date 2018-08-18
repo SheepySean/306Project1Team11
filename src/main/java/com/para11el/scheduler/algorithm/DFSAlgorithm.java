@@ -105,7 +105,7 @@ public class DFSAlgorithm extends Algorithm {
 		ArrayList<Node> availableNodes = availableNode(solutionArrayList);
 		ArrayList<Task> privateSolutionArrayList = (ArrayList<Task>)solutionArrayList.clone();
 
-
+		// Check timeout has not occurred before computing
 		ViewerPaneController.getInstance();
 		if (!ViewerPaneController.getTimeout()) {
 			if (availableNodes.size() != 0) {
@@ -141,6 +141,7 @@ public class DFSAlgorithm extends Algorithm {
 	@SuppressWarnings("unchecked")
 	private void findOptimal(ArrayList<Task> solution) {
 
+		// Check if timeout has occurred to prevent any more solution searching
 		ViewerPaneController.getInstance();
 		if (!ViewerPaneController.getTimeout()) {
 

@@ -184,11 +184,11 @@ public class Scheduler extends Application {
 			ArrayList<Task> solution = algorithm.buildSolution();
 			ViewerPaneController.getInstance();
 			
+			// Stop timer when the optimal solution is found
 			if (!ViewerPaneController.getInstance().getTimeout() && 
 					ViewerPaneController.isRunning()) {
 				ViewerPaneController.toggleTimer(false);
 			}
-			
 			outputGraph = algorithm.getGraph(solution);
 		}
 
