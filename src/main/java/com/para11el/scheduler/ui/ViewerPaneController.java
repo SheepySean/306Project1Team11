@@ -43,6 +43,7 @@ public class ViewerPaneController {
     private FxDefaultView viewPanel;
 
     private static AnimationTimer _timer;
+    private static boolean _timeout = false;
 
     private static String _inputFile;
     private static String _outputFile;
@@ -158,6 +159,7 @@ public class ViewerPaneController {
         this.toggleTimer(true); // Start the timer
         _hasLoaded.set(true);
     }
+    
 
     public void setViewer(FxViewer viewer) {
         _viewer = viewer;
@@ -532,6 +534,14 @@ public class ViewerPaneController {
     public void setSchedule(List<Task> schedule) {
 	    _schedule = schedule;
     }
+    
+    public static void setTimeout(boolean timeout) {
+    	_timeout = timeout;
+    }
+    
+    public static boolean getTimeout() {
+    	return _timeout;
+    }
 
     public static void update() {
 	    if(_hasLoaded.get() ) {
@@ -540,5 +550,11 @@ public class ViewerPaneController {
             });
         }
     }
+    
+    
+	public static boolean isRunning() {
+		
+		return _hasLoaded.get();
+	}
 }
 

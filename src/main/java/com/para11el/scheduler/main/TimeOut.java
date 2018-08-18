@@ -1,5 +1,7 @@
 package com.para11el.scheduler.main;
 
+import com.para11el.scheduler.ui.ViewerPaneController;
+
 /**
  * TimeOut extends the thread class and stops the program
  * if the timeout occurs before an optimal schedule has been found.
@@ -35,7 +37,18 @@ public class TimeOut extends Thread {
 		try {
 			Thread.sleep(_timeOutMiliseconds);
 			System.out.println("A timeout has occurred, an optimal schedule was not computed so no output file was generated.");
-			System.exit(1);
+			
+			ViewerPaneController.getInstance();
+			ViewerPaneController.toggleTimer(false);
+			
+			ViewerPaneController.getInstance();
+			ViewerPaneController.setTimeout(true);;
+			
+			
+			
+			
+			
+			//System.exit(1);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			return;

@@ -1,8 +1,11 @@
 package com.para11el.scheduler.algorithm;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
+import com.para11el.scheduler.ui.ViewerPaneController;
 
 /**
  * DFS Recursive Algorithm to find the optimal solution.
@@ -45,7 +48,7 @@ public class DFSAlgorithm extends Algorithm {
 	public DFSAlgorithm(Graph graph, int processor, int cores) {
 		super(graph, processor, cores);
 	}
-	
+
 	/**
 	 * Calls initialise to begin the recursive DFS
 	 * @return an array list of type task with the optimal schedule
@@ -75,7 +78,7 @@ public class DFSAlgorithm extends Algorithm {
 			}
 		});
 	}
-	
+
 	/**
 	 * Sets the absolute maximum time to complete all tasks (sequentially on a single 
 	 * processor), which can then be used for bounding. Sets a private int _minimumTime
@@ -102,24 +105,28 @@ public class DFSAlgorithm extends Algorithm {
 		ArrayList<Node> availableNodes = availableNode(solutionArrayList);
 		ArrayList<Task> privateSolutionArrayList = (ArrayList<Task>)solutionArrayList.clone();
 
-		if (availableNodes.size() != 0) {
-			for (Node node : availableNodes) {
-				// For each available processor add available node to possible schedule
-				for (int i = 1; i <= _processors; i++) {
-					privateSolutionArrayList = (ArrayList<Task>) solutionArrayList.clone();		
-					int startTime = getEarliestStartTime(node, privateSolutionArrayList, i);
-					if (startTime > _minimumTime) {
-						break;
+
+		ViewerPaneController.getInstance();
+		if (!ViewerPaneController.getTimeout()) {
+			if (availableNodes.size() != 0) {
+				for (Node node : availableNodes) {
+					// For each available processor add available node to possible schedule
+					for (int i = 1; i <= _processors; i++) {
+						privateSolutionArrayList = (ArrayList<Task>) solutionArrayList.clone();		
+						int startTime = getEarliestStartTime(node, privateSolutionArrayList, i);
+						if (startTime > _minimumTime) {
+							break;
+						}
+						Task task = new Task(node, startTime, i);
+						privateSolutionArrayList.add(task);			
+						buildRecursiveSolution(privateSolutionArrayList);	
 					}
-					Task task = new Task(node, startTime, i);
-					privateSolutionArrayList.add(task);			
-					buildRecursiveSolution(privateSolutionArrayList);	
 				}
-			}
-		} else {
-			// Add schedule to solution space if there are no more available nodes
-			if (privateSolutionArrayList.size() == _graph.getNodeCount()) {
-				findOptimal(privateSolutionArrayList);
+			} else {
+				// Add schedule to solution space if there are no more available nodes
+				if (privateSolutionArrayList.size() == _graph.getNodeCount()) {
+					findOptimal(privateSolutionArrayList);
+				}
 			}
 		}
 	}
@@ -133,26 +140,40 @@ public class DFSAlgorithm extends Algorithm {
 	 */
 	@SuppressWarnings("unchecked")
 	private void findOptimal(ArrayList<Task> solution) {
-		if (solution != null) {
-			int solutionTime = 0; 
-			ArrayList<Task> newSolution = (ArrayList<Task>)solution.clone();
 
-			for (int processor=1; processor <= _processors; processor++) {
-				int solutionFinishTime = getProcessorFinishTime(newSolution, processor);
-				
-				if (solutionFinishTime > _minimumTime) {
-					return;
-				}
-				// Update latest finish time
-				if (solutionTime < solutionFinishTime) {
-					solutionTime = solutionFinishTime;
-				}
-			}
+		ViewerPaneController.getInstance();
+		if (!ViewerPaneController.getTimeout()) {
 
-			// Update minimal time and optimal solution
-			if (_minimumTime >= solutionTime) {
-				_minimumTime = solutionTime;
-				_optimalSchedule = newSolution;
+			if (solution != null) {
+				int solutionTime = 0; 
+				ArrayList<Task> newSolution = (ArrayList<Task>)solution.clone();
+
+				for (int processor=1; processor <= _processors; processor++) {
+					int solutionFinishTime = getProcessorFinishTime(newSolution, processor);
+
+					if (solutionFinishTime > _minimumTime) {
+						return;
+					}
+					// Update latest finish time
+					if (solutionTime < solutionFinishTime) {
+						solutionTime = solutionFinishTime;
+					}
+				}
+
+
+				// Update minimal time and optimal solution
+				if (_minimumTime >= solutionTime) {
+					_minimumTime = solutionTime;
+					_optimalSchedule = newSolution;
+
+					ViewerPaneController.getInstance().setSchedule(_optimalSchedule);
+
+					try{
+						TimeUnit.MILLISECONDS.sleep(500);
+					} catch(Exception e) {}
+
+					ViewerPaneController.update();
+				}
 			}
 		}
 	}
@@ -166,7 +187,7 @@ public class DFSAlgorithm extends Algorithm {
 	public ArrayList<Task> getOptimal() {
 		return _optimalSchedule;
 	}
-	
+
 	/**
 	 * Returns the finish time of the optimal solution
 	 * @return int of the finish time 
