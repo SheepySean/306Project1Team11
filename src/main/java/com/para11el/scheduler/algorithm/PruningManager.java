@@ -3,6 +3,7 @@ package com.para11el.scheduler.algorithm;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Queue;
+import java.util.concurrent.RecursiveTask;
 
 /**
  * Manager class to perform pruning checks.
@@ -10,12 +11,27 @@ import java.util.Queue;
  * @author Jessica Alcantara, Holly Hagenson
  *
  */
-public class PruningManager {
-	
+public class PruningManager extends RecursiveTask<Boolean>{
+
+	private static final long serialVersionUID = 1L;
 	private int _makespan;
+	private State _newState;
+	private Queue<State> _states;
 	
 	public PruningManager(){}
 
+	/**
+	 * Constructor for Pruning Manager
+	 * @param newState State to be pruned
+	 * @param states States to be compared against
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public PruningManager(State newState, Queue<State> states) {
+		_newState = newState;
+		_states = states;
+	}
+	
 	/**
 	 * Check for duplicates between states
 	 * @param newState State to be added to list of states
@@ -24,12 +40,13 @@ public class PruningManager {
 	 * 
 	 * @author Holly Hagenson, Jessica Alcantara
 	 */
-	public Boolean doPrune(State newState, Queue<State> states) {
-		ArrayList<Task> newSchedule = newState.getSchedule();
+	@Override
+	public Boolean compute() {
+		ArrayList<Task> newSchedule = _newState.getSchedule();
 		_makespan = getScheduleFinishTime(newSchedule);
 		
 		// Check new state against all states in queue
-		for (State state : states){
+		for (State state : _states){
 			ArrayList<Task> queuedSchedule = state.getSchedule();
 			// Check if same number of tasks
 			if (sameNumberOfTasks(newSchedule, queuedSchedule)) {
@@ -91,10 +108,6 @@ public class PruningManager {
 	 * @author Jessica Alcantara
 	 */
 	public Boolean compareAllocation(ArrayList<Task> newSchedule, ArrayList<Task> queuedSchedule){
-		//TODO: Check order and dont care about processor (Use hash code which 
-		// tell if task is the same -> task is the same if same node id and start time)
-		// compare hashcodes by task.hashCode() == task.hashCode()
-		
 		HashMap<Integer,ArrayList<Task>> allocations = new HashMap<Integer,ArrayList<Task>>();
 		
 		// Map each task to a processor in the new schedule

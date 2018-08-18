@@ -14,12 +14,12 @@ import com.para11el.scheduler.algorithm.AStarAlgorithm;
 import com.para11el.scheduler.algorithm.Task;
 
 /**
- * JUnit test class to test the behaviour of the Algorithm class.
+ * JUnit test class to test the behaviour of the A* Algorithm helper methods.
  * 
  * @author Holly Hagenson, Jessica Alcantara
  *
  */
-public class AlgorithmIT {
+public class AStarAlgorithmHelperIT {
 	
 	private static TestGraphManager _tgManager;  
 	private static Graph _testGraph; 
@@ -33,57 +33,6 @@ public class AlgorithmIT {
 		_tgManager = new TestGraphManager(); 
 		_testGraph = _tgManager.createGraph(); 
 		_aStar = new AStarAlgorithm(); 
-	}
-	
-	/**
-	 * Unit test for getting the earliest start time of a node. 
-	 * @author Holly Hagenson
-	 */
-	@Test
-	public void testGetEarliestStartTime() {		
-		// Create test schedule to get earliest start time of
-		ArrayList<Task> testSchedule = new ArrayList<Task>(); 
-		testSchedule.add(new Task(_testGraph.getNode("1"),0,1));
-		testSchedule.add(new Task(_testGraph.getNode("2"),3,1));
-		testSchedule.add(new Task(_testGraph.getNode("3"),5,2));
-		
-		int start = _aStar.getEarliestStartTime(_testGraph.getNode("4"), testSchedule, 1);
-		
-		assertEquals(start, 7); 
-	}
-	
-	/**
-	 * Unit test for getting the finish time of a schedule. 
-	 * @author Jessica Alcantara
-	 */
-	@Test
-	public void testGetScheduleFinishTime() {		
-		// Create test schedule
-		ArrayList<Task> testSchedule = new ArrayList<Task>(); 
-		testSchedule.add(new Task(_testGraph.getNode("1"),0,1));
-		testSchedule.add(new Task(_testGraph.getNode("2"),3,1));
-		testSchedule.add(new Task(_testGraph.getNode("5"),12,2));
-		
-		int finish = _aStar.getScheduleFinishTime(testSchedule);
-		
-		assertEquals(finish, 17); 
-	}
-	
-	/**
-	 * Unit test for getting the finish time on a given processor. 
-	 * @author Jessica Alcantara
-	 */
-	@Test
-	public void testGetProcessorFinishTime() {		
-		// Create test schedule
-		ArrayList<Task> testSchedule = new ArrayList<Task>(); 
-		testSchedule.add(new Task(_testGraph.getNode("1"),0,1));
-		testSchedule.add(new Task(_testGraph.getNode("2"),3,1));
-		testSchedule.add(new Task(_testGraph.getNode("5"),12,2));
-		
-		int finish = _aStar.getProcessorFinishTime(testSchedule,1);
-		
-		assertEquals(finish, 7); 
 	}
 	
 	/**
@@ -103,26 +52,9 @@ public class AlgorithmIT {
 		expected.add(_testGraph.getNode("4"));
 		
 		AStarAlgorithm aStar = new AStarAlgorithm(_testGraph,2);
-		List<Node> available = aStar.availableNode(testSchedule);
+		List<Node> available = aStar.getAvailableNodes(testSchedule);
 		
 		assertEquals(expected, available); 
-	}
-	
-	/**
-	 * Unit test for getting the task corresponding to the node. 
-	 * @author Jessica Alcantara
-	 */
-	@Test
-	public void testFindNodeTask() {		
-		// Create test schedule
-		ArrayList<Task> testSchedule = new ArrayList<Task>(); 
-		Task expectedTask = new Task(_testGraph.getNode("1"),0,1);
-		testSchedule.add(expectedTask);
-		testSchedule.add(new Task(_testGraph.getNode("2"),3,1));
-		testSchedule.add(new Task(_testGraph.getNode("5"),12,2));
-		
-		Task foundTask = _aStar.findNodeTask(_testGraph.getNode("1"), testSchedule);
-		assertEquals(expectedTask, foundTask); 
 	}
 	
 	/**

@@ -5,6 +5,13 @@ import java.util.concurrent.RecursiveTask;
 
 import org.graphstream.graph.Node;
 
+/**
+ * Class representing the a task to be computed in parallel. These are
+ * states built during the expansion phase of the A* algorithm.
+ * 
+ * @author Jessica Alcantara, Holly Hagenson
+ *
+ */
 public class AStarStateTask extends RecursiveTask<State>{
 	
 	private static final long serialVersionUID = 1L;
@@ -13,14 +20,30 @@ public class AStarStateTask extends RecursiveTask<State>{
 	private int _processor;
 	private CostFunctionManager _cfm;
 	
-	public AStarStateTask(State state, Node node, int processor
-			, CostFunctionManager cfm) {
+	public AStarStateTask() {}
+	
+	/**
+	 * Constructor for the A* State Task
+	 * @param state Parent state
+	 * @param node Node to be added to the new state
+	 * @param processor Number of processors to schedule on
+	 * @param cfm Cost Function Manager to handle cost function calculations
+	 * 
+	 * @author Jessica Alcantara, Holly Hagenson
+	 */
+	public AStarStateTask(State state, Node node, int processor, CostFunctionManager cfm) {
 		_state = state;
 		_node = node;
 		_processor = processor;
 		_cfm = cfm;
 	}
 
+	/**
+	 * Creates a new state from the parent state schedule
+	 * 
+	 * @author Jessica Alcantara
+	 * @see java.util.concurrent.RecursiveTask#compute()
+	 */
 	@Override
 	protected State compute() {
 		ArrayList<Task> schedule = new ArrayList<Task>(_state.getSchedule());
@@ -36,6 +59,15 @@ public class AStarStateTask extends RecursiveTask<State>{
 		return newState;
 	}
 	
+	/**
+	 * Finds the earliest start time of a task on a processor with given dependencies
+	 * @param node Node to be scheduled
+	 * @param schedule ArrayList of scheduled tasks
+	 * @param processor Processor to schedule the node on
+	 * @return int of the earliest start time
+	 * 
+	 * @author Holly Hagenson, Rebekah Berriman
+	 */
 	public int getEarliestStartTime(Node node, ArrayList<Task> schedule, int processor) {
 		int processorFinishTime; 
 		int nodeStartTime = 0;
@@ -99,6 +131,14 @@ public class AStarStateTask extends RecursiveTask<State>{
 		return null;
 	}
 	
+	/**
+	 * Returns an int of the finishTime of the last task on the processor
+	 * @param schedule ArrayList of the scheduled tasks
+	 * @param processor To find latest finish time of
+	 * @return int of the finishTime
+	 * 
+	 * @author Rebekah Berriman
+	 */
 	public int getProcessorFinishTime(ArrayList<Task> schedule, int processor) {
 		int processorFinishTime = 0;
 		int taskFinishTime;
