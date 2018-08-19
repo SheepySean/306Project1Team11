@@ -2,10 +2,6 @@ package com.para11el.scheduler.ui;
 
 import com.para11el.scheduler.algorithm.Task;
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -14,7 +10,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -28,13 +23,15 @@ import org.graphstream.ui.layout.HierarchicalLayout;
 import org.graphstream.ui.layout.springbox.implementations.LinLog;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.camera.Camera;
-
-
 import java.awt.Color;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
+/**
+ * Controller class for ViewerPane.fxml
+ *
+ * @author Sean Oldfield, Tina Chen
+ */
 public class ViewerPaneController {
 	private static final String WIKI_LINK = "https://github.com/SheepySean/306Project1Team11/wiki/Visualisation";
 
@@ -112,17 +109,16 @@ public class ViewerPaneController {
 	private ScrollPane scrollPane;
 
 	public ViewerPaneController() {}
+
 	/**
 	 * Initialize some of the GUI's components to initial states
 	 */
 	@FXML
 	public void initialize() {
-
-
 		_instance = getInstance();
-		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-		// This is a little hacky but allows static reference to the tile pane
+		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		// This is a little hacky but allows static reference to some FXML fields
 		_tile = tile;
 		_colLabelTile = colLabelTile;
 		_timerLabel = timerLabel;
@@ -133,7 +129,7 @@ public class ViewerPaneController {
 		initialisePane(_criticalLength);
 		initialiseLabel(_criticalLength);
 
-		generateBlue();
+		generateBlue(); // Set the schedule view colours
 
 
 		this.updateSchedule(_schedule);
@@ -149,6 +145,7 @@ public class ViewerPaneController {
 		_camera = _viewer.getDefaultView().getCamera();
 		graphContainer.getChildren().add(viewPanel); // Add it to its container
 
+		// Update statistics pan
 		coresText.setText(_cores);
 		processorsText.setText(_processors);
 		outputFileText.setText(_outputFile);
@@ -168,14 +165,17 @@ public class ViewerPaneController {
 				timerLabel.setText(ViewerPaneController.calculateTimeLabel());
 			}
 		};
+
 		if(!(_noTimer)) {
 			this.toggleTimer(true); // Start the timer
 		} else {
 			timerLabel.setText(ViewerPaneController.calculateTimeLabel());
 		}
+
 		if(_fillGreen) {
 			_timerLabel.setTextFill(Paint.valueOf("#00e500"));
 		}
+
 		_hasLoaded.set(true);
 
 	}
@@ -469,7 +469,6 @@ public class ViewerPaneController {
 	 * @author Sean Oldfield
 	 */
 	private static void updateSchedule(List<Task> schedule) {
-
 		if (!_timeout) {
 			if(_schedule != null) {
 				List<Node> children = _tile.getChildren();
@@ -641,7 +640,8 @@ public class ViewerPaneController {
 
 	/**
 	 * Set the schedule to be updated
-	 * @param schedule
+	 * @param schedule List of tasks that represent a schedule
+	 * @author Sean Oldfield
 	 */
 	public void setSchedule(List<Task> schedule) {
 		_schedule = schedule;
@@ -649,6 +649,7 @@ public class ViewerPaneController {
 
 	/**
 	 * Update the GUI
+	 * @author Sean Oldfield
 	 */
 	public static void update() {
 		if(_hasLoaded.get() ) {
@@ -697,23 +698,38 @@ public class ViewerPaneController {
 
 	}
 
-
 	/**
 	 * Return the status of the GUI running or not
 	 * @return True if the GUI is running
+	 * @author Sean Oldfield
 	 */
 	public static boolean isRunning() {
 		return _hasLoaded.get();
 	}
 
+	/**
+	 * Set host services for the GUI for opening the web browser
+	 * @param services Host services
+	 * @author Sean Oldfield
+	 */
 	public static void setHostServices(HostServices services) {
 		_hostServices = services;
 	}
 
+	/**
+	 * Open a link in the browser
+	 * @param url URL of a webpage
+	 * @author Sean Oldfield
+	 */
 	private void openBrowser(final String url) {
 		_hostServices.showDocument(url);
 	}
 
+	/**
+	 * Set the status message of the GUI
+	 * @param statusMessage message to set as the GUI's status
+	 * @author Sean Oldfield
+	 */
 	public static void setStatus(String statusMessage) {
 		if(isRunning()) {
 			Platform.runLater(()->{
@@ -725,12 +741,18 @@ public class ViewerPaneController {
 		}
 	}
 
+	/**
+	 * Calculate a string that corresponds to the time the program has been
+	 * running for
+	 * @return String representing the elapsed time
+	 * @author, Sean Oldfield
+	 */
 	private static String calculateTimeLabel() {
 		long elapsedMillis = System.currentTimeMillis() - _startTime ;
 		return String.format("%02d:%02d:%02d",
-				(elapsedMillis / 60000),
-				((elapsedMillis % 60000) / 1000),
-				((elapsedMillis % 1000) / 10));
+				(elapsedMillis / 60000), 			// Minutes
+				((elapsedMillis % 60000) / 1000),	// Seconds
+				((elapsedMillis % 1000) / 10));		// Milliseconds
 
 	}
 

@@ -1,23 +1,22 @@
 package com.para11el.scheduler.ui;
 
-import com.para11el.scheduler.main.Scheduler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
 import javafx.stage.*;
 import javafx.scene.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.control.*;
 
-import com.sun.prism.paint.Color;
-
-import javafx.geometry.*;
-
-
-
-
+/**
+ * Class for creating a modal window for confirming an exit of the GUI
+ *
+ * @author Sean Oldfield
+ */
 public class ExitWindow {
 
+    /**
+     * Display the exit confirmation
+     * @param stage The stage of the calling GUI
+     * @return True if the gui should be closed
+     */
     public static boolean display(Stage stage) {
         Stage dialog = new Stage(); // New stage
         dialog.setResizable(false);
