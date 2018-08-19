@@ -152,7 +152,11 @@ public class ViewerPaneController {
 		coresText.setText(_cores);
 		processorsText.setText(_processors);
 		outputFileText.setText(_outputFile);
-		timeoutText.setText(_timeoutDuration + " seconds");
+		if (Integer.parseInt(_timeoutDuration) == 0) {
+			timeoutText.setText("Timeout not set");
+		} else {
+			timeoutText.setText(_timeoutDuration + " seconds");
+		}
 		algroithmText.setText(_algorithm);
 
 

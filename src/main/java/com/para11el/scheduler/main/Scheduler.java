@@ -1,6 +1,5 @@
 package com.para11el.scheduler.main;
 
-
 import com.para11el.scheduler.algorithm.AStarAlgorithm;
 import com.para11el.scheduler.algorithm.DFSInitialiser;
 import com.para11el.scheduler.algorithm.Task;
@@ -9,16 +8,12 @@ import com.para11el.scheduler.graph.GraphFileManager;
 import com.para11el.scheduler.graph.GraphViewManager;
 import com.para11el.scheduler.ui.ExitWindow;
 import com.para11el.scheduler.ui.ViewerPaneController;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.graphstream.graph.Graph;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +25,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.LogManager;
 import java.util.ArrayList;
-
 
 /**
  * Main runner class of the program
@@ -170,7 +164,11 @@ public class Scheduler extends Application {
 			AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
 			ArrayList<Task> solution = algorithm.buildSolution();
 
-			outputGraph = algorithm.getGraph(solution);
+			if (solution != null) {
+				outputGraph = algorithm.getGraph(solution);
+			} else {
+				outputGraph = _inGraph;
+			}
 
 		} else {
 			//Searches with DFS Algorithm
