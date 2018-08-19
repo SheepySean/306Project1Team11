@@ -67,7 +67,7 @@ public class ViewerPaneController {
 	private static HostServices _hostServices;
 	private static String _statusMessage;
 	private static ViewerPaneController _instance = null;
-
+	private static boolean _isTileInitialised = false;
 	private static AtomicBoolean _hasLoaded = new AtomicBoolean(false);
 	@FXML
 	private AnchorPane graphContainer;
@@ -115,46 +115,6 @@ public class ViewerPaneController {
 	 */
 	@FXML
 	public void initialize() {
-		_instance = getInstance();
-
-		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		// This is a little hacky but allows static reference to some FXML fields
-		_tile = tile;
-		_colLabelTile = colLabelTile;
-		_timerLabel = timerLabel;
-		_statusLabel = statusLabel;
-		_statusLabel.setText(_statusMessage);
-		setCellSize(Integer.parseInt(_processors));
-
-		initialisePane(_criticalLength);
-		initialiseLabel(_criticalLength);
-
-		generateBlue(); // Set the schedule view colours
-
-		this.updateSchedule(_schedule);
-
-		// Embed GraphStream graph into the GUI
-		_viewer.addDefaultView(false, _viewer.newDefaultGraphRenderer());
-		_viewer.enableAutoLayout();
-		viewPanel = (FxDefaultView) _viewer.getDefaultView();
-		viewPanel.setFocusTraversable(true); // Allow the keyboard shortcuts
-		viewPanel.setMaxHeight(332); // So it fits
-		viewPanel.setMaxWidth(598);
-		viewPanel.requireFocus();
-		_camera = _viewer.getDefaultView().getCamera();
-		graphContainer.getChildren().add(viewPanel); // Add it to its container
-
-		// Update statistics pan
-		coresText.setText(_cores);
-		processorsText.setText(_processors);
-		outputFileText.setText(_outputFile);
-		if (Integer.parseInt(_timeoutDuration) == 0) {
-			timeoutText.setText("Timeout not set");
-		} else {
-			timeoutText.setText(_timeoutDuration + " seconds");
-		}
-		algroithmText.setText(_algorithm);
-
 		// Set the timer for elapsing the program run time
 		_timer = new AnimationTimer() {
 			@Override
@@ -168,6 +128,54 @@ public class ViewerPaneController {
 		} else {
 			timerLabel.setText(ViewerPaneController.calculateTimeLabel());
 		}
+		_instance = getInstance();
+
+		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		// This is a little hacky but allows static reference to some FXML fields
+		_tile = tile;
+		_colLabelTile = colLabelTile;
+		_timerLabel = timerLabel;
+		_statusLabel = statusLabel;
+		_statusLabel.setText(_statusMessage);
+		setCellSize(Integer.parseInt(_processors));
+
+		Platform.runLater(() -> {
+
+			initialisePane(_criticalLength);
+			initialiseLabel(_criticalLength);
+			generateBlue(); // Set the schedule view colours
+			this.updateSchedule(_schedule);
+		});
+
+
+
+
+		Platform.runLater(() -> {
+			// Embed GraphStream graph into the GUI
+			_viewer.addDefaultView(false, _viewer.newDefaultGraphRenderer());
+			_viewer.enableAutoLayout();
+			viewPanel = (FxDefaultView) _viewer.getDefaultView();
+			viewPanel.setFocusTraversable(true); // Allow the keyboard shortcuts
+			viewPanel.setMaxHeight(332); // So it fits
+			viewPanel.setMaxWidth(598);
+			viewPanel.requireFocus();
+			_camera = _viewer.getDefaultView().getCamera();
+			graphContainer.getChildren().add(viewPanel); // Add it to its container
+		});
+
+
+		// Update statistics pan
+		coresText.setText(_cores);
+		processorsText.setText(_processors);
+		outputFileText.setText(_outputFile);
+		if (Integer.parseInt(_timeoutDuration) == 0) {
+			timeoutText.setText("Timeout not set");
+		} else {
+			timeoutText.setText(_timeoutDuration + " seconds");
+		}
+		algroithmText.setText(_algorithm);
+
+
 
 		if(_fillGreen) {
 			_timerLabel.setTextFill(Paint.valueOf("#00e500"));
@@ -376,11 +384,14 @@ public class ViewerPaneController {
 		if(_timer == null) {
 			_noTimer = true;
 		} else {
-			if (enable) {
-				_timer.start();
-			} else {
-				_timer.stop();
-			}
+			new Thread(() -> {
+				if (enable) {
+					_timer.start();
+				} else {
+					_timer.stop();
+				}
+			}).start();
+
 		}
 	}
 
@@ -403,6 +414,7 @@ public class ViewerPaneController {
 	 * @author Tina Chen, Sean Oldfield
 	 */
 	private static void initialisePane(int num) {
+
 		Text processorLabel;
 		int processorNum = Integer.parseInt(_processors);
 
@@ -425,6 +437,7 @@ public class ViewerPaneController {
 			p.setStyle("-fx-background-color: #D3D3D3");
 			_tile.getChildren().add(p);
 		}
+		_isTileInitialised = true;
 	}
 
 	/**
@@ -615,7 +628,9 @@ public class ViewerPaneController {
 	public static void update() {
 		if(_hasLoaded.get() ) {
 			Platform.runLater(() -> {
-				updateSchedule(_schedule);
+				if(_isTileInitialised) {
+					updateSchedule(_schedule);
+				}
 			});
 		}
 	}
