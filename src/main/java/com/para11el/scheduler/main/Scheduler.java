@@ -187,8 +187,7 @@ public class Scheduler extends Application {
 			outputGraph = dfs.getGraph(solution);
 		}
 
-		// Write the output file
-        
+		// Write the output file only if a timeout has not occurred
         if (timeoutCounter.isAlive()) {
         	try {
     			fileManager.writeGraphFile(_outputFilename,
@@ -199,6 +198,11 @@ public class Scheduler extends Application {
     			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
                 ViewerPaneController.setStatus("Unable to write the graph to the file '" + _outputFilename + "'");
     		}
+        } else {
+        	
+        	// set GUI status to timeout error message
+        	ViewerPaneController.setStatus("A timeout has occurred, an optimal schedule was not "
+        			+ "computed and no output file was generated.");
         }
 		
 
