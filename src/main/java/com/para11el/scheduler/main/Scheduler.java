@@ -126,7 +126,8 @@ public class Scheduler extends Application {
 					Integer.toString(_numCores),
 					getFilenameNoDirectory(_outputFilename),
 					Long.toString(startTime),
-					Integer.toString(critLength)
+					Integer.toString(critLength),
+					Integer.toString(_inGraph.getNodeCount())
 			};
 
 			// Start the GUI on another thread
