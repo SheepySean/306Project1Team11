@@ -5,7 +5,7 @@
 # 306 Project 1		|		Team 11		|		Para11el    |   [![Build Status](https://travis-ci.com/SheepySean/306Project1Team11.svg?token=uyPgVa62zwbc6MQzYwFa&branch=master)](https://travis-ci.com/SheepySean/306Project1Team11)
 
 
-## Para11el Task Schedule 
+## Para11el Task Scheduler 
 Welcome to the official page from the Para11el Task Scheduler Project!
 
 **Using AI and parallel processing power to solve difficult scheduling problem**
@@ -23,12 +23,13 @@ The project should be able to run on all operating systems namely **Linux**.
 The project requires:
 ```
 GraphStream (version 2.0)
-Java 1.8
+Java 1.8 (inluding JavaFX 8)
 Parallel Task
 ```
 
 ### Additional Requirements
-*--- Optional - add in additional requirements here ---*
+
+A multicore machine is recommended to access the parallel functionality of the scheduler
 
 ## Running the Code (For a Developer)
 
@@ -40,23 +41,54 @@ Please see the Wiki Resources by following the following links:
 
 With Java (plus dependant packages) installed you can run the project code. 
 
+### With the .jar file
+
 Para11el Task Schedule takes a graph in dot format (.dot) as input, and outputs a graph in dot format (.dot) with an optimal schedule.
 ```java
 java -jar scheduler.jar INPUT.dot P [ADDITIONAL OPTIONS]
 ```
 The first two arguments are required:
-`INPUT.dot` is a task graph with integer weights in dot format
-`P` is the number of processors to schedule the input graph on.
+* `INPUT.dot` is a task graph with integer weights in dot format
+* `P` is the number of processors to schedule the input graph on.
 The output file will be created in the same directory and the nodes will have additional attributes (the start time of the node and the processor it is scheduled on) with integer weights.
 
 Optional arguments are:
-`-p N` use N cores for execution in parallel 
-`-v` visualise the search (opens a GUI which will allow you to view the input graph, the optimal schedule and the current state of the search)
-`o FILENAME` specify the filename of the output file to be FILENAME 
-`-t SECONDS` time out the search in SECONDS, if a solution has not been found, no output file will be written
-`-d` search for the optional solution using DFS Algorithm (unable to specify any other additional arguments alongside -d)
+* `-p N` use N cores for execution in parallel 
+* `-v` visualise the search (opens a GUI which will allow you to view the input graph, the optimal schedule and the current state of the search)
+* `o FILENAME` specify the filename of the output file to be FILENAME 
+* `-t SECONDS` time out the search in SECONDS, if a solution has not been found, no output file will be written
+* `-d` search for the optional solution using DFS Algorithm (unable to specify any other additional arguments alongside -d)
 
 By default, Para11el Task Scheduler will run sequentially, using an A* Algorithm with no visualisation and the output file will be named INPUT-output.dot (where INPUT is the name of the input graph).
+
+**An example input graph may look like as follows:**
+```dot
+digraph "example" {
+	a [Weight=2];
+	b [Weight=3];
+	c [Weight=3];
+	d [Weight=2];
+        a -> c [Weight=2];
+        a -> b [Weight=1];
+	b -> d [Weight=2];
+	c -> d [Weight=1];
+}
+```
+
+### Building the project yourself
+
+If you wish, you may build the projects .jar file yourself. To do this you need **Maven** installed on your machine.
+
+Simply clone the project on to you machine by running the following command:
+```cmd
+git clone https://github.com/SheepySean/306Project1Team11.git
+```
+Locate the **pom.xml** file and run the following command with maven
+```maven
+clean compile assembly:single
+```
+This will create a fresh .jar file for executing the project and you may run it by following the steps [above](#with-the-jar-file).
+
 
 ## Folder Structure
 
