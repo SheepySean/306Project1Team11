@@ -93,14 +93,14 @@ public class Scheduler extends Application {
 			_inGraph = fileManager.readGraphFile(_filename,
 					graphName);
 			System.out.println("Found and loaded the graph file '" + _filename + "'");
-            ViewerPaneController.setStatus("Found and loaded the graph file '" + _filename + "'");
+			ViewerPaneController.setStatus("Found and loaded the graph file '" + _filename + "'");
 
 		} catch(IOException e) {
 			System.out.println("Cannot find the specified input file '" + _filename + "'");
 			System.exit(1);
 		}
 
-		
+
 		if(_outputFilename == null) {
 			// Name the file if no specific output name was provided
 			_outputFilename = removeFileExt(_filename)
@@ -135,9 +135,9 @@ public class Scheduler extends Application {
 					getFilenameNoDirectory(_outputFilename),
 					Long.toString(startTime),
 					Integer.toString(critLength),
-                    Integer.toString(_inGraph.getNodeCount()),
-                    Boolean.toString(_astar),
-                    Integer.toString(_timeoutSeconds)
+					Integer.toString(_inGraph.getNodeCount()),
+					Boolean.toString(_astar),
+					Integer.toString(_timeoutSeconds)
 			};
 
 			// Start the GUI on another thread
@@ -158,19 +158,19 @@ public class Scheduler extends Application {
 			viewGraph.setAttribute("ui.stylesheet", "url('" + url + "')");
 			GraphViewManager viewManager = new GraphViewManager(_inGraph);
 			viewManager.labelGraph(); // Label nodes and edges
-            //_inGraph.getNode("0").setAttribute("ui.class", "some");
+			//_inGraph.getNode("0").setAttribute("ui.class", "some");
 
-        }
+		}
 
-        //Initialise the output graph
-        Graph outputGraph;
+		//Initialise the output graph
+		Graph outputGraph;
 
-        if(_astar) {
-            //Searches with A Star Algorithm (default)
-            AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
-            ArrayList<Task> solution = algorithm.buildSolution();
+		if(_astar) {
+			//Searches with A Star Algorithm (default)
+			AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
+			ArrayList<Task> solution = algorithm.buildSolution();
 
-            outputGraph = algorithm.getGraph(solution);
+			outputGraph = algorithm.getGraph(solution);
 
 		} else {
 			//Searches with DFS Algorithm
@@ -188,23 +188,22 @@ public class Scheduler extends Application {
 		}
 
 		// Write the output file only if a timeout has not occurred
-        if (timeoutCounter.isAlive()) {
-        	try {
-    			fileManager.writeGraphFile(_outputFilename,
-    					outputGraph, true);
-                System.out.println("Graph file successfully written to '" + _outputFilename+ "'");
-                ViewerPaneController.setStatus("Graph file successfully written to '" + _outputFilename+ "'");
-    		} catch(IOException e) {
-    			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
-                ViewerPaneController.setStatus("Unable to write the graph to the file '" + _outputFilename + "'");
-    		}
-        } else {
-        	
-        	// set GUI status to timeout error message
-        	ViewerPaneController.setStatus("A timeout has occurred, an optimal schedule was not "
-        			+ "computed and no output file was generated.");
-        }
-		
+		if (!_timeout || (_timeout && timeoutCounter.isAlive())) {
+			try {
+				fileManager.writeGraphFile(_outputFilename,
+						outputGraph, true);
+				System.out.println("Graph file successfully written to '" + _outputFilename+ "'");
+				ViewerPaneController.setStatus("Graph file successfully written to '" + _outputFilename+ "'");
+			} catch(IOException e) {
+				System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
+				ViewerPaneController.setStatus("Unable to write the graph to the file '" + _outputFilename + "'");
+			}
+		} else {
+
+			// set GUI status to timeout error message
+			ViewerPaneController.setStatus("A timeout has occurred, an optimal schedule was not "
+					+ "computed and no output file was generated.");
+		}
 
 		//Interrupt the timeout thread and stop it
 		if (_timeout) {
@@ -212,7 +211,7 @@ public class Scheduler extends Application {
 		}
 
 		// Exit program when finished
-        ViewerPaneController.getInstance();
+		ViewerPaneController.getInstance();
 		if (!_visualise) {
 			System.exit(0);
 		}
@@ -264,28 +263,28 @@ public class Scheduler extends Application {
 		}
 	}
 
-    /**
-     * Remove a . extension from a file name
-     * @param filename Filename to remove the .dot from
-     * @return Name of the file without the extension
-     *
-     * @author Sean Oldfield
-     */
+	/**
+	 * Remove a . extension from a file name
+	 * @param filename Filename to remove the .dot from
+	 * @return Name of the file without the extension
+	 *
+	 * @author Sean Oldfield
+	 */
 	private static String removeFileExt(String filename) {
-	    try {
-            return filename.substring(0, filename.lastIndexOf('.'));
-        } catch(StringIndexOutOfBoundsException e) {
-	        return filename;
-        }
-    }
+		try {
+			return filename.substring(0, filename.lastIndexOf('.'));
+		} catch(StringIndexOutOfBoundsException e) {
+			return filename;
+		}
+	}
 
-    /**
-     * Remove any parent directories from a file path
-     * @param path File path to a file
-     * @return The name of the file without directories
-     * @author Sean Oldfield
-     */
-    private static String getFilenameNoDirectory(String path) {
+	/**
+	 * Remove any parent directories from a file path
+	 * @param path File path to a file
+	 * @return The name of the file without directories
+	 * @author Sean Oldfield
+	 */
+	private static String getFilenameNoDirectory(String path) {
 		return Paths.get(path).getFileName().toString();
 	}
 
@@ -314,40 +313,40 @@ public class Scheduler extends Application {
 
 
 
-    @Override
-    public void start(Stage primaryStage) {
-        final Stage stage;
-        try{
-            List<String> params = getParameters().getRaw();
-            ViewerPaneController.getInstance().setParameters(params);
-            ViewerPaneController.setHostServices(getHostServices());
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/ViewerPane.fxml")); // Load the fxml pane
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add("/css/main.css"); // Add the css
-            stage = primaryStage;
-            stage.sizeToScene();
-            stage.setResizable(false);
-            // Add logo to the GUI
-            stage.getIcons().add(new Image(Scheduler.class.getResourceAsStream("/images/logo-icon.png")));
-            stage.setScene(scene);
-            //stage.setResizable(false);
-            stage.setTitle("Para11el | Task Scheduler | " + _filename);
-            stage.setOnCloseRequest((event) -> {
-                boolean response = ExitWindow.display(stage);
-                if(response) stage.close();
-                event.consume();
-            });
+	@Override
+	public void start(Stage primaryStage) {
+		final Stage stage;
+		try{
+			List<String> params = getParameters().getRaw();
+			ViewerPaneController.getInstance().setParameters(params);
+			ViewerPaneController.setHostServices(getHostServices());
+			Parent root = FXMLLoader.load(getClass().getResource("/fxml/ViewerPane.fxml")); // Load the fxml pane
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add("/css/main.css"); // Add the css
+			stage = primaryStage;
+			stage.sizeToScene();
+			stage.setResizable(false);
+			// Add logo to the GUI
+			stage.getIcons().add(new Image(Scheduler.class.getResourceAsStream("/images/logo-icon.png")));
+			stage.setScene(scene);
+			//stage.setResizable(false);
+			stage.setTitle("Para11el | Task Scheduler | " + _filename);
+			stage.setOnCloseRequest((event) -> {
+				boolean response = ExitWindow.display(stage);
+				if(response) stage.close();
+				event.consume();
+			});
 
-            stage.show();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
+			stage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    @Override
-    public void stop(){
-        Platform.exit();
-        System.exit(0);
-    }
+	@Override
+	public void stop(){
+		Platform.exit();
+		System.exit(0);
+	}
 
 }
