@@ -6,7 +6,7 @@
 
 
 ## Para11el Task Scheduler 
-Welcome to the official page from the Para11el Task Scheduler Project!
+Welcome to the official page for the Para11el Task Scheduler Project!
 
 **Using AI and parallel processing power to solve difficult scheduling problem**
 
