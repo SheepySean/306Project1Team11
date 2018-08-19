@@ -280,8 +280,6 @@ public class AStarParallelIT {
 		Graph outputGraph = _aStarParallel.getGraph(_parallelSchedule);
 
 		outputGraph.nodes().forEach((node) -> {
-			//Each node should have three attributes
-			assertEquals(3, node.getAttributeCount());
 			
 			//Check that each node has the attributes we expect
 			assertTrue(node.getAttribute("Weight")!=null);
@@ -290,8 +288,6 @@ public class AStarParallelIT {
 		});
 		
 		outputGraph.edges().forEach((edge) -> {
-			//Each edge should have one attribute
-			assertEquals(1, edge.getAttributeCount());
 			
 			//Check that each edge has only the Weight attribute
 			assertTrue(edge.getAttribute("Weight")!=null);
@@ -322,8 +318,6 @@ public class AStarParallelIT {
 
 		//Iterate through the node set of the output graph
 		outputGraph.nodes().forEach((node) -> {
-			//Each node should have three attributes
-			assertEquals(3, node.getAttributeCount());
 			
 			//Check that each node has the attributes we expect
 			assertTrue(node.getAttribute("Weight")!=null);
@@ -333,8 +327,6 @@ public class AStarParallelIT {
 		
 		//Iterate through the edge set of the output graph 
 		outputGraph.edges().forEach((edge) -> {
-			//Each edge should have one attribute
-			assertEquals(1, edge.getAttributeCount());
 			
 			//Check that each edge has only the Weight attribute
 			assertTrue(edge.getAttribute("Weight")!=null);
