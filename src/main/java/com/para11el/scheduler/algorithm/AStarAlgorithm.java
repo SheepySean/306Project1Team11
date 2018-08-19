@@ -111,6 +111,12 @@ public class AStarAlgorithm implements Algorithm, Traversable {
 				}
 				// Check if solution is complete
 				if (state.isComplete(_graph.nodes())) {
+					_graph.nodes().forEach(node -> {
+						node.removeAttribute("ui.class");
+						node.enteringEdges().forEach((edge) -> {
+							edge.removeAttribute("ui.class");
+						});
+					});
 					ViewerPaneController.toggleTimer(false);
 					ViewerPaneController.setLabelFinish();
 					return state.getSchedule();
@@ -143,7 +149,7 @@ public class AStarAlgorithm implements Algorithm, Traversable {
 				State newState = _fjp.invoke(aStarStateTask);
 				newStates.add(newState);
 			}
-			node.edges().forEach(edge -> {
+			node.enteringEdges().forEach(edge -> {
 				edge.setAttribute("ui.class", "free");
 			});
 			node.setAttribute("ui.class", "free");
@@ -158,7 +164,7 @@ public class AStarAlgorithm implements Algorithm, Traversable {
 			}
 
 		}
-		state.getNode().edges().forEach(edge -> {
+		state.getNode().enteringEdges().forEach(edge -> {
 			edge.removeAttribute("ui.class");
 		});
 		state.getNode().removeAttribute("ui.class");
