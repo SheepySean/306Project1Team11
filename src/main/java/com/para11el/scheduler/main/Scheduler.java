@@ -280,6 +280,7 @@ public class Scheduler extends Application {
 	 * Remove any parent directories from a file path
 	 * @param path File path to a file
 	 * @return The name of the file without directories
+	 * 
 	 * @author Sean Oldfield
 	 */
 	private static String getFilenameNoDirectory(String path) {
@@ -310,7 +311,10 @@ public class Scheduler extends Application {
 	}
 
 
-
+	/**
+	 * Starts the visualisation
+	 * @param primaryStage Stage to set view on
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		final Stage stage;
@@ -341,6 +345,9 @@ public class Scheduler extends Application {
 		}
 	}
 
+	/**
+	 * Stops the visualisation
+	 */
 	@Override
 	public void stop(){
 		Platform.exit();
