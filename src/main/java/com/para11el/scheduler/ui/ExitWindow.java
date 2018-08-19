@@ -18,8 +18,6 @@ import javafx.geometry.*;
 
 public class ExitWindow {
 
-    private static boolean _answer;
-
     public static boolean display(Stage stage) {
         Stage dialog = new Stage(); // New stage
         dialog.setResizable(false);

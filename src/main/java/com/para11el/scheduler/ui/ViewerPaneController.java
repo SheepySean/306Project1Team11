@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -37,6 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ViewerPaneController {
 	private static final String WIKI_LINK = "https://github.com/SheepySean/306Project1Team11/wiki/Visualisation";
 
+
     private static FxViewer _viewer;
     private static List<Task> _schedule;
     private Camera _camera;
@@ -47,10 +49,12 @@ public class ViewerPaneController {
     private static boolean _timeout = false;
     private static boolean _noTimer = false;
 
-    private static String _inputFile;
     private static String _outputFile;
     private static String _processors;
     private static String _cores;
+    private static String _algorithm;
+    private static String _timeoutDuration;
+
     private static long _startTime;
     private static int _criticalLength;
     private static boolean _fillGreen = false;
@@ -71,9 +75,6 @@ public class ViewerPaneController {
 	private Label timerLabel;
 
 	@FXML
-	private Text inputFileText;
-
-	@FXML
 	private Text processorsText;
 
 	@FXML
@@ -81,6 +82,12 @@ public class ViewerPaneController {
 
 	@FXML
 	private Text outputFileText;
+
+    @FXML
+    private Text algroithmText;
+
+    @FXML
+    private Text timeoutText;
 
 	@FXML
 	private TilePane colLabelTile;
@@ -125,23 +132,6 @@ public class ViewerPaneController {
 
         this.updateSchedule(_schedule);
 
-		// set cell: processor, start time, length of time, colour (string)
-/*		setCell("a", 2, 3, 2, generateColours());
-		setCell("b", 4, 0, 7, generateColours());
-
-		setCell("b2", 4, 7, 7, generateColours());
-
-		setCell("c", 3, 18, 12, generateColours());
-
-		setCell("b", 1, 0, 1, generateColours());
-
-		setCell("b", 1, 1, 1, generateColours());
-
-		setCell("b", 1, 7, 4, generateColours());*/
-
-		//setCell("e", 6, 7, 4, generateColours());
-
-
         // Embed GraphStream graph into the GUI
         _viewer.addDefaultView(false, _viewer.newDefaultGraphRenderer());
         _viewer.enableAutoLayout();
@@ -153,10 +143,12 @@ public class ViewerPaneController {
         _camera = _viewer.getDefaultView().getCamera();
         graphContainer.getChildren().add(viewPanel); // Add it to its container
 
-        inputFileText.setText(_inputFile);
         coresText.setText(_cores);
         processorsText.setText(_processors);
         outputFileText.setText(_outputFile);
+        timeoutText.setText(_timeoutDuration + " seconds");
+        algroithmText.setText(_algorithm);
+
 
 
         // Set the timer for elapsing the program run time
@@ -349,16 +341,14 @@ public class ViewerPaneController {
      * @author Sean Oldfield
      */
     public void setParameters(List<String> parameters) {
-        _inputFile = parameters.get(0);
         _processors = parameters.get(1);
-        if(parameters.get(2).equals("0")) {
-            _cores = "Not Set";
-        } else {
-            _cores = parameters.get(2);
-        }
+        _cores = parameters.get(2);
         _outputFile = parameters.get(3);
         _startTime = Long.parseLong(parameters.get(4));
         _criticalLength = Integer.parseInt(parameters.get(5));
+        _algorithm = Boolean.parseBoolean(parameters.get(6)) ? "A*" : "DFS";
+        _timeoutDuration = parameters.get(7).equals("0") ? "Not Set" : parameters.get(7);
+
 
 
     }

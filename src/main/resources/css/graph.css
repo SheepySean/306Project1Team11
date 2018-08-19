@@ -1,8 +1,8 @@
-graph { fill-color: white; }
+graph { fill-color: #cecece;  }
 
 
 node {
-	fill-color: #01233f;
+	fill-color: #f7f7f7;
 	text-alignment: above;
 	text-color: white;
 	text-style: bold;
@@ -11,17 +11,14 @@ node {
 	text-background-color: #26a6bd;
 	text-padding: 10px, 10px;
 	text-offset: 20px, 0px;
+	shadow-mode: gradient-radial; shadow-width: 10px; shadow-color: #01233f, #cecece; shadow-offset: 0px;
 }
 
 edge {
 	fill-color: #139389;
 	text-alignment: above;
-	text-color: #01233f;
+	text-color: #282828;
 	text-style: bold;
+	arrow-size: 10px, 5px;
 
-}
-node#C {text-alignment:above; text-offset: 0px, -5px;}
-
-node.some {
-	stroke-color: green;
 }

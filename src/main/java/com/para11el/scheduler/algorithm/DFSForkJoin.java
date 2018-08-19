@@ -31,7 +31,6 @@ public class DFSForkJoin extends RecursiveAction {
 	 * @param graph
 	 * @param processors
 	 * @param cores
-	 * @param minimumTime
 	 * @param solutionList
 	 * 
 	 * @author Tina Chen
@@ -52,6 +51,7 @@ public class DFSForkJoin extends RecursiveAction {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void compute() {
+		ViewerPaneController.setStatus("Using DFS to expand states in the schedule");
 		// Finding available nodes to add
 		ArrayList<Node> availableNodes = availableNode(_solutionList);
 		ArrayList<Task> private_solutionList = (ArrayList<Task>)_solutionList.clone();
