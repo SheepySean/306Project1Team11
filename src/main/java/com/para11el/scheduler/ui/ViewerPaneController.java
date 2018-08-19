@@ -58,7 +58,11 @@ public class ViewerPaneController {
     private static long _startTime;
     private static int _criticalLength;
     private static boolean _fillGreen = false;
+    private static int _nodeCount;
 
+    private static ArrayList<String> _colourArray = new ArrayList<String>();
+    private static Map<String, String> _colourMap = new HashMap<String, String>();
+    private static int _colourCounter = 0;
 
 	private static int _cellWidth;
 	private static int _cellHeight = 20;
@@ -128,6 +132,8 @@ public class ViewerPaneController {
 
         initialisePane(_criticalLength);
         initialiseLabel(_criticalLength);
+
+        generateBlue();
 
 
         this.updateSchedule(_schedule);
@@ -346,8 +352,10 @@ public class ViewerPaneController {
         _outputFile = parameters.get(3);
         _startTime = Long.parseLong(parameters.get(4));
         _criticalLength = Integer.parseInt(parameters.get(5));
-        _algorithm = Boolean.parseBoolean(parameters.get(6)) ? "A*" : "DFS";
-        _timeoutDuration = parameters.get(7).equals("0") ? "Not Set" : parameters.get(7);
+        _nodeCount = Integer.parseInt(parameters.get(6));
+        _algorithm = Boolean.parseBoolean(parameters.get(7)) ? "A*" : "DFS";
+        _timeoutDuration = parameters.get(7).equals("0") ? "Not Set" : parameters.get(8);
+
 
 
 
@@ -477,12 +485,9 @@ public class ViewerPaneController {
                 setCell(task.getNode().getId(),
                         task.getProcessor(),
                         task.getStartTime(),
-                        task.getWeight(),
-                        generateColours());
+                        task.getWeight());
             }
         }
-
-
     }
 
 
@@ -493,11 +498,10 @@ public class ViewerPaneController {
 	 * @param processor The processor the task is scheduled on
 	 * @param startTime Start time of the task
 	 * @param length The length of the task
-	 * @param colour The colour to render the cell
 	 *
 	 * @author Tina Chen, Sean Oldfield
 	 */
-	private static void setCell(String label, int processor, int startTime, int length, String colour) {
+	private static void setCell(String label, int processor, int startTime, int length) {
 
 		int processorNum = Integer.parseInt(_processors);
 		int cell = (processor + processorNum * startTime) - 1 + processorNum;
@@ -515,15 +519,22 @@ public class ViewerPaneController {
                     _tile.getChildren().set(cell, nodeLabel);
                 }
 
-				_tile.getChildren().get(cell).setStyle(colour);
+                // Assign a colour to a node if not already done so
+                String colourValue = _colourMap.get(label);
+                if (colourValue == null) {
+                	_colourMap.put(label, _colourArray.get(_colourCounter));
+                	_colourCounter++;
+                }
+
+				_tile.getChildren().get(cell).setStyle(_colourMap.get(label));
 
 				// If cell background is dark, colour label text white
-				if (isDark(colour)) {
+				if (isDark(_colourMap.get(label))) {
 					((Label)_tile.getChildren().get(cell)).setTextFill(Paint.valueOf("#FFFFFF"));
 				}
 			}
 
-			_tile.getChildren().get(cell).setStyle("-fx-background-color: " + colour);
+			_tile.getChildren().get(cell).setStyle("-fx-background-color: " + _colourMap.get(label));
 			cell = cell + processorNum;
 		}
 	}
@@ -538,9 +549,9 @@ public class ViewerPaneController {
 
 		Random rand = new Random();
 
-		float r = rand.nextFloat();
+		float r = rand.nextFloat() / 3f;
 		float g = rand.nextFloat() / 2f;
-		float b = rand.nextFloat() / 2f;
+		float b = rand.nextFloat();
 
 		java.awt.Color randomColor = new java.awt.Color(r, g, b);
 		String hex = Integer.toHexString(randomColor.getRGB() & 0xffffff);
@@ -551,6 +562,39 @@ public class ViewerPaneController {
 		hex = "#" + hex;
 
 		return hex;
+
+	}
+
+	/**
+	 * Generates a random shade of blue and stores it in an
+	 * ArrayList<String>
+	 *
+	 * @author Tina Chen
+	 */
+	private static void generateBlue() {
+
+		// The Para11el theme standard blue
+		String blue = "26a6bd";
+
+		int rgb = Integer.parseInt(blue, 16);
+
+		Color c = new Color(rgb);
+		float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
+		hsb[2] = (float) 0.9;
+
+		// for changing the shade of blue
+		float shade = (float) (0.30/_nodeCount);
+
+		for (int i = 0; i < _nodeCount; i++) {
+
+			float[] colour = hsb;
+			colour[2] = hsb[2] - i*shade;
+
+			int newColour = Color.HSBtoRGB(colour[0], colour[1], colour[2]);
+			String hex = String.format("#%06X", (0xFFFFFF & newColour));
+
+			_colourArray.add(hex);
+		}
 	}
 
 	/**
