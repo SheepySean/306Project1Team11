@@ -7,7 +7,7 @@ import org.graphstream.graph.Node;
 /**
  * Abstract interface to represent the general concept of a scheduling algorithm. 
  * 
- * @author Jessica Alcantara
+ * @author Jessica Alcantara, Sean Oldfield
  * 
  */
 public interface Algorithm {
@@ -40,6 +40,11 @@ public interface Algorithm {
 		return getGSGraph();
 	}
 
+    /**
+     * Method signature for getting a corresponding graph associated with
+     * an Algorithm
+     * @return GraphStream graph
+     */
 	Graph getGSGraph();
 
 }
