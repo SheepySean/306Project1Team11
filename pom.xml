@@ -12,26 +12,18 @@
     <dependencies>
         <!-- GraphStream -->
         <dependency>
-            <groupId>org.graphstream</groupId>
+            <groupId>com.github.graphstream</groupId>
             <artifactId>gs-core</artifactId>
-            <version>1.3</version>
-            <optional>false</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.graphstream</groupId>
-            <artifactId>gs-algo</artifactId>
-            <version>1.3</version>
-            <optional>false</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.graphstream</groupId>
-            <artifactId>gs-ui</artifactId>
-            <version>1.3</version>
-            <optional>false</optional>
+            <version>2.0-alpha</version>
         </dependency>
         <dependency>
             <groupId>com.github.graphstream</groupId>
             <artifactId>gs-ui-javafx</artifactId>
+            <version>2.0-alpha</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.graphstream</groupId>
+            <artifactId>gs-algo</artifactId>
             <version>2.0-alpha</version>
         </dependency>
         <!-- JUnit. -->
@@ -47,6 +39,13 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.7</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.stefanbirkner/system-rules -->
+		<dependency>
+    		<groupId>com.github.stefanbirkner</groupId>
+    		<artifactId>system-rules</artifactId>
+    		<version>1.2.0</version>
+    		<scope>test</scope>
+		</dependency>
     </dependencies>
     <build>
         <plugins>

@@ -15,6 +15,8 @@ public class GraphFileManager {
 
     /**
      * Constructor for GraphFileManager
+     * 
+     * @author Sean Oldfield
      */
     public GraphFileManager(){
     }
@@ -25,10 +27,11 @@ public class GraphFileManager {
      * @param graphID Name of the generated graph for titling purposes
      * @return Graph made from the file
      * @throws IOException Thrown if the graph file cannot be read
+     * 
      * @author Sean Oldfield
      */
     public Graph readGraphFile(String filename, String graphID) throws IOException {
-        Graph g = new SingleGraph(graphID);
+        Graph g = new SingleGraph(graphID, false,false);
         FileSource fs = new FileSourceDOT();
 
         fs.addSink(g);
@@ -40,12 +43,13 @@ public class GraphFileManager {
      * Write a specified graph to an output .dot file
      * @param filename Name of the output file
      * @param graph The graph to be written to the output file
-     * @param isDigraph True if the graph is a _digraph, false otherwise
+     * @param isDigraph True if the graph is a digraph, false otherwise
      * @throws IOException Thrown if the graph file cannot be written
+     * 
      * @author Sean Oldfield
      */
     public void writeGraphFile(String filename, Graph graph, boolean isDigraph) throws IOException {
-        CustomFileSinkDot fso = new CustomFileSinkDot(true, graph.getId());
+        CustomFileSinkDOT fso = new CustomFileSinkDOT(isDigraph, graph.getId());
         fso.writeAll(graph, filename); // Write to .dot file
     }
 }

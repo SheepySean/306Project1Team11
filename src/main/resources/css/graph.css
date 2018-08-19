@@ -1,0 +1,39 @@
+graph { fill-color: #cecece;  }
+
+
+node {
+	size-mode: fit;
+	fill-color: #f7f7f7;
+	text-alignment: above;
+	text-color: white;
+	text-style: bold;
+	text-size: 14px;
+	text-background-mode: rounded-box;
+	text-background-color: #26a6bd;
+	text-padding: 10px, 10px;
+	text-offset: 20px, 0px;
+	shadow-mode: gradient-radial; shadow-width: 10px; shadow-color: #01233f, #cecece; shadow-offset: 0px;
+}
+
+node.promising {
+	fill-color: red;
+	size: 20px;
+}
+node.free {
+	fill-color: orange;
+
+}
+
+edge.free {
+	fill-color: orange;
+	size: 3px;
+}
+
+edge {
+	fill-color: #139389;
+	text-alignment: above;
+	text-color: #282828;
+	text-style: bold;
+	arrow-size: 10px, 5px;
+
+}

@@ -1,5 +1,6 @@
 package com.para11el.scheduler.algorithm;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.graphstream.graph.Node;
 
 /**
@@ -15,10 +16,9 @@ public class Task {
 	
 	/**
 	 * Task constructor
-	 * 
-	 * @param node a task in input graph
-	 * @param startTime the start time of a scheduled task
-	 * @param processor the processor a task is scheduled on
+	 * @param node Node task in input graph
+	 * @param startTime Start time of a scheduled task
+	 * @param processor Processor a task is scheduled on
 	 * 
 	 * @author Tina Chen, Rebekah Berriman
 	 */
@@ -28,6 +28,11 @@ public class Task {
 		_processor = processor;
 	}
 
+	/**
+	 * @return Node from Task object
+	 * 
+	 * @author Tina Chen
+	 */
 	public Node getNode() {
 		return _node;
 	}
@@ -53,8 +58,72 @@ public class Task {
 	}
 	
 	/**
-	 * Returns a string representation of a Task object
+	 * Returns the weight of a task
+	 * @return Weight of task
 	 * 
+	 * @author Jessica Alcantara
+	 */
+	public int getWeight() {
+		int weight = ((Number)_node.getAttribute("Weight")).intValue();
+		return weight;
+	}
+	
+	/**
+	 * Returns the finish time of a task
+	 * @return Finish time of task
+	 * 
+	 * @author Jessica Alcantara
+	 */
+	public int getFinishTime() {
+		int weight = ((Number)_node.getAttribute("Weight")).intValue();
+		int finishTime = weight + _startTime;
+		return finishTime;
+	}
+	
+	/**
+	 * Checks whether two Tasks are equal. Tasks are equal if the node has
+	 * the same ID and if the start time is equal
+	 *  @return boolean if two tasks are equal
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * @author Jessica Alcantara
+	 */
+	@Override
+	public boolean equals(Object o){
+		// Check instance
+		if (!(o instanceof Task)) {
+			return false;
+		}
+		// Check properties are equal
+		if (_node.getId().equals(((Task)o).getNode().getId())
+				&& _startTime == ((Task)o).getStartTime()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	 /**
+	  * Returns a hashcode value for the Task and computes it by the
+	  * start time and node ID
+	  * @return int hashcode value
+	  * 
+	  * @see java.lang.Object#hashCode()
+	  * @author Jessica Alcantara
+	  */
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 31). 
+	            append(_startTime).
+	            append(_node.getId().hashCode()).
+	            toHashCode();
+	}
+	
+	/**
+	 * Returns a string representation of a Task object
+	 * @return String representing task object
+	 * 
+	 * @see java.lang.Object#toString()
 	 * @author Tina Chen
 	 */
 	@Override

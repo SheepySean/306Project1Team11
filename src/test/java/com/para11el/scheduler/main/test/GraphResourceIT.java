@@ -7,9 +7,10 @@ import com.para11el.scheduler.graph.GraphViewManager;
 import com.para11el.scheduler.main.Scheduler;
 import org.graphstream.graph.Graph;
 import org.junit.*;
+import org.junit.contrib.java.lang.system.ExpectedSystemExit;
+import org.junit.contrib.java.lang.system.internal.CheckExitCalled;
 
 import java.awt.*;
-import java.util.Arrays;
 
 /**
  * Simple JUnit test to test the behaviour of the Scheduler.
@@ -18,14 +19,19 @@ import java.util.Arrays;
  */
 public class GraphResourceIT {
 	private static GraphFileManager _fileManager;
-	private GraphViewManager _viewManager;
+	
+	@Rule
+	public final ExpectedSystemExit exit = ExpectedSystemExit.none();
 	
 	@BeforeClass
 	public static void createManagers() {
 	    _fileManager = new GraphFileManager();
 
 	}
-	
+
+    /**
+     * Test the graph loads as expected
+     */
 	@Test
     public void testGraphLoad() {
 	    try {
@@ -42,6 +48,9 @@ public class GraphResourceIT {
         }
     }
 
+    /**
+     * Test the graph writes to a file
+     */
     @Test
     public void testGraphWrite() {
         try {
@@ -57,35 +66,19 @@ public class GraphResourceIT {
         }
     }
 
-    @Test
-    public void testViewLabelUnlabel() {
-	    try {
-            Graph g = _fileManager.readGraphFile(GraphConstants.GRAPH_DIRECTORY.getValue() +
-                    "/" + GraphConstants.SAMPLE_INPUT_FILE.getValue() +
-                    GraphConstants.FILE_EXT.getValue(), "Test");
-            _viewManager = new GraphViewManager(g);
-            _viewManager.labelGraph();
-            assertTrue(g.getNode(0).hasAttribute("ui.label"));
-            _viewManager.unlabelGraph();
-            assertFalse(g.getNode(0).hasAttribute("ui.label"));
-        } catch (Exception e) {
-	        e.printStackTrace();
-	        fail();
-        }
-    }
-
     /**
      * Ensure the program runs as expected
      */
     @Test
     public void testSchedulerRun() {
-	    try {
+    	try {
 	        String[] someArgs = {"example.dot", "4"};
-            Scheduler.main(someArgs);
+	        Scheduler.main(someArgs);
+	        exit.expectSystemExitWithStatus(1);
         } catch (HeadlessException e) {
+        } catch (CheckExitCalled e) {
         } catch (Exception e) {
-	        e.printStackTrace();
-	        fail();
+        	fail();
         }
     }
 }
