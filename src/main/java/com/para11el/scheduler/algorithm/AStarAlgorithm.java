@@ -108,9 +108,6 @@ public class AStarAlgorithm implements Algorithm{
 			if(ViewerPaneController.isRunning()) {
 				ViewerPaneController.update();
 			}
-/*			try{
-				TimeUnit.MILLISECONDS.sleep(100);
-			} catch(Exception e) {}*/
 			// Check if solution is complete
 			if (state.isComplete(_graph.nodes())) {
 				ViewerPaneController.toggleTimer(false);
