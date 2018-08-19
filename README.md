@@ -23,8 +23,7 @@ The project should be able to run on all operating systems namely **Linux**.
 The project requires:
 ```
 GraphStream (version 2.0)
-Java 1.8 (inluding JavaFX 8)
-Parallel Task
+Java 1.8 (including JavaFX 8)
 ```
 
 ### Additional Requirements
@@ -39,7 +38,7 @@ Please see the Wiki Resources by following the following links:
 
 ## Running the Code (For a User)
 
-With Java (plus dependant packages) installed you can run the project code. 
+With Java (plus dependent packages) installed you can run the project code. 
 
 ### With the .jar file
 
@@ -57,7 +56,7 @@ Optional arguments are:
 * `-v` visualise the search (opens a GUI which will allow you to view the input graph, the optimal schedule and the current state of the search)
 * `o FILENAME` specify the filename of the output file to be FILENAME 
 * `-t SECONDS` time out the search in SECONDS, if a solution has not been found, no output file will be written
-* `-d` search for the optional solution using DFS Algorithm (unable to specify any other additional arguments alongside -d)
+* `-d` search for the optional solution using DFS Algorithm (can only specify -p as an additional argument alongside -d)
 
 By default, Para11el Task Scheduler will run sequentially, using an A* Algorithm with no visualisation and the output file will be named INPUT-output.dot (where INPUT is the name of the input graph).
 
@@ -104,10 +103,6 @@ The projects folder structure is as follows:
 |  |__Nodes_7_OutTree.dot
 |  |__Nodes_8_Random.dot
 |  |__Nodes_9_SeriesParallel.dot
-|  |__test_graph_1_input.dot
-|  |__test_graph_2_input.dot
-|  |__test_graph_3_input.dot
-|  |__test_graph_4_input.dot
 |  
 |__lib (Libraries folder for any additional project libraries)
 |  |__ext (External Libraries)
@@ -126,13 +121,19 @@ The projects folder structure is as follows:
 |  |  |     |__para11el
 |  |  |        |__scheduler (Main project package)
 |  |  |           |__algorithm
-|  |  |           |  |__Algorithm.java
 |  |  |           |  |__AStarAlgorithm.java
-|  |  |           |  |__CostFunctionManager.java  
-|  |  |           |  |__DFSAlgorithm.java
+|  |  |           |  |__AStarStateTask.java
+|  |  |           |  |__Algorithm.java
+|  |  |           |  |__CostFunctionManager.java 
+|  |  |           |  |__DFSForkJoin.java
+|  |  |           |  |__DFSInitialiser.java
+|  |  |           |  |__NodeManager.java
+|  |  |           |  |__OptimalSchedule.java
+|  |  |           |  |__Parallellised.java
 |  |  |           |  |__PruningManager.java
 |  |  |           |  |__State.java
 |  |  |           |  |__Task.java  
+|  |  |           |  |__Traversable.java
 |  |  |           |__graph
 |  |  |           |  |__CustomFileSinkDOT.java
 |  |  |           |  |__GraphConstants.java
@@ -142,12 +143,21 @@ The projects folder structure is as follows:
 |  |  |           |  |__ParameterLengthException.java
 |  |  |           |  |__ParameterType.java
 |  |  |           |  |__Scheduler.java
+|  |  |           |  |__TimeOut.java
 |  |  |           |__ui
-|  |  |              |__Viewer.java
+|  |  |              |__ExitPaneController.java
+|  |  |              |__ExitPaneController.java
 |  |  |              |__ViewerPaneController.java
 |  |  |
 |  |  |__resources (Other External Resources)
-|  |     |__...
+|  |     |__css
+|  |     |  |__graph.css
+|  |     |  |__main.css
+|  |     |__fxml
+|  |     |  |__ExitPane.fxml
+|  |     |  |__ViewerPane.fxml
+|  |     |__images
+|  |     |  |__logo-icon.png
 |  |
 |  |__test (Test files)
 |     |__java
@@ -156,10 +166,18 @@ The projects folder structure is as follows:
 |              |__scheduler 
 |              |  |__algorithm
 |                 |  |__test
-|                 |     |__AStarAlgorithmIT.java
+|                 |     |__AStarAlgorithmHelperIT.java
+|                 |     |__AStarParallelIT.java
+|                 |     |__AStarSequentialIT.java
+|                 |     |__AStarStateTaskIT.java
 |                 |     |__CostFunctionManagerIT.java
-|                 |     |__DFSAlgorithmIT.java
+|                 |     |__DFSParallelIT.java
+|                 |     |__DFSSequentialIT.java
 |                 |     |__MockNode.java
+|                 |     |__ModelClassIT.java
+|                 |     |__NodeManagerIT.java
+|                 |     |__PruningManagerIT.java
+|                 |     |__SolutionValidity.java
 |                 |     |__SolutionValidityIT.java
 |                 |     |__TestGraphManager.java
 |                 |__main
@@ -168,20 +186,21 @@ The projects folder structure is as follows:
 |
 |__.gitignore
 |
-|__img.png (Team logo)
-|
-|__pom.xml (Maven file for building the project)
+|__.travis.yml
 |
 |__Project1Plan_Team11.pdf (First Milestone Deliverable)
 |
 |__README.md (You Are Here)
+|
+|__img.png (Team logo)
+|
+|__pom.xml (Maven file for building the project)
+
 ```
 
 ## Helpful Links
 
 *  [GraphStream](http://graphstream-project.org/) - GraphStream project for graph management and visualisation. Simple tutorials can be found [here](http://graphstream-project.org/doc/Tutorials/)
-*  [Parallel Task](http://parallel.auckland.ac.nz/ParallelIT/index.html) - Parallel IT -- True Object Oriented Parallelisation. Simple tutorials of Parallel Task can be found [here](http://parallel.auckland.ac.nz/ParallelIT/PT_Examples.html)
-
 
 ## authors
 
