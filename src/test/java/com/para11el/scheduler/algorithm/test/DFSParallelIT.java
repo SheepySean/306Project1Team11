@@ -330,7 +330,6 @@ public class DFSParallelIT {
 	 *  - Processor
 	 *  and that the output graph only has one label for each edge:
 	 *  - Weight
-	 *  
 	 *  @author Rebekah Berriman, Holly Hagenson
 	 */
 	@Test 

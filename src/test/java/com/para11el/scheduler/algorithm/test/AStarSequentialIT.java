@@ -249,7 +249,6 @@ public class AStarSequentialIT {
 	 *  - Processor
 	 *  and that the output graph only has one label for each edge:
 	 *  - Weight
-	 *  
 	 *  @author Holly Hagenson
 	 */
 	@Test 
