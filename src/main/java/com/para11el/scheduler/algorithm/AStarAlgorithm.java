@@ -103,6 +103,7 @@ public class AStarAlgorithm implements Algorithm, Traversable {
 			if (!ViewerPaneController.getTimeout()) {
 				// Pop the most promising state
 				State state = _states.poll();
+				state.getNode().setAttribute("ui.class", "promising");
 				ViewerPaneController.setStatus("Using A* to expand states in the schedule");
 				ViewerPaneController.getInstance().setSchedule(state.getSchedule());
 				if(ViewerPaneController.isRunning()) {
@@ -142,6 +143,10 @@ public class AStarAlgorithm implements Algorithm, Traversable {
 				State newState = _fjp.invoke(aStarStateTask);
 				newStates.add(newState);
 			}
+			node.edges().forEach(edge -> {
+				edge.setAttribute("ui.class", "free");
+			});
+			node.setAttribute("ui.class", "free");
 		}
 		
 		// Prune duplicate states
@@ -151,7 +156,12 @@ public class AStarAlgorithm implements Algorithm, Traversable {
 			if (!duplicate){
 				_states.add(s);
 			}
+
 		}
+		state.getNode().edges().forEach(edge -> {
+			edge.removeAttribute("ui.class");
+		});
+		state.getNode().removeAttribute("ui.class");
 	}
 
 	/**
