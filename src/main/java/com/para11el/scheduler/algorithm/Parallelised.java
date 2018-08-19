@@ -4,6 +4,12 @@ import org.graphstream.graph.Node;
 
 import java.util.ArrayList;
 
+/**
+ * Abstract interface to represent algorithms the can be parallelised
+ *
+ * @author Sean Oldfield
+ *
+ */
 public interface Parallelised extends Traversable {
     /**
      * Finds the earliest start time of a task on a processor with given dependencies

@@ -18,14 +18,12 @@ import org.graphstream.graph.Node;
  * 
  * @author Jessica Alcantara, Holly Hagenson
  */
-public class AStarAlgorithm implements Algorithm, Traversable{
-
+public class AStarAlgorithm implements Algorithm, Traversable {
 	/**
 	 * Comparator to sort states according to the results of the cost
 	 * function.
 	 * 
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-	 * @author Jessica Alcantara
 	 */
 	private Comparator<State> _stateComparator = new Comparator<State>() {
 		@Override
@@ -108,9 +106,9 @@ public class AStarAlgorithm implements Algorithm, Traversable{
 				ViewerPaneController.setStatus("Using A* to expand states in the schedule");
 				ViewerPaneController.getInstance().setSchedule(state.getSchedule());
 				if(ViewerPaneController.isRunning()) {
-					ViewerPaneController.update();
+					ViewerPaneController.update(); // Update the schedule view
 				}
-			// Check if solution is complete
+				// Check if solution is complete
 				if (state.isComplete(_graph.nodes())) {
 					ViewerPaneController.toggleTimer(false);
 					ViewerPaneController.setLabelFinish();

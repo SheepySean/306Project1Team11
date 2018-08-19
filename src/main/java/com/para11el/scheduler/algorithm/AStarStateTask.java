@@ -13,7 +13,7 @@ import org.graphstream.graph.Node;
  * @author Jessica Alcantara, Holly Hagenson
  *
  */
-public class AStarStateTask extends RecursiveTask<State> implements Parallelised{
+public class AStarStateTask extends RecursiveTask<State> implements Parallelised {
 	
 	private static final long serialVersionUID = 1L;
 	private State _state;

@@ -2,9 +2,15 @@ package com.para11el.scheduler.algorithm;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-
 import java.util.ArrayList;
 
+/**
+ * Abstract interface to represent graphs that can be traversed for
+ * graph traversal algorithms
+ *
+ * @author Sean Oldfield
+ *
+ */
 public interface Traversable {
     /**
      * Returns a list of parent nodes of a node
