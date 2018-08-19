@@ -481,7 +481,6 @@ public class ViewerPaneController {
 
 	}
 
-
 	/**
 	 * Sets a cell with a colour and label to represent a
 	 * scheduled task
@@ -496,8 +495,9 @@ public class ViewerPaneController {
 		int processorNum = Integer.parseInt(_processors);
 		int cell = (processor + processorNum * startTime) - 1 + processorNum;
 		for (int i = 0; i < length; i++) {
-
-			if (i == 0) {  // if first cell for task, set the task label for it
+			
+			// if first cell for task, set the task label for it
+			if (i == 0) {  
 
 				// If this cell has been labelled in the past then there is no point relabelling it
 				if(_tile.getChildren().get(cell) instanceof Label) {
@@ -528,32 +528,7 @@ public class ViewerPaneController {
 			cell = cell + processorNum;
 		}
 	}
-
-	/**
-	 * Random colour generator for Schedule view
-	 * @return String value representing random hex value
-	 *
-	 * @author Tina Chen
-	 */
-	private static String generateColours() {
-		Random rand = new Random();
-
-		float r = rand.nextFloat() / 3f;
-		float g = rand.nextFloat() / 2f;
-		float b = rand.nextFloat();
-
-		java.awt.Color randomColor = new java.awt.Color(r, g, b);
-		String hex = Integer.toHexString(randomColor.getRGB() & 0xffffff);
-
-		if (hex.length() < 6) {
-			hex = "0" + hex;
-		}
-		hex = "#" + hex;
-
-		return hex;
-
-	}
-
+	
 	/**
 	 * Generates a random shade of blue and stores it in an
 	 * ArrayList<String>
@@ -614,6 +589,8 @@ public class ViewerPaneController {
 	/**
 	 * Return an instance of the GUI controller
 	 * @return an Instance of the GUI controller
+	 * 
+	 * @author Sean Oldfield
 	 */
 	public static ViewerPaneController getInstance() {
 		if(_instance == null) {
@@ -625,6 +602,8 @@ public class ViewerPaneController {
 	/**
 	 * Set the schedule to be updated
 	 * @param schedule Schedule representing the solution
+	 * 
+	 * @author Sean Oldfield
 	 */
 	public void setSchedule(List<Task> schedule) {
 		_schedule = schedule;
@@ -632,6 +611,8 @@ public class ViewerPaneController {
 
 	/**
 	 * Update the GUI
+	 * 
+	 * @author Sean Oldfield
 	 */
 	public static void update() {
 		if(_hasLoaded.get() ) {
@@ -682,6 +663,8 @@ public class ViewerPaneController {
 	/**
 	 * Return the status of the GUI running or not
 	 * @return True if the GUI is running
+	 * 
+	 * @author Sean Oldfield
 	 */
 	public static boolean isRunning() {
 		return _hasLoaded.get();
@@ -690,6 +673,8 @@ public class ViewerPaneController {
 	/**
 	 * Sets the host service
 	 * @param services HostServices to be set
+	 * 
+	 * @author Sean Oldfield
 	 */
 	public static void setHostServices(HostServices services) {
 		_hostServices = services;
@@ -698,6 +683,8 @@ public class ViewerPaneController {
 	/**
 	 * Opens the browser for the host services
 	 * @param url URI to be opened in browser
+	 * 
+	 * @author Sean Oldfield
 	 */
 	private void openBrowser(final String url) {
 		_hostServices.showDocument(url);
@@ -706,6 +693,8 @@ public class ViewerPaneController {
 	/**
 	 * Sets the status messages of the viewer pane
 	 * @param statusMessage Message to be displayed
+	 * 
+	 * @author Sean Oldfield
 	 */
 	public static void setStatus(String statusMessage) {
 		if(isRunning()) {
@@ -721,6 +710,8 @@ public class ViewerPaneController {
 	/**
 	 * Calculates the elapsed time for the label
 	 * @return String representing time elapsed
+	 * 
+	 * @author Sean Oldfield
 	 */
 	private static String calculateTimeLabel() {
 		long elapsedMillis = System.currentTimeMillis() - _startTime ;
@@ -729,7 +720,6 @@ public class ViewerPaneController {
 				((elapsedMillis % 60000) / 1000),
 				((elapsedMillis % 1000) / 10));
 	}
-
 
 	/**
 	 * Sets visualisation to be true if visualisation
