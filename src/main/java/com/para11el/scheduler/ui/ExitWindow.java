@@ -26,10 +26,12 @@ public class ExitWindow {
         dialog.initModality(Modality.APPLICATION_MODAL);
 
         try {
-            Parent root = FXMLLoader.load(ViewerPaneController.getInstance().getClass().getResource("/fxml/ExitPane.fxml")); // Load in the fxml
+            Parent root = FXMLLoader.load(ViewerPaneController.getInstance()
+            		.getClass().getResource("/fxml/ExitPane.fxml")); // Load in the fxml
             Scene dialogScene = new Scene(root);
             dialogScene.getStylesheets().add("/css/main.css"); // Add the css
-            stage.getIcons().add(new Image(ExitWindow.class.getResourceAsStream("/images/logo-icon.png")));
+            stage.getIcons().add(new Image(ExitWindow.class
+            		.getResourceAsStream("/images/logo-icon.png")));
             dialog.setScene(dialogScene);
             dialog.sizeToScene();
             ExitPaneController.setStage(dialog);

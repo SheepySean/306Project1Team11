@@ -10,9 +10,9 @@ import org.graphstream.graph.Node;
 import com.para11el.scheduler.ui.ViewerPaneController;
 
 /**
+ * Class that represents a task in DFS to be done in parallel.
  * 
  * @author Tina Chen
- *
  */
 public class DFSForkJoin extends RecursiveAction implements Parallelised {
 
@@ -27,10 +27,10 @@ public class DFSForkJoin extends RecursiveAction implements Parallelised {
 
 	/**
 	 * Constructor for DFSForkJoin
-	 * @param graph
-	 * @param processors
-	 * @param cores
-	 * @param solutionList
+	 * @param graph Input Graph
+	 * @param processors Number of processors to schedule on
+	 * @param cores Number of cores
+	 * @param solutionList Scheduled tasks in the solution
 	 * 
 	 * @author Tina Chen
 	 */
@@ -131,6 +131,12 @@ public class DFSForkJoin extends RecursiveAction implements Parallelised {
 		}
 	}
 
+	/**
+	 * Returns the GraphStream graph
+	 * @return GraphStream graph
+	 * 
+	 * @author Sean Oldfield
+	 */
 	@Override
 	public Graph getGSGraph() {
 		return _graph;

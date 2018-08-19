@@ -13,19 +13,25 @@ public class ExitPaneController {
     private static boolean _confirmed;
     private static Stage _stage;
 
+
+    /**
+     * Handles the abort visualisation action
+     * @param event Exit visualisation event
+     */
     @FXML
     void abortAction(ActionEvent event) {
         _confirmed = false;
         _stage.close();
-
-
     }
 
+    /**
+     * Handles the confirm abort visualisation action
+     * @param event Confirm exit event
+     */
     @FXML
     void confirmAction(ActionEvent event) {
         _confirmed = true;
         _stage.close();
-
     }
 
     /**

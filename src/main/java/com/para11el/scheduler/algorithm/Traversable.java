@@ -71,5 +71,8 @@ public interface Traversable {
         return available;
     }
 
+	/**
+	 * Method signature for returning the graph
+	 */
     Graph getGSGraph();
 }

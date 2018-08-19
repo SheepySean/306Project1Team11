@@ -192,6 +192,12 @@ public class AStarAlgorithm implements Algorithm, Traversable {
 	}
 
 
+	/**
+	 * Returns the graph representing scheduling problem
+	 * @return GraphStream graph
+	 * 
+	 * @author Sean Oldfield
+	 */
 	public Graph getGSGraph() {
 		return _graph;
 	}

@@ -131,7 +131,6 @@ public class ViewerPaneController {
 
 		generateBlue(); // Set the schedule view colours
 
-
 		this.updateSchedule(_schedule);
 
 		// Embed GraphStream graph into the GUI
@@ -156,8 +155,6 @@ public class ViewerPaneController {
 		}
 		algroithmText.setText(_algorithm);
 
-
-
 		// Set the timer for elapsing the program run time
 		_timer = new AnimationTimer() {
 			@Override
@@ -177,7 +174,6 @@ public class ViewerPaneController {
 		}
 
 		_hasLoaded.set(true);
-
 	}
 
 
@@ -395,7 +391,6 @@ public class ViewerPaneController {
 	 * @author Tina Chen
 	 */
 	private void setCellSize(int processors) {
-
 		int gapSize = (processors - 1)*2;
 		_cellWidth = (int)(Math.floor((300 - gapSize)/processors));
 	}
@@ -408,11 +403,10 @@ public class ViewerPaneController {
 	 * @author Tina Chen, Sean Oldfield
 	 */
 	private static void initialisePane(int num) {
-
 		Text processorLabel;
 		int processorNum = Integer.parseInt(_processors);
 
-		// label the processor columns
+		// Label the processor columns
 		for (int i = 0; i < processorNum; i++) {
 
 			// only label with processor number if over 11 processors due to lack of space
@@ -421,11 +415,10 @@ public class ViewerPaneController {
 			} else {
 				processorLabel = new Text(Integer.toString(i+1));
 			}
-
 			_tile.getChildren().add(processorLabel);
 		}
 
-		// initialise the tile panes with initial grey colour
+		// Initialise the tile panes with initial grey colour
 		for (int i = 0; i < (num)*processorNum; i++) {
 			Pane p = new Pane();
 			p.setPrefSize(_cellWidth, _cellHeight);
@@ -437,17 +430,14 @@ public class ViewerPaneController {
 	/**
 	 * Initialise the row labels to represent the time a task is
 	 * scheduled based on the critical path length of a sequential schedule
-	 *
 	 * @param num The time taken for a sequential schedule
 	 *
 	 * @author Tina Chen
 	 */
 	private static void initialiseLabel(int num) {
-
 		Label rowLabel;
 
 		for (int i = 0; i < num + 1; i++) {
-
 			// set blank row label for first row
 			if (i == 0) {
 				rowLabel = new Label("");
@@ -493,7 +483,6 @@ public class ViewerPaneController {
 
 	}
 
-
 	/**
 	 * Sets a cell with a colour and label to represent a
 	 * scheduled task
@@ -505,12 +494,12 @@ public class ViewerPaneController {
 	 * @author Tina Chen, Sean Oldfield
 	 */
 	private static void setCell(String label, int processor, int startTime, int length) {
-
 		int processorNum = Integer.parseInt(_processors);
 		int cell = (processor + processorNum * startTime) - 1 + processorNum;
 		for (int i = 0; i < length; i++) {
 
-			if (i == 0) {  // if first cell for task, set the task label for it
+			// if first cell for task, set the task label for it
+			if (i == 0) {
 
 				// If this cell has been labelled in the past then there is no point relabelling it
 				if(_tile.getChildren().get(cell) instanceof Label) {
@@ -543,39 +532,12 @@ public class ViewerPaneController {
 	}
 
 	/**
-	 * Random colour generator for Schedule view
-	 * @return String value representing random hex value
-	 *
-	 * @author Tina Chen
-	 */
-	private static String generateColours() {
-
-		Random rand = new Random();
-
-		float r = rand.nextFloat() / 3f;
-		float g = rand.nextFloat() / 2f;
-		float b = rand.nextFloat();
-
-		java.awt.Color randomColor = new java.awt.Color(r, g, b);
-		String hex = Integer.toHexString(randomColor.getRGB() & 0xffffff);
-
-		if (hex.length() < 6) {
-			hex = "0" + hex;
-		}
-		hex = "#" + hex;
-
-		return hex;
-
-	}
-
-	/**
 	 * Generates a random shade of blue and stores it in an
 	 * ArrayList<String>
 	 *
 	 * @author Tina Chen
 	 */
 	private static void generateBlue() {
-
 		// The Para11el theme standard blue
 		String blue = "26a6bd";
 
@@ -608,7 +570,6 @@ public class ViewerPaneController {
 	 * @author Tina Chen
 	 */
 	private static boolean isDark(String hex) {
-
 		String colour = hex.substring(1, hex.length());
 
 		// convert hex string to int
@@ -695,7 +656,6 @@ public class ViewerPaneController {
 		} else {
 			_fillGreen = true;
 		}
-
 	}
 
 	/**
@@ -753,9 +713,7 @@ public class ViewerPaneController {
 				(elapsedMillis / 60000), 			// Minutes
 				((elapsedMillis % 60000) / 1000),	// Seconds
 				((elapsedMillis % 1000) / 10));		// Milliseconds
-
 	}
-
 
 	/**
 	 * Sets visualisation to be true if visualisation
