@@ -60,7 +60,6 @@ public class DFSForkJoin extends RecursiveAction implements Parallelised {
 		if (!ViewerPaneController.getTimeout()) {
 
 			if (availableNodes.size() != 0) {
-
 				// Create a list of DFSForkJoin classes for subtasking
 				List<DFSForkJoin> subtasks = new ArrayList<DFSForkJoin>();
 
@@ -83,6 +82,8 @@ public class DFSForkJoin extends RecursiveAction implements Parallelised {
 
 						subtasks.add(subtask);
 					}
+
+
 				}
 				// Fork each subtask
 				for(RecursiveAction subtask : subtasks){

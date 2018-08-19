@@ -113,23 +113,6 @@ public class DFSInitialiser  implements Algorithm {
 	}
 
 	/**
-	 * Returns and labels the graph with the startTime and processor numbers of each of the
-	 * nodes for the optimal solution
-	 * @param solution Final solution
-	 * @return graph of the nodes with labels
-	 * 
-	 * @author Rebekah Berriman
-	 */
-	public Graph getGraph(ArrayList<Task> solution) {
-		for (Task task : solution) {
-			Node node = task.getNode();
-			node.setAttribute("Start", task.getStartTime());
-			node.setAttribute("Processor", task.getProcessor());
-		}
-		return _graph;
-	}
-
-	/**
 	 * Returns the GraphStream graph
 	 * @return GraphStream graph
 	 * 
