@@ -18,7 +18,7 @@ import org.graphstream.graph.Node;
  * 
  * @author Jessica Alcantara, Holly Hagenson
  */
-public class AStarAlgorithm implements Algorithm{
+public class AStarAlgorithm implements Algorithm, Traversable{
 
 	/**
 	 * Comparator to sort states according to the results of the cost
@@ -110,9 +110,6 @@ public class AStarAlgorithm implements Algorithm{
 				if(ViewerPaneController.isRunning()) {
 					ViewerPaneController.update();
 				}
-/*			try{
-				TimeUnit.MILLISECONDS.sleep(100);
-			} catch(Exception e) {}*/
 			// Check if solution is complete
 				if (state.isComplete(_graph.nodes())) {
 					ViewerPaneController.toggleTimer(false);
@@ -160,65 +157,6 @@ public class AStarAlgorithm implements Algorithm{
 	}
 
 	/**
-	 * Find the available nodes that can be scheduled given what nodes have already
-	 * been scheduled
-	 * @param scheduledTasks
-	 * @return ArrayList of available nodes
-	 *
-	 * @author Rebekah Berriman, Tina Chen
-	 */
-	public ArrayList<Node> getAvailableNodes(ArrayList<Task> scheduledTasks) {
-		ArrayList<Node> scheduledNodes =  new ArrayList<Node>();
-		ArrayList<Node> available = new ArrayList<Node>();
-
-		// Get list of scheduled nodes
-		for (Task task : scheduledTasks) {
-			scheduledNodes.add(task.getNode());
-		}
-
-		_graph.nodes().forEach((node) -> {
-			// Find nodes that have not been scheduled
-			if (!scheduledNodes.contains(node)) {
-				ArrayList<Node> parents = getParents(node);
-
-				// Add nodes with no parents to available nodes
-				if (parents.size() == 0) {
-					available.add(node);
-				// Check all the parents of the node have been scheduled
-				} else {
-					boolean availableNode = true;
-					for (Node parentNode : parents) {
-						// Node is not available if parent has not been scheduled
-						if (!scheduledNodes.contains(parentNode)) {
-							availableNode = false;
-						}
-					}
-					if (availableNode) {
-						available.add(node);
-					}
-				}
-			}
-		});
-
-		return available;
-	}
-
-	/**
-	 * Returns a list of parent nodes of a node
-	 * @param node Node to find parents of
-	 *
-	 * @author Tina Chen
-	 */
-	public ArrayList<Node> getParents(Node node) {
-		ArrayList<Node> parents = new ArrayList<Node>();
-		node.enteringEdges().forEach((edge) -> {
-			parents.add(edge.getSourceNode());
-		});
-
-		return parents;
-	}
-
-	/**
 	 * Calculates the sum of weights of all nodes in the graph
 	 * @param nodes Collection of nodes in the graph
 	 * @return int total of node weights
@@ -255,20 +193,8 @@ public class AStarAlgorithm implements Algorithm{
 		return _states;
 	}
 
-	/**
-	 * Returns and labels the graph with the startTime and processor numbers of each of the
-	 * nodes for the optimal solution
-	 * @param solution Final solution
-	 * @return graph of the nodes with labels
-	 *
-	 * @author Rebekah Berriman
-	 */
-	public Graph getGraph(ArrayList<Task> solution) {
-		for (Task task : solution) {
-			Node node = task.getNode();
-			node.setAttribute("Start", task.getStartTime());
-			node.setAttribute("Processor", task.getProcessor());
-		}
+
+	public Graph getGSGraph() {
 		return _graph;
 	}
 }
