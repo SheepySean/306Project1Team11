@@ -2,10 +2,6 @@ package com.para11el.scheduler.ui;
 
 import com.para11el.scheduler.algorithm.Task;
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -14,7 +10,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -29,12 +24,17 @@ import org.graphstream.ui.layout.springbox.implementations.LinLog;
 import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.camera.Camera;
 
-
 import java.awt.Color;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
+/**
+ * 
+ * Controller class for the Viewer Pane.
+ * 
+ * @author Sean Oldfield, Tina Chen
+ *
+ */
 public class ViewerPaneController {
 	private static final String WIKI_LINK = "https://github.com/SheepySean/306Project1Team11/wiki/Visualisation";
 
@@ -117,8 +117,6 @@ public class ViewerPaneController {
 	 */
 	@FXML
 	public void initialize() {
-
-
 		_instance = getInstance();
 		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
@@ -134,7 +132,6 @@ public class ViewerPaneController {
 		initialiseLabel(_criticalLength);
 
 		generateBlue();
-
 
 		this.updateSchedule(_schedule);
 
@@ -159,8 +156,6 @@ public class ViewerPaneController {
 		}
 		algroithmText.setText(_algorithm);
 
-
-
 		// Set the timer for elapsing the program run time
 		_timer = new AnimationTimer() {
 			@Override
@@ -177,7 +172,6 @@ public class ViewerPaneController {
 			_timerLabel.setTextFill(Paint.valueOf("#00e500"));
 		}
 		_hasLoaded.set(true);
-
 	}
 
 
@@ -395,7 +389,6 @@ public class ViewerPaneController {
 	 * @author Tina Chen
 	 */
 	private void setCellSize(int processors) {
-
 		int gapSize = (processors - 1)*2;
 		_cellWidth = (int)(Math.floor((300 - gapSize)/processors));
 	}
@@ -408,11 +401,10 @@ public class ViewerPaneController {
 	 * @author Tina Chen, Sean Oldfield
 	 */
 	private static void initialisePane(int num) {
-
 		Text processorLabel;
 		int processorNum = Integer.parseInt(_processors);
 
-		// label the processor columns
+		// Label the processor columns
 		for (int i = 0; i < processorNum; i++) {
 
 			// only label with processor number if over 11 processors due to lack of space
@@ -421,11 +413,10 @@ public class ViewerPaneController {
 			} else {
 				processorLabel = new Text(Integer.toString(i+1));
 			}
-
 			_tile.getChildren().add(processorLabel);
 		}
 
-		// initialise the tile panes with initial grey colour
+		// Initialise the tile panes with initial grey colour
 		for (int i = 0; i < (num)*processorNum; i++) {
 			Pane p = new Pane();
 			p.setPrefSize(_cellWidth, _cellHeight);
@@ -437,17 +428,14 @@ public class ViewerPaneController {
 	/**
 	 * Initialise the row labels to represent the time a task is
 	 * scheduled based on the critical path length of a sequential schedule
-	 *
 	 * @param num The time taken for a sequential schedule
 	 *
 	 * @author Tina Chen
 	 */
 	private static void initialiseLabel(int num) {
-
 		Label rowLabel;
-
+		
 		for (int i = 0; i < num + 1; i++) {
-
 			// set blank row label for first row
 			if (i == 0) {
 				rowLabel = new Label("");
@@ -469,7 +457,6 @@ public class ViewerPaneController {
 	 * @author Sean Oldfield
 	 */
 	private static void updateSchedule(List<Task> schedule) {
-
 		if (!_timeout) {
 			if(_schedule != null) {
 				List<Node> children = _tile.getChildren();
@@ -506,7 +493,6 @@ public class ViewerPaneController {
 	 * @author Tina Chen, Sean Oldfield
 	 */
 	private static void setCell(String label, int processor, int startTime, int length) {
-
 		int processorNum = Integer.parseInt(_processors);
 		int cell = (processor + processorNum * startTime) - 1 + processorNum;
 		for (int i = 0; i < length; i++) {
@@ -550,7 +536,6 @@ public class ViewerPaneController {
 	 * @author Tina Chen
 	 */
 	private static String generateColours() {
-
 		Random rand = new Random();
 
 		float r = rand.nextFloat() / 3f;
@@ -576,7 +561,6 @@ public class ViewerPaneController {
 	 * @author Tina Chen
 	 */
 	private static void generateBlue() {
-
 		// The Para11el theme standard blue
 		String blue = "26a6bd";
 
@@ -609,7 +593,6 @@ public class ViewerPaneController {
 	 * @author Tina Chen
 	 */
 	private static boolean isDark(String hex) {
-
 		String colour = hex.substring(1, hex.length());
 
 		// convert hex string to int
@@ -641,7 +624,7 @@ public class ViewerPaneController {
 
 	/**
 	 * Set the schedule to be updated
-	 * @param schedule
+	 * @param schedule Schedule representing the solution
 	 */
 	public void setSchedule(List<Task> schedule) {
 		_schedule = schedule;
@@ -694,9 +677,7 @@ public class ViewerPaneController {
 		} else {
 			_fillGreen = true;
 		}
-
 	}
-
 
 	/**
 	 * Return the status of the GUI running or not
@@ -706,14 +687,26 @@ public class ViewerPaneController {
 		return _hasLoaded.get();
 	}
 
+	/**
+	 * Sets the host service
+	 * @param services HostServices to be set
+	 */
 	public static void setHostServices(HostServices services) {
 		_hostServices = services;
 	}
 
+	/**
+	 * Opens the browser for the host services
+	 * @param url URI to be opened in browser
+	 */
 	private void openBrowser(final String url) {
 		_hostServices.showDocument(url);
 	}
 
+	/**
+	 * Sets the status messages of the viewer pane
+	 * @param statusMessage Message to be displayed
+	 */
 	public static void setStatus(String statusMessage) {
 		if(isRunning()) {
 			Platform.runLater(()->{
@@ -725,13 +718,16 @@ public class ViewerPaneController {
 		}
 	}
 
+	/**
+	 * Calculates the elapsed time for the label
+	 * @return String representing time elapsed
+	 */
 	private static String calculateTimeLabel() {
 		long elapsedMillis = System.currentTimeMillis() - _startTime ;
 		return String.format("%02d:%02d:%02d",
 				(elapsedMillis / 60000),
 				((elapsedMillis % 60000) / 1000),
 				((elapsedMillis % 1000) / 10));
-
 	}
 
 
