@@ -71,7 +71,7 @@
                            </center>
                         </BorderPane>
                      </children></AnchorPane>
-                  <SplitPane dividerPositions="0.7208904109589042" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #3d3d3d;">
+                  <SplitPane dividerPositions="0.7208904109589042" mouseTransparent="true" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #3d3d3d;">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: white;">
                            <children>
