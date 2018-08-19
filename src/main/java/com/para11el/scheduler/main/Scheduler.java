@@ -326,12 +326,12 @@ public class Scheduler extends Application {
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add("/css/main.css"); // Add the css
 			stage = primaryStage;
+            ViewerPaneController.setControlledStage(stage);
 			stage.sizeToScene();
 			stage.setResizable(false);
 			// Add logo to the GUI
 			stage.getIcons().add(new Image(Scheduler.class.getResourceAsStream("/images/logo-icon.png")));
 			stage.setScene(scene);
-			//stage.setResizable(false);
 			stage.setTitle("Para11el | Task Scheduler | " + _filename);
 			stage.setOnCloseRequest((event) -> {
 				boolean response = ExitWindow.display(stage);

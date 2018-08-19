@@ -17,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.geom.Point3;
@@ -35,8 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ViewerPaneController {
 	private static final String WIKI_LINK = "https://github.com/SheepySean/306Project1Team11/wiki/Visualisation";
-
-
+	private static Stage _controlledStage;
 	private static FxViewer _viewer;
 	private static List<Task> _schedule;
 	private Camera _camera;
@@ -57,19 +57,21 @@ public class ViewerPaneController {
 	private static int _criticalLength;
 	private static boolean _fillGreen = false;
 	private static int _nodeCount;
-
 	private static ArrayList<String> _colourArray = new ArrayList<String>();
 	private static Map<String, String> _colourMap = new HashMap<String, String>();
 	private static int _colourCounter = 0;
-
 	private static int _cellWidth;
 	private static int _cellHeight = 1;
-
 	private static HostServices _hostServices;
 	private static String _statusMessage;
 	private static ViewerPaneController _instance = null;
 	private static boolean _isTileInitialised = false;
 	private static AtomicBoolean _hasLoaded = new AtomicBoolean(false);
+	private static TilePane _tile;
+	private static TilePane _colLabelTile;
+	private static Label _timerLabel;
+	private static boolean _isVisualise = false;
+
 	@FXML
 	private AnchorPane graphContainer;
 
@@ -102,12 +104,6 @@ public class ViewerPaneController {
 
 	@FXML
 	private BorderPane graphLegend;
-
-	private static TilePane _tile;
-	private static TilePane _colLabelTile;
-	private static Label _timerLabel;
-	private static boolean _isVisualise = false;
-
 
 	@FXML
 	private ScrollPane scrollPane;
@@ -757,6 +753,23 @@ public class ViewerPaneController {
 	 */
 	public static boolean getVisualise() {
 		return _isVisualise;
+	}
+
+
+	/**
+	 * Set the stage that is controlled by the controller
+	 * @param stage stage that is controlled by the controller
+	 * @author Sean Oldfield
+	 */
+	public static void setControlledStage(Stage stage) {
+		_controlledStage = stage;
+	}
+
+	@FXML
+	void closeAction(ActionEvent event) {
+		boolean response = ExitWindow.display(_controlledStage);
+		if(response) _controlledStage.close();
+		event.consume();
 	}
 }
 
