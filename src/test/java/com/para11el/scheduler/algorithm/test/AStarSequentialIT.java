@@ -43,9 +43,7 @@ public class AStarSequentialIT {
 	@Test
 	public void testMultipleEntryNodes(){
 		_processors = 1;
-		
 		_testGraph = _tgManager.createMultiEntry(_testGraph);
-		
 		_aStar = new AStarAlgorithm(_testGraph, _processors);
 		_tasks = _aStar.buildSolution();
 		
@@ -71,9 +69,7 @@ public class AStarSequentialIT {
 	@Test
 	public void testMultipleEntryNodesMultiProcessor(){
 		_processors = 2;
-		
 		_testGraph = _tgManager.createMultiEntry(_testGraph);
-		
 		_aStar = new AStarAlgorithm(_testGraph, _processors);
 		_tasks = _aStar.buildSolution();
 		
@@ -101,10 +97,8 @@ public class AStarSequentialIT {
 	 */
 	@Test
 	public void testMultipleExitNodes(){
-		_processors = 1; 
-		
+		_processors = 1;
 		_testGraph = _tgManager.createMultiExit(_testGraph);
-		
 		_aStar = new AStarAlgorithm(_testGraph, _processors);
 		_tasks = _aStar.buildSolution();
 		
@@ -121,7 +115,6 @@ public class AStarSequentialIT {
 		assertTrue(_validity.isBefore(mappedNodes.get("2"), mappedNodes.get("4")));
 		
 		_testGraph = _tgManager.returnToOriginal(); 
-		
 	}
 	
 	/**
@@ -153,7 +146,6 @@ public class AStarSequentialIT {
 		assertTrue(_validity.isBefore(mappedNodes.get("2"), mappedNodes.get("4")));
 		
 		_testGraph = _tgManager.returnToOriginal(); 
-		
 	}
 	
 	/**
@@ -182,7 +174,6 @@ public class AStarSequentialIT {
 		assertTrue(_validity.isBefore(mappedNodes.get("2"), mappedNodes.get("4")));
 		
 		_testGraph = _tgManager.returnToOriginal();
-	
 	}
 	
 	/**
@@ -193,9 +184,7 @@ public class AStarSequentialIT {
 	@Test 
 	public void testSequentialGraphMulti(){
 		_processors = 3;
-		
 		_testGraph = _tgManager.createSequential(_testGraph);
-		
 		_aStar = new AStarAlgorithm(_testGraph, _processors); 
 		_tasks = _aStar.buildSolution();
 		

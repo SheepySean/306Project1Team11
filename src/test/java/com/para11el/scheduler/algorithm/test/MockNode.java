@@ -15,9 +15,9 @@ public class MockNode extends SingleNode{
 	private Number _weight;
 
 	/**
-	 * 
-	 * @param graph
-	 * @param id
+	 * Constructor for MockNode
+	 * @param graph Graph that node is from
+	 * @param id Node Id
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -26,10 +26,10 @@ public class MockNode extends SingleNode{
 	}
 	
 	/**
-	 * 
-	 * @param graph
-	 * @param id
-	 * @param weight
+	 * Constructor for MockNode
+	 * @param graph Graph that node is from
+	 * @param id Node Id
+	 * @param weight Node Weight
 	 * 
 	 * @author Jessica Alcantara
 	 */
@@ -39,12 +39,15 @@ public class MockNode extends SingleNode{
 	}
 
 	/**
+	 * Returns the weight of the node without referring to the graph
+	 * @param attribute Attribute to be returned
+	 * @return object Value of attribute
 	 * 
 	 * @author Jessica Alcantara
 	 */
 	@Override
-	public Object getAttribute(String arg0) {
-		if (arg0.equals("Weight")) {
+	public Object getAttribute(String attribute) {
+		if (attribute.equals("Weight")) {
 			return _weight;
 		}
 		return null;

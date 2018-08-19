@@ -84,9 +84,7 @@ public class CostFunctionManagerIT {
 	@Test
 	public void testFindNodeTask(){
 		_aStar = new AStarAlgorithm(_testGraph, 1);
-		
 		_tasks = _aStar.buildSolution();
-		
 		_cfm = new CostFunctionManager(_nm, 15, 1); 
 		
 		assertEquals(_cfm.findNodeTask(_testGraph.getNode("2"), _tasks), _tasks.get(1)); 
@@ -101,11 +99,9 @@ public class CostFunctionManagerIT {
 	public void testCalculateCriticalPathEstimate(){
 		_aStar = new AStarAlgorithm(_testGraph, 1);
 		_tasks = _aStar.buildSolution();
-		
 		_cfm = new CostFunctionManager(_nm, 15, 2); 
 		
-		Node nlast = _testGraph.getNode("4"); 
-
+		Node nlast = _testGraph.getNode("4");
 		int criticalPathEstimate = _cfm.criticalPathEstimate(_tasks, nlast);
 		
 		assertEquals(criticalPathEstimate, 13);

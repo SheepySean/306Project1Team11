@@ -30,6 +30,9 @@ public class GraphResourceIT {
 
 	}
 	
+	/**
+	 * Ensures the graph is able to load
+	 */
 	@Test
     public void testGraphLoad() {
 	    try {
@@ -46,6 +49,9 @@ public class GraphResourceIT {
         }
     }
 
+	/**
+	 * Ensures the graph is able to write to the output file
+	 */
     @Test
     public void testGraphWrite() {
         try {
@@ -61,6 +67,9 @@ public class GraphResourceIT {
         }
     }
 
+    /**
+     * Ensures that the labels for visualisation are properly removed
+     */
     @Test
     public void testViewLabelUnlabel() {
 	    try {
