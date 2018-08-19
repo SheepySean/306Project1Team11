@@ -161,7 +161,7 @@ public class Scheduler extends Application {
 
 		if(_astar) {
 			//Searches with A Star Algorithm (default)
-			AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors);
+			AStarAlgorithm algorithm = new AStarAlgorithm(_inGraph, _scheduleProcessors, _numCores);
 			ArrayList<Task> solution = algorithm.buildSolution();
 
 			if (solution != null) {
