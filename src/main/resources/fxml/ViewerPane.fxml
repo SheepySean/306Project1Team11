@@ -12,6 +12,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -19,6 +20,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -30,7 +32,7 @@
               <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="417.0" style="-fx-border-color: #282828; -fx-border-width: 1;">
                      <children>
-                        <BorderPane prefHeight="539.0" prefWidth="418.0">
+                        <BorderPane prefHeight="506.0" prefWidth="418.0">
                            <top>
                               <Label text="Schedule" textFill="WHITE" BorderPane.alignment="CENTER">
                                  <BorderPane.margin>
@@ -44,7 +46,7 @@
                                  </padding></Label>
                            </top>
                            <center>
-                              <ScrollPane fx:id="scrollPane" minHeight="284.0" prefHeight="536.0" prefWidth="418.0" BorderPane.alignment="CENTER">
+                              <ScrollPane fx:id="scrollPane" minHeight="284.0" prefHeight="458.0" prefWidth="418.0" BorderPane.alignment="CENTER">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="418.0">
                                        <children>
@@ -88,7 +90,7 @@
                                   </Tab>
                                 </tabs>
                               </TabPane>
-                              <GridPane accessibleRole="BUTTON" alignment="CENTER_LEFT" depthTest="ENABLE" layoutX="545.0" layoutY="280.0">
+                              <GridPane accessibleRole="BUTTON" alignment="CENTER_LEFT" depthTest="ENABLE" layoutX="545.0" layoutY="280.0" opacity="0.7">
                                 <columnConstraints>
                                   <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
                                 </columnConstraints>
@@ -107,6 +109,54 @@
                                        </font></Button>
                                  </children>
                               </GridPane>
+                              <BorderPane fx:id="graphLegend" layoutX="479.0" layoutY="40.0" opacity="0.7" prefHeight="115.0" prefWidth="106.0" style="-fx-background-color: #282828;">
+                                 <center>
+                                    <GridPane prefHeight="90.0" prefWidth="87.0" BorderPane.alignment="CENTER">
+                                      <columnConstraints>
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="46.77777099609375" minWidth="10.0" prefWidth="35.77783203125" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="83.22222900390625" minWidth="10.0" prefWidth="70.22216796875" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Circle fill="WHITE" radius="7.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" />
+                                          <Circle fill="ORANGE" radius="7.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" GridPane.rowIndex="1" />
+                                          <Circle fill="RED" radius="7.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" GridPane.rowIndex="2" />
+                                          <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Scheduled" GridPane.columnIndex="1">
+                                             <font>
+                                                <Font size="10.0" />
+                                             </font>
+                                          </Text>
+                                          <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Free" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="10.0" />
+                                             </font>
+                                          </Text>
+                                          <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Investigating" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                             <font>
+                                                <Font size="10.0" />
+                                             </font>
+                                          </Text>
+                                       </children>
+                                    </GridPane>
+                                 </center>
+                                 <top>
+                                    <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Legend" BorderPane.alignment="CENTER">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <BorderPane.margin>
+                                          <Insets top="5.0" />
+                                       </BorderPane.margin>
+                                    </Text>
+                                 </top>
+                                 <effect>
+                                    <DropShadow color="#282828" height="29.7" radius="11.395" width="17.88" />
+                                 </effect>
+                              </BorderPane>
                            </children>
                         </AnchorPane>
                       <AnchorPane fx:id="statisticsAnchor" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" style="-fx-border-color: #282828; -fx-border-width: 1;">

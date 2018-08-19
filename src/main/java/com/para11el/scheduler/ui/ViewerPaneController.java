@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Paint;
@@ -62,7 +63,7 @@ public class ViewerPaneController {
 	private static int _colourCounter = 0;
 
 	private static int _cellWidth;
-	private static int _cellHeight = 20;
+	private static int _cellHeight = 1;
 
 	private static HostServices _hostServices;
 	private static String _statusMessage;
@@ -98,6 +99,9 @@ public class ViewerPaneController {
 
 	@FXML
 	private Label statusLabel;
+
+	@FXML
+	private BorderPane graphLegend;
 
 	private static TilePane _tile;
 	private static TilePane _colLabelTile;
@@ -179,6 +183,10 @@ public class ViewerPaneController {
 
 		if(_fillGreen) {
 			_timerLabel.setTextFill(Paint.valueOf("#00e500"));
+		}
+
+		if(_algorithm.equals("DFS")) { // Don't show graph legend if running DFS
+			graphLegend.setVisible(false);
 		}
 
 		_hasLoaded.set(true);
