@@ -56,9 +56,11 @@ Optional arguments are:
 * `-v` visualise the search (opens a GUI which will allow you to view the input graph, the optimal schedule and the current state of the search)
 * `o FILENAME` specify the filename of the output file to be FILENAME 
 * `-t SECONDS` time out the search in SECONDS, if a solution has not been found, no output file will be written
-* `-d` search for the optional solution using DFS Algorithm
+* `-d` search for the optimal solution using DFS Algorithm
 
-By default, Para11el Task Scheduler will run sequentially, using an A* Algorithm with no visualisation and the output file will be named INPUT-output.dot (where INPUT is the name of the input graph).
+By default, Para11el Task Scheduler will run sequentially, using an A* Algorithm with no visualisation and the output file will be named INPUT-output.dot (where INPUT is the name of the input graph). 
+
+More information on the command line inputs can be found [here.](https://github.com/SheepySean/306Project1Team11/wiki/Command-Line)
 
 **An example input graph may look like as follows:**
 ```dot
