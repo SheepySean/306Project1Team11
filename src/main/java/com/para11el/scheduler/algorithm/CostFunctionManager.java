@@ -18,6 +18,7 @@ public class CostFunctionManager {
 	
 	/**
 	 * Constructor for CostFunctionManager
+	 * @param nm Node Manager that handles bottom level calculations
 	 * @param totalWeight Total weight of nodes in the input graph
 	 * @param processors Number of processors
 	 * 

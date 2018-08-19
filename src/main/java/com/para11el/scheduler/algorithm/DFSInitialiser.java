@@ -6,7 +6,12 @@ import java.util.concurrent.ForkJoinPool;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
-public class DFSInitialiser  implements Algorithm { //implements Algorithm{
+/**
+ * Class that initialises and runs the DFS algorithm
+ * 
+ * @author Tina Chen, Rebekah Berriman
+ */
+public class DFSInitialiser  implements Algorithm {
 
 	protected Graph _graph;
 	protected int _processors;
@@ -75,14 +80,13 @@ public class DFSInitialiser  implements Algorithm { //implements Algorithm{
 		});
 		
 		while (!forkJoinPool.isQuiescent()) {
-			//Make all threads have completed before
-			//leaving the function
+			//Make all threads have completed before leaving the function
 		}
 	}
 	
 	/**
-	 * 
-	 * @return the optimal schedule
+	 * Builds the optimal solution using the DFS algorithm
+	 * @return List of tasks representing the optimal schedule
 	 * 
 	 * @author Tina Chen
 	 */
@@ -125,6 +129,12 @@ public class DFSInitialiser  implements Algorithm { //implements Algorithm{
 		return _graph;
 	}
 
+	/**
+	 * Returns the GraphStream graph
+	 * @return GraphStream graph
+	 * 
+	 * @author Sean Oldfield
+	 */
 	@Override
 	public Graph getGSGraph() {
 		return _graph;

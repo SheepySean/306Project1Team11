@@ -5,6 +5,12 @@ import org.graphstream.graph.Node;
 
 import java.util.ArrayList;
 
+/**
+ * Interface to represent classes that utilise graphs that require traversal.
+ * 
+ * @author Sean Oldfield
+ * 
+ */
 public interface Traversable {
     /**
      * Returns a list of parent nodes of a node
@@ -65,5 +71,8 @@ public interface Traversable {
         return available;
     }
 
+	/**
+	 * Method signature for returning the graph
+	 */
     Graph getGSGraph();
 }

@@ -61,6 +61,12 @@ public class AStarStateTask extends RecursiveTask<State> implements Parallelised
 	}
 
 
+	/**
+	 * Returns null instead of the graph during parallelisation
+	 * @return GraphStream graph
+	 * 
+	 * @author Sean Oldfield
+	 */
 	@Override
 	public Graph getGSGraph() {
 		return null;
