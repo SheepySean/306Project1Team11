@@ -19,6 +19,8 @@ public class GraphViewManager {
     /**
      * Constructor for GraphViewManager
      * @param graph The graph to be managed
+     * 
+     * @author Sean Oldfield
      */
     public GraphViewManager(Graph graph) {
         _managedGraph = graph;
@@ -26,6 +28,7 @@ public class GraphViewManager {
 
     /**
      * Label the graph with its attributes such as weight and node name for visual display
+     * 
      * @author Sean Oldfield
      */
     public void labelGraph() {
