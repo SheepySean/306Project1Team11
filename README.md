@@ -146,7 +146,7 @@ The projects folder structure is as follows:
 |  |  |           |  |__TimeOut.java
 |  |  |           |__ui
 |  |  |              |__ExitPaneController.java
-|  |  |              |__ExitPaneController.java
+|  |  |              |__ExitWindow.java
 |  |  |              |__ViewerPaneController.java
 |  |  |
 |  |  |__resources (Other External Resources)
