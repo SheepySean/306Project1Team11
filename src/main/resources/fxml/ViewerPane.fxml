@@ -146,7 +146,7 @@
                                                 <Font name="Microsoft JhengHei UI" size="12.0" />
                                              </font>
                                           </Text>
-                                          <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Output FIle:" GridPane.rowIndex="2">
+                                          <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Output File:" GridPane.rowIndex="2">
                                              <font>
                                                 <Font name="Microsoft JhengHei UI" size="12.0" />
                                              </font>

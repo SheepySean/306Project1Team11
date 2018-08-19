@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import com.para11el.scheduler.ui.ViewerPaneController;
@@ -101,22 +100,33 @@ public class AStarAlgorithm implements Algorithm{
 	 */
 	public ArrayList<Task> buildSolution() {
 		while (_states.size() > 0) {
-			// Pop the most promising state
-			State state = _states.poll();
-			ViewerPaneController.setStatus("Using A* to expand states in the schedule");
-			ViewerPaneController.getInstance().setSchedule(state.getSchedule());
-			if(ViewerPaneController.isRunning()) {
-				ViewerPaneController.update();
-			}
+			
+			ViewerPaneController.getInstance();
+			if (!ViewerPaneController.getTimeout()) {
+				// Pop the most promising state
+				State state = _states.poll();
+				ViewerPaneController.setStatus("Using A* to expand states in the schedule");
+				ViewerPaneController.getInstance().setSchedule(state.getSchedule());
+				if(ViewerPaneController.isRunning()) {
+					ViewerPaneController.update();
+				}
+/*			try{
+				TimeUnit.MILLISECONDS.sleep(100);
+			} catch(Exception e) {}*/
 			// Check if solution is complete
-			if (state.isComplete(_graph.nodes())) {
-				ViewerPaneController.toggleTimer(false);
-                ViewerPaneController.setLabelFinish();
-				return state.getSchedule();
-			}
-
-			expandState(state);
+				if (state.isComplete(_graph.nodes())) {
+					ViewerPaneController.toggleTimer(false);
+					ViewerPaneController.setLabelFinish();
+					return state.getSchedule();
+				}
+				
+				expandState(state);
+				
+			} else {				
+				break;
+			}	
 		}
+		
 		return null;
 	}
 

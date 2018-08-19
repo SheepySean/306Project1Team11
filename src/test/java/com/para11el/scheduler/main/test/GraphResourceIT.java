@@ -7,6 +7,8 @@ import com.para11el.scheduler.graph.GraphViewManager;
 import com.para11el.scheduler.main.Scheduler;
 import org.graphstream.graph.Graph;
 import org.junit.*;
+import org.junit.contrib.java.lang.system.ExpectedSystemExit;
+import org.junit.contrib.java.lang.system.internal.CheckExitCalled;
 
 import java.awt.*;
 
@@ -18,6 +20,9 @@ import java.awt.*;
 public class GraphResourceIT {
 	private static GraphFileManager _fileManager;
 	private GraphViewManager _viewManager;
+	
+	@Rule
+	public final ExpectedSystemExit exit = ExpectedSystemExit.none();
 	
 	@BeforeClass
 	public static void createManagers() {
@@ -76,13 +81,14 @@ public class GraphResourceIT {
      */
     @Test
     public void testSchedulerRun() {
-	    try {
+    	try {
 	        String[] someArgs = {"example.dot", "4"};
-            Scheduler.main(someArgs);
+	        Scheduler.main(someArgs);
+	        exit.expectSystemExitWithStatus(1);
         } catch (HeadlessException e) {
+        } catch (CheckExitCalled e) {
         } catch (Exception e) {
-	        e.printStackTrace();
-	        fail();
+        	fail();
         }
     }
 }

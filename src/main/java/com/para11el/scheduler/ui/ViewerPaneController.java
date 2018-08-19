@@ -39,41 +39,41 @@ public class ViewerPaneController {
 	private static final String WIKI_LINK = "https://github.com/SheepySean/306Project1Team11/wiki/Visualisation";
 
 
-    private static FxViewer _viewer;
-    private static List<Task> _schedule;
-    private Camera _camera;
-    private FxDefaultView viewPanel;
+	private static FxViewer _viewer;
+	private static List<Task> _schedule;
+	private Camera _camera;
+	private FxDefaultView viewPanel;
 
-    private static AnimationTimer _timer;
-    private static Label _statusLabel;
-    private static boolean _timeout = false;
-    private static boolean _noTimer = false;
+	private static AnimationTimer _timer;
+	private static Label _statusLabel;
+	private static boolean _timeout = false;
+	private static boolean _noTimer = false;
 
-    private static String _outputFile;
-    private static String _processors;
-    private static String _cores;
-    private static String _algorithm;
-    private static String _timeoutDuration;
+	private static String _outputFile;
+	private static String _processors;
+	private static String _cores;
+	private static String _algorithm;
+	private static String _timeoutDuration;
 
-    private static long _startTime;
-    private static int _criticalLength;
-    private static boolean _fillGreen = false;
-    private static int _nodeCount;
+	private static long _startTime;
+	private static int _criticalLength;
+	private static boolean _fillGreen = false;
+	private static int _nodeCount;
 
-    private static ArrayList<String> _colourArray = new ArrayList<String>();
-    private static Map<String, String> _colourMap = new HashMap<String, String>();
-    private static int _colourCounter = 0;
+	private static ArrayList<String> _colourArray = new ArrayList<String>();
+	private static Map<String, String> _colourMap = new HashMap<String, String>();
+	private static int _colourCounter = 0;
 
 	private static int _cellWidth;
 	private static int _cellHeight = 20;
 
 	private static HostServices _hostServices;
 	private static String _statusMessage;
-    private static ViewerPaneController _instance = null;
+	private static ViewerPaneController _instance = null;
 
-    private static AtomicBoolean _hasLoaded = new AtomicBoolean(false);
-    @FXML
-    private AnchorPane graphContainer;
+	private static AtomicBoolean _hasLoaded = new AtomicBoolean(false);
+	@FXML
+	private AnchorPane graphContainer;
 
 	@FXML
 	private Label timerLabel;
@@ -87,11 +87,11 @@ public class ViewerPaneController {
 	@FXML
 	private Text outputFileText;
 
-    @FXML
-    private Text algroithmText;
+	@FXML
+	private Text algroithmText;
 
-    @FXML
-    private Text timeoutText;
+	@FXML
+	private Text timeoutText;
 
 	@FXML
 	private TilePane colLabelTile;
@@ -103,120 +103,124 @@ public class ViewerPaneController {
 	private Label statusLabel;
 
 	private static TilePane _tile;
-    private static TilePane _colLabelTile;
-    private static Label _timerLabel;
-    private static boolean _isVisualise = false;
+	private static TilePane _colLabelTile;
+	private static Label _timerLabel;
+	private static boolean _isVisualise = false;
 
 
 	@FXML
 	private ScrollPane scrollPane;
 
-    public ViewerPaneController() {}
-    /**
-     * Initialize some of the GUI's components to initial states
-     */
-    @FXML
-    public void initialize() {
+	public ViewerPaneController() {}
+	/**
+	 * Initialize some of the GUI's components to initial states
+	 */
+	@FXML
+	public void initialize() {
 
 
-        _instance = getInstance();
+		_instance = getInstance();
 		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
 		// This is a little hacky but allows static reference to the tile pane
-        _tile = tile;
-        _colLabelTile = colLabelTile;
-        _timerLabel = timerLabel;
-        _statusLabel = statusLabel;
+		_tile = tile;
+		_colLabelTile = colLabelTile;
+		_timerLabel = timerLabel;
+		_statusLabel = statusLabel;
 		_statusLabel.setText(_statusMessage);
 		setCellSize(Integer.parseInt(_processors));
 
-        initialisePane(_criticalLength);
-        initialiseLabel(_criticalLength);
+		initialisePane(_criticalLength);
+		initialiseLabel(_criticalLength);
 
-        generateBlue();
-
-
-        this.updateSchedule(_schedule);
-
-        // Embed GraphStream graph into the GUI
-        _viewer.addDefaultView(false, _viewer.newDefaultGraphRenderer());
-        _viewer.enableAutoLayout();
-        viewPanel = (FxDefaultView) _viewer.getDefaultView();
-        viewPanel.setFocusTraversable(true); // Allow the keyboard shortcuts
-        viewPanel.setMaxHeight(332); // So it fits
-        viewPanel.setMaxWidth(598);
-        viewPanel.requireFocus();
-        _camera = _viewer.getDefaultView().getCamera();
-        graphContainer.getChildren().add(viewPanel); // Add it to its container
-
-        coresText.setText(_cores);
-        processorsText.setText(_processors);
-        outputFileText.setText(_outputFile);
-        timeoutText.setText(_timeoutDuration + " seconds");
-        algroithmText.setText(_algorithm);
+		generateBlue();
 
 
+		this.updateSchedule(_schedule);
 
-        // Set the timer for elapsing the program run time
-        _timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
+		// Embed GraphStream graph into the GUI
+		_viewer.addDefaultView(false, _viewer.newDefaultGraphRenderer());
+		_viewer.enableAutoLayout();
+		viewPanel = (FxDefaultView) _viewer.getDefaultView();
+		viewPanel.setFocusTraversable(true); // Allow the keyboard shortcuts
+		viewPanel.setMaxHeight(332); // So it fits
+		viewPanel.setMaxWidth(598);
+		viewPanel.requireFocus();
+		_camera = _viewer.getDefaultView().getCamera();
+		graphContainer.getChildren().add(viewPanel); // Add it to its container
+
+		coresText.setText(_cores);
+		processorsText.setText(_processors);
+		outputFileText.setText(_outputFile);
+		if (Integer.parseInt(_timeoutDuration) == 0) {
+			timeoutText.setText("Timeout not set");
+		} else {
+			timeoutText.setText(_timeoutDuration + " seconds");
+		}
+		algroithmText.setText(_algorithm);
+
+
+
+		// Set the timer for elapsing the program run time
+		_timer = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
 				timerLabel.setText(ViewerPaneController.calculateTimeLabel());
-            }
-        };
+			}
+		};
 		if(!(_noTimer)) {
 			this.toggleTimer(true); // Start the timer
 		} else {
 			timerLabel.setText(ViewerPaneController.calculateTimeLabel());
 		}
 		if(_fillGreen) {
-            _timerLabel.setTextFill(Paint.valueOf("#00e500"));
-        }
-        _hasLoaded.set(true);
+			_timerLabel.setTextFill(Paint.valueOf("#00e500"));
+		}
+		_hasLoaded.set(true);
 
-    }
+	}
 
 
-    public void setViewer(FxViewer viewer) {
-        _viewer = viewer;
-    }
+	public void setViewer(FxViewer viewer) {
+		_viewer = viewer;
+	}
 
-    /**
-     * Zoom out on the graph view
-     * @param event
-     * @author Sean Oldfield
-     */
-    @FXML
-    private void zoomInAction(ActionEvent event) {
-        Platform.runLater(() -> {
-            _camera.setViewPercent(Math.max(0.0001f,
-                    _camera.getViewPercent() * 0.7f));
-        });
-    }
+	/**
+	 * Zoom out on the graph view
+	 * @param event
+	 * @author Sean Oldfield
+	 */
+	@FXML
+	private void zoomInAction(ActionEvent event) {
+		Platform.runLater(() -> {
+			_camera.setViewPercent(Math.max(0.0001f,
+					_camera.getViewPercent() * 0.7f));
+		});
+	}
 
-    /**
-     * Zoom out on the graph view
-     * @param event
-     * @author Sean Oldfield
-     */
-    @FXML
-    private void zoomOutAction(ActionEvent event) {
-        Platform.runLater(() -> {
-            _camera.setViewPercent(_camera.getViewPercent() * 1.3f);
-        });
-    }
+	/**
+	 * Zoom out on the graph view
+	 * @param event
+	 * @author Sean Oldfield
+	 */
+	@FXML
+	private void zoomOutAction(ActionEvent event) {
+		Platform.runLater(() -> {
+			_camera.setViewPercent(_camera.getViewPercent() * 1.3f);
+		});
+	}
 
-    /**
-     * Recenter the camera to default on the graph view
-     * @param event
-     * @author Sean Oldfield
-     */
-    @FXML
-    private void resetViewAction(ActionEvent event) {
-        Platform.runLater(() -> {
-              _camera.resetView();
-        });
-    }
+	/**
+	 * Recenter the camera to default on the graph view
+	 * @param event
+	 * @author Sean Oldfield
+	 */
+	@FXML
+	private void resetViewAction(ActionEvent event) {
+		Platform.runLater(() -> {
+			_camera.resetView();
+		});
+	}
 
 	/**
 	 * Pan the camera on the graph view up
@@ -341,25 +345,21 @@ public class ViewerPaneController {
 		viewPanel.requestFocus();
 	}
 
-    /**
-     * Set useful parameters for viewing and manipulating in the GUI
-     * @param parameters String list of parameters
-     * @author Sean Oldfield
-     */
-    public void setParameters(List<String> parameters) {
-        _processors = parameters.get(1);
-        _cores = parameters.get(2);
-        _outputFile = parameters.get(3);
-        _startTime = Long.parseLong(parameters.get(4));
-        _criticalLength = Integer.parseInt(parameters.get(5));
-        _nodeCount = Integer.parseInt(parameters.get(6));
-        _algorithm = Boolean.parseBoolean(parameters.get(7)) ? "A*" : "DFS";
-        _timeoutDuration = parameters.get(7).equals("0") ? "Not Set" : parameters.get(8);
-
-
-
-
-    }
+	/**
+	 * Set useful parameters for viewing and manipulating in the GUI
+	 * @param parameters String list of parameters
+	 * @author Sean Oldfield
+	 */
+	public void setParameters(List<String> parameters) {
+		_processors = parameters.get(1);
+		_cores = parameters.get(2);
+		_outputFile = parameters.get(3);
+		_startTime = Long.parseLong(parameters.get(4));
+		_criticalLength = Integer.parseInt(parameters.get(5));
+		_nodeCount = Integer.parseInt(parameters.get(6));
+		_algorithm = Boolean.parseBoolean(parameters.get(7)) ? "A*" : "DFS";
+		_timeoutDuration = parameters.get(7).equals("0") ? "Not Set" : parameters.get(8);
+	}
 
 	/**
 	 * Calculate delta offset for zoom functions in the GUI
@@ -371,14 +371,14 @@ public class ViewerPaneController {
 		return  _camera.getViewPercent() * _camera.getGraphDimension() * 0.1f;
 	}
 
-    /**
-     * Start or stop the program timer
-     * @param enable True if the timer is to be started, false to stop it
-     * @author Sean Oldfield
-     */
-    public static void toggleTimer(boolean enable) {
-    	if(_timer == null) {
-    		_noTimer = true;
+	/**
+	 * Start or stop the program timer
+	 * @param enable True if the timer is to be started, false to stop it
+	 * @author Sean Oldfield
+	 */
+	public static void toggleTimer(boolean enable) {
+		if(_timer == null) {
+			_noTimer = true;
 		} else {
 			if (enable) {
 				_timer.start();
@@ -386,7 +386,7 @@ public class ViewerPaneController {
 				_timer.stop();
 			}
 		}
-    }
+	}
 
 	/**
 	 * Sets the cell width in the Schedule view
@@ -444,51 +444,55 @@ public class ViewerPaneController {
 	 */
 	private static void initialiseLabel(int num) {
 
-        Label rowLabel;
+		Label rowLabel;
 
-        for (int i = 0; i < num + 1; i++) {
+		for (int i = 0; i < num + 1; i++) {
 
-            // set blank row label for first row
-            if (i == 0) {
-                rowLabel = new Label("");
-            } else {
-                rowLabel = new Label(Integer.toString(i - 1));
-            }
+			// set blank row label for first row
+			if (i == 0) {
+				rowLabel = new Label("");
+			} else {
+				rowLabel = new Label(Integer.toString(i - 1));
+			}
 
-            rowLabel.setPrefSize(30, _cellHeight);
-            rowLabel.setAlignment(Pos.CENTER_RIGHT);
+			rowLabel.setPrefSize(30, _cellHeight);
+			rowLabel.setAlignment(Pos.CENTER_RIGHT);
 
-            _colLabelTile.getChildren().add(rowLabel);
-        }
-    }
+			_colLabelTile.getChildren().add(rowLabel);
+		}
+	}
 
-    /**
-     * Update the schedule shown in the viewer
-     * @param schedule A list of tasks representing a schedule
-     *
-     * @author Sean Oldfield
-     */
-    private static void updateSchedule(List<Task> schedule) {
-        if(_schedule != null) {
-            List<Node> children = _tile.getChildren();
+	/**
+	 * Update the schedule shown in the viewer
+	 * @param schedule A list of tasks representing a schedule
+	 *
+	 * @author Sean Oldfield
+	 */
+	private static void updateSchedule(List<Task> schedule) {
 
-            // Reset the pane to defaults
-            for (Node n : children) {
-                n.setStyle("-fx-background-color: #D3D3D3");
-                if (n instanceof Label) {
-                    ((Label) n).setText("");
-                }
-            }
+		if (!_timeout) {
+			if(_schedule != null) {
+				List<Node> children = _tile.getChildren();
 
-            // Add the tasks to the view
-            for (Task task : schedule) {
-                setCell(task.getNode().getId(),
-                        task.getProcessor(),
-                        task.getStartTime(),
-                        task.getWeight());
-            }
-        }
-    }
+				// Reset the pane to defaults
+				for (Node n : children) {
+					n.setStyle("-fx-background-color: #D3D3D3");
+					if (n instanceof Label) {
+						((Label) n).setText("");
+					}
+				}
+
+				// Add the tasks to the view
+				for (Task task : schedule) {
+					setCell(task.getNode().getId(),
+							task.getProcessor(),
+							task.getStartTime(),
+							task.getWeight());
+				}
+			}
+		}
+
+	}
 
 
 	/**
@@ -507,24 +511,24 @@ public class ViewerPaneController {
 		int cell = (processor + processorNum * startTime) - 1 + processorNum;
 		for (int i = 0; i < length; i++) {
 
-            if (i == 0) {  // if first cell for task, set the task label for it
+			if (i == 0) {  // if first cell for task, set the task label for it
 
-                // If this cell has been labelled in the past then there is no point relabelling it
-                if(_tile.getChildren().get(cell) instanceof Label) {
-                    ((Label) _tile.getChildren().get(cell)).setText(label);
-                } else {
-                    Label nodeLabel = new Label(label);
-                    nodeLabel.setPrefSize(_cellWidth, _cellHeight);
-                    nodeLabel.setAlignment(Pos.CENTER);
-                    _tile.getChildren().set(cell, nodeLabel);
-                }
+				// If this cell has been labelled in the past then there is no point relabelling it
+				if(_tile.getChildren().get(cell) instanceof Label) {
+					((Label) _tile.getChildren().get(cell)).setText(label);
+				} else {
+					Label nodeLabel = new Label(label);
+					nodeLabel.setPrefSize(_cellWidth, _cellHeight);
+					nodeLabel.setAlignment(Pos.CENTER);
+					_tile.getChildren().set(cell, nodeLabel);
+				}
 
-                // Assign a colour to a node if not already done so
-                String colourValue = _colourMap.get(label);
-                if (colourValue == null) {
-                	_colourMap.put(label, _colourArray.get(_colourCounter));
-                	_colourCounter++;
-                }
+				// Assign a colour to a node if not already done so
+				String colourValue = _colourMap.get(label);
+				if (colourValue == null) {
+					_colourMap.put(label, _colourArray.get(_colourCounter));
+					_colourCounter++;
+				}
 
 				_tile.getChildren().get(cell).setStyle(_colourMap.get(label));
 
@@ -618,92 +622,92 @@ public class ViewerPaneController {
 		float brightness = hsb[2];
 
 		if (brightness < 0.5) {
-		   return true;
+			return true;
 		} else {
-		   return false;
+			return false;
 		}
 	}
 
-    /**
-     * Return an instance of the GUI controller
-     * @return an Instance of the GUI controller
-     */
+	/**
+	 * Return an instance of the GUI controller
+	 * @return an Instance of the GUI controller
+	 */
 	public static ViewerPaneController getInstance() {
-        if(_instance == null) {
-            _instance = new ViewerPaneController();
-        }
-        return _instance;
-    }
+		if(_instance == null) {
+			_instance = new ViewerPaneController();
+		}
+		return _instance;
+	}
 
-    /**
-     * Set the schedule to be updated
-     * @param schedule
-     */
-    public void setSchedule(List<Task> schedule) {
-	    _schedule = schedule;
-    }
+	/**
+	 * Set the schedule to be updated
+	 * @param schedule
+	 */
+	public void setSchedule(List<Task> schedule) {
+		_schedule = schedule;
+	}
 
-    /**
-     * Update the GUI
-     */
-    public static void update() {
-	    if(_hasLoaded.get() ) {
-            Platform.runLater(() -> {
-                updateSchedule(_schedule);
-            });
-        }
-    }
+	/**
+	 * Update the GUI
+	 */
+	public static void update() {
+		if(_hasLoaded.get() ) {
+			Platform.runLater(() -> {
+				updateSchedule(_schedule);
+			});
+		}
+	}
 
-    /**
-     * Sets the timeout if timeout occurs
-     * @param timeout True if timeout
-     *
-     * @author Tina Chen
-     */
-    public static void setTimeout(boolean timeout) {
-    	_timeout = timeout;
+	/**
+	 * Sets the timeout if timeout occurs
+	 * @param timeout True if timeout
+	 *
+	 * @author Tina Chen
+	 */
+	public static void setTimeout(boolean timeout) {
+		_timeout = timeout;
 
-    	// Change colour of timer label
-    	if (_timeout) {
-    		_timerLabel.setTextFill(Paint.valueOf("#e50000"));
-    	}
-    }
+		// Change colour of timer label
+		if (_timeout) {
+			_timerLabel.setTextFill(Paint.valueOf("#e50000"));
+		}
+	}
 
-    /**
-     * Returns true if a timeout has occurred
-     * @return _timeout True if timeout
-     *
-     * @author Tina Chen
-     */
-    public static boolean getTimeout() {
-    	return _timeout;
-    }
+	/**
+	 * Returns true if a timeout has occurred
+	 * @return _timeout True if timeout
+	 *
+	 * @author Tina Chen
+	 */
+	public static boolean getTimeout() {
+		return _timeout;
+	}
 
-    /**
-     * Sets the timer label green if optimal solution is found
-     *
-     * @author Tina Chen
-     */
-    public static void setLabelFinish() {
-        if(_timerLabel != null) {
-            _timerLabel.setTextFill(Paint.valueOf("#00e500"));
-        } else {
-            _fillGreen = true;
-        }
+	/**
+	 * Sets the timer label green if optimal solution is found
+	 *
+	 * @author Tina Chen
+	 */
+	public static void setLabelFinish() {
+		if(_timerLabel != null) {
+			_timerLabel.setTextFill(Paint.valueOf("#00e500"));
+		} else {
+			_fillGreen = true;
+		}
 
-    }
+	}
 
 
-    /**
-     * Return the status of the GUI running or not
-     * @return True if the GUI is running
-     */
-    public static boolean isRunning() {
-        return _hasLoaded.get();
-    }
+	/**
+	 * Return the status of the GUI running or not
+	 * @return True if the GUI is running
+	 */
+	public static boolean isRunning() {
+		return _hasLoaded.get();
+	}
 
 	public static void setHostServices(HostServices services) {
-    	_hostServices = services;
+		_hostServices = services;
 	}
 
 	private void openBrowser(final String url) {
@@ -711,13 +715,13 @@ public class ViewerPaneController {
 	}
 
 	public static void setStatus(String statusMessage) {
-    	if(isRunning()) {
-    		Platform.runLater(()->{
+		if(isRunning()) {
+			Platform.runLater(()->{
 				_statusLabel.setText(statusMessage);
 			});
 
 		} else {
-    		_statusMessage = statusMessage;
+			_statusMessage = statusMessage;
 		}
 	}
 
@@ -731,25 +735,25 @@ public class ViewerPaneController {
 	}
 
 
-    /**
-     * Sets visualisation to be true if visualisation
-     * parameter is in input arguments
-     *
-     * @author Rebekah Berriman, Tina Chen
-     */
-    public static void setVisualise() {
-        _isVisualise = true;
+	/**
+	 * Sets visualisation to be true if visualisation
+	 * parameter is in input arguments
+	 *
+	 * @author Rebekah Berriman, Tina Chen
+	 */
+	public static void setVisualise() {
+		_isVisualise = true;
 
-    }
+	}
 
-    /**
-     * Returns true if visualisation is enabled
-     * @return True if visualisation
-     *
-     * @author Tina Chen, Rebekah Berriman
-     */
-    public static boolean getVisualise() {
-        return _isVisualise;
-    }
+	/**
+	 * Returns true if visualisation is enabled
+	 * @return True if visualisation
+	 *
+	 * @author Tina Chen, Rebekah Berriman
+	 */
+	public static boolean getVisualise() {
+		return _isVisualise;
+	}
 }
 
