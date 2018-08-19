@@ -106,13 +106,13 @@ The projects folder structure is as follows:
 |  
 |__lib (Libraries folder for any additional project libraries)
 |  |__ext (External Libraries)
-|  |  |__graph_stream (GraphStream Library for graph management)
-|  |  |  |__gs-algo-2.0-alpha.jar
-|  |  |  |__gs-core-2.0-alpha.jar
-|  |  |  |__gs-ui-javafx-2.0-alpha.jar
-|  |  |__gs-algo-1.3.jar
-|  |  |__gs-core-1.3.jar
-|  |  |__gs-ui-1.3.jar
+|     |__graph_stream (GraphStream Library for graph management)
+|     |  |__gs-algo-2.0-alpha.jar
+|     |  |__gs-core-2.0-alpha.jar
+|     |  |__gs-ui-javafx-2.0-alpha.jar
+|     |__gs-algo-1.3.jar
+|     |__gs-core-1.3.jar
+|     |__gs-ui-1.3.jar
 |
 |__src (.java files for compiling and running the project)
 |  |__main (Runner Files)
@@ -157,14 +157,14 @@ The projects folder structure is as follows:
 |  |     |  |__ExitPane.fxml
 |  |     |  |__ViewerPane.fxml
 |  |     |__images
-|  |     |  |__logo-icon.png
+|  |        |__logo-icon.png
 |  |
 |  |__test (Test files)
 |     |__java
 |        |__com
 |           |__para11el
 |              |__scheduler 
-|              |  |__algorithm
+|                 |__algorithm
 |                 |  |__test
 |                 |     |__AStarAlgorithmHelperIT.java
 |                 |     |__AStarParallelIT.java
