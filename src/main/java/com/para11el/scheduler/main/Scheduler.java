@@ -68,14 +68,18 @@ public class Scheduler extends Application {
 			readParameters(args);
 		} catch (ParameterLengthException e) {
 			System.out.println("At least 2 parameters required");
-			return; // Exit
+			System.exit(1); // Exit
 		} catch (NumberFormatException e) {
 			System.out.println("Please ensure that processors and cores specified " +
 					"are numbers");
-			return; //Exit
+			System.exit(1); //Exit
 		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println("Please ensure that number of cores is specified");
-			return; //Exit
+			if (_timeout) {
+				System.out.println("Please ensure that the timeout period is specified.");
+			} else {
+				System.out.println("Please ensure that number of cores is specified");
+			}
+			System.exit(1); //Exit
 		}
 
 		// Get just the name of the graph file, removing dir paths and extensions
@@ -93,18 +97,22 @@ public class Scheduler extends Application {
 
 		} catch(IOException e) {
 			System.out.println("Cannot find the specified input file '" + _filename + "'");
-			return;
+			System.exit(1);
 		}
 
-		// Name the file if no specific output name was provided
+		
 		if(_outputFilename == null) {
+			// Name the file if no specific output name was provided
 			_outputFilename = removeFileExt(_filename)
 					+ "-output" + GraphConstants.FILE_EXT.getValue();
+		} else if (!_outputFilename.endsWith(GraphConstants.FILE_EXT.getValue())) {
+			//Add file extension if not specified.
+			_outputFilename = _outputFilename + GraphConstants.FILE_EXT.getValue();
 		}
 
 		if (invalidOptional()) {
 			//Exit if any optional parameters are invalid
-			return;
+			System.exit(1);
 		}
 
 		//Initialise a timeoutCounter for use if there is a timeout specified
@@ -195,7 +203,7 @@ public class Scheduler extends Application {
 		// Exit program when finished
 		ViewerPaneController.getInstance();
 		if (!ViewerPaneController.isRunning() || !ViewerPaneController.getVisualise()) {
-			System.exit(1);
+			System.exit(0);
 		}
 		return;
 
@@ -279,7 +287,15 @@ public class Scheduler extends Application {
 	 */
 	private static boolean invalidOptional() {
 		if (_timeout && (_timeoutSeconds==0)) {
-			System.out.println("An optimal solution cannot be found in 0 seconds.");
+			System.out.println("An optimal schedule cannot be found in 0 seconds, select a longer time out.");
+			return true;
+		}
+		if (_scheduleProcessors == 0) {
+			System.out.println("Tasks cannot be scheduled on 0 processors, select 1 or more processors to schedule tasks.");
+			return true;
+		}
+		if (_numCores == 0) {
+			System.out.println("An optimal schedule cannot be found using 0 cores, select 2 or more cores for parallelisation.");
 			return true;
 		}
 		return false;
