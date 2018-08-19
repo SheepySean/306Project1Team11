@@ -188,15 +188,19 @@ public class Scheduler extends Application {
 		}
 
 		// Write the output file
-		try {
-			fileManager.writeGraphFile(_outputFilename,
-					outputGraph, true);
-            System.out.println("Graph file successfully written to '" + _outputFilename+ "'");
-            ViewerPaneController.setStatus("Graph file successfully written to '" + _outputFilename+ "'");
-		} catch(IOException e) {
-			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
-            ViewerPaneController.setStatus("Unable to write the graph to the file '" + _outputFilename + "'");
-		}
+        
+        if (timeoutCounter.isAlive()) {
+        	try {
+    			fileManager.writeGraphFile(_outputFilename,
+    					outputGraph, true);
+                System.out.println("Graph file successfully written to '" + _outputFilename+ "'");
+                ViewerPaneController.setStatus("Graph file successfully written to '" + _outputFilename+ "'");
+    		} catch(IOException e) {
+    			System.out.println("Unable to write the graph to the file '" + _outputFilename + "'");
+                ViewerPaneController.setStatus("Unable to write the graph to the file '" + _outputFilename + "'");
+    		}
+        }
+		
 
 		//Interrupt the timeout thread and stop it
 		if (_timeout) {
