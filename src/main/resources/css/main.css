@@ -9,6 +9,17 @@
 .button.zoom-control {
     -fx-effect: dropshadow(three-pass-box, #282828, 8, 0, 0, 3);
 }
+
+.button.highlight {
+	-fx-background-color:  #139389;
+}
+.button.highlight:hover {
+	-fx-background-color: #26a6bd;
+}
+
+.button.highlight:pressed {
+	-fx-background-color: #01233f;
+}
 .button:hover {
 	-fx-background-color: #4f4f4f; /* gray */
 }

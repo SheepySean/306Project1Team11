@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -12,9 +13,13 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.para11el.scheduler.ui.ExitPaneController">
    <children>
-      <BorderPane prefHeight="200.0" prefWidth="300.0">
+      <BorderPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #6b6b6b;">
          <center>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Are you sure you want to exit?&#10;&#10;(This stops the program)&#10;" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Are you sure you want to exit?&#10;&#10;(This stops the program)&#10;" textAlignment="CENTER" BorderPane.alignment="CENTER">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Text>
          </center>
          <bottom>
             <GridPane BorderPane.alignment="CENTER">
@@ -26,7 +31,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button mnemonicParsing="false" onAction="#confirmAction" style="-fx-background-color: #139389;" text="Exit" GridPane.halignment="CENTER">
+                  <Button mnemonicParsing="false" onAction="#confirmAction" prefWidth="64.0" styleClass="highlight" text="Exit" GridPane.halignment="CENTER">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -37,6 +42,12 @@
                      </font>
                   </Button>
                </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <BorderPane.margin>
+                  <Insets bottom="20.0" />
+               </BorderPane.margin>
             </GridPane>
          </bottom>
       </BorderPane>

@@ -114,6 +114,7 @@ public class AStarAlgorithm implements Algorithm{
 			// Check if solution is complete
 			if (state.isComplete(_graph.nodes())) {
 				ViewerPaneController.toggleTimer(false);
+                ViewerPaneController.setLabelFinish();
 				return state.getSchedule();
 			}
 
