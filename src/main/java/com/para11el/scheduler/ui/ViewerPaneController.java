@@ -53,6 +53,7 @@ public class ViewerPaneController {
     private static String _cores;
     private static long _startTime;
     private static int _criticalLength;
+    private static boolean _fillGreen = false;
 
 
 	private static int _cellWidth;
@@ -146,7 +147,7 @@ public class ViewerPaneController {
         _viewer.enableAutoLayout();
         viewPanel = (FxDefaultView) _viewer.getDefaultView();
         viewPanel.setFocusTraversable(true); // Allow the keyboard shortcuts
-        viewPanel.setMaxHeight(357); // So it fits
+        viewPanel.setMaxHeight(332); // So it fits
         viewPanel.setMaxWidth(598);
         viewPanel.requireFocus();
         _camera = _viewer.getDefaultView().getCamera();
@@ -170,6 +171,9 @@ public class ViewerPaneController {
 		} else {
 			timerLabel.setText(ViewerPaneController.calculateTimeLabel());
 		}
+		if(_fillGreen) {
+            _timerLabel.setTextFill(Paint.valueOf("#00e500"));
+        }
         _hasLoaded.set(true);
 
     }
@@ -647,7 +651,12 @@ public class ViewerPaneController {
      * @author Tina Chen
      */
     public static void setLabelFinish() {
-    	_timerLabel.setTextFill(Paint.valueOf("#00e500"));
+        if(_timerLabel != null) {
+            _timerLabel.setTextFill(Paint.valueOf("#00e500"));
+        } else {
+            _fillGreen = true;
+        }
+
     }
 
 

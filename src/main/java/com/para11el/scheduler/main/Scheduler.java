@@ -193,8 +193,8 @@ public class Scheduler extends Application {
 		}
 
 		// Exit program when finished
-		ViewerPaneController.getInstance();
-		if (!ViewerPaneController.isRunning() || !ViewerPaneController.getVisualise()) {
+        ViewerPaneController.getInstance();
+		if (!_visualise) {
 			System.exit(1);
 		}
 		return;
@@ -289,9 +289,6 @@ public class Scheduler extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
-        final Popup popup = new Popup(); popup.setX(300); popup.setY(200);
-        popup.getContent().addAll(new Circle(25, 25, 50, Color.AQUAMARINE));
         final Stage stage;
         try{
             List<String> params = getParameters().getRaw();
@@ -301,6 +298,8 @@ public class Scheduler extends Application {
             Scene scene = new Scene(root);
             scene.getStylesheets().add("/css/main.css"); // Add the css
             stage = primaryStage;
+            stage.sizeToScene();
+            stage.setResizable(false);
             // Add logo to the GUI
             stage.getIcons().add(new Image(Scheduler.class.getResourceAsStream("/images/logo-icon.png")));
             stage.setScene(scene);

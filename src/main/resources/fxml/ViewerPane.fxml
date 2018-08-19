@@ -75,11 +75,11 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: white;">
                            <children>
-                              <TabPane fx:id="tabPane" focusTraversable="false" prefHeight="386.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE">
+                              <TabPane fx:id="tabPane" focusTraversable="false" prefHeight="361.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE">
                                 <tabs>
                                   <Tab text="DAG View">
                                     <content>
-                                      <AnchorPane fx:id="graphContainer" accessibleRole="NODE" minHeight="0.0" minWidth="0.0" onMouseClicked="#giveGraphFocus" prefHeight="316.0" prefWidth="1024.0" scaleZ="2.0">
+                                      <AnchorPane fx:id="graphContainer" accessibleRole="NODE" minHeight="0.0" minWidth="0.0" onMouseClicked="#giveGraphFocus" prefHeight="314.0" prefWidth="1024.0" scaleZ="2.0">
                                              <rotationAxis>
                                                 <Point3D z="2.0" />
                                              </rotationAxis>
@@ -93,7 +93,7 @@
                                   </Tab>
                                 </tabs>
                               </TabPane>
-                              <GridPane accessibleRole="BUTTON" alignment="CENTER_LEFT" depthTest="ENABLE" layoutX="545.0" layoutY="300.0">
+                              <GridPane accessibleRole="BUTTON" alignment="CENTER_LEFT" depthTest="ENABLE" layoutX="545.0" layoutY="280.0">
                                 <columnConstraints>
                                   <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
                                 </columnConstraints>
